@@ -1,0 +1,7 @@
+watcom/*.obj
+watcom/*.exe
+watcom/*.lk1
+watcom/*.map
+watcom/*.mk
+watcom/*.mk1
+watcom/*.sym
