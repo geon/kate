@@ -6,7 +6,6 @@
 int main (int argc, char* argv[]) {
 
 	unsigned int  column, y;
-	unsigned char colors[8];
 	unsigned long int strip;
 	unsigned char palette[16];
 	
@@ -32,15 +31,7 @@ int main (int argc, char* argv[]) {
 
 	drawPoint(100, 100, 0x04);
 
-	colors[0] = 0;
-	colors[1] = 1;
-	colors[2] = 2;
-	colors[3] = 3;
-	colors[4] = 4;
-	colors[5] = 5;
-	colors[6] = 6;
-	colors[7] = 7;
-	strip = makeStrip(colors);
+	strip = makeBitplaneStrip(0x01234567);
 
 	drawStrip(0, 0, strip, 0xFF);
 	copyStrip(0, 0);
@@ -51,15 +42,7 @@ int main (int argc, char* argv[]) {
 		}
 	}
 
-	colors[0] = 0+8;
-	colors[1] = 1+8;
-	colors[2] = 2+8;
-	colors[3] = 3+8;
-	colors[4] = 4+8;
-	colors[5] = 5+8;
-	colors[6] = 6+8;
-	colors[7] = 7+8;
-	strip = makeStrip(colors);
+	strip = makeBitplaneStrip(0x89abcdef);
 
 	drawStrip(1, 0, strip, 0xFF);
 	copyStrip(1, 0);
