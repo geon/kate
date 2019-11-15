@@ -84,7 +84,7 @@ long unsigned int makeBitplaneStrip (unsigned long int nibbleStrip) {
 	bitplane2 = (pixel0 & BIT_2) << 5 | (pixel1 & BIT_2) << 4 | (pixel2 & BIT_2) << 3 | (pixel3 & BIT_2) << 2 | (pixel4 & BIT_2) << 1 | (pixel5 & BIT_2) << 0 | (pixel6 & BIT_2) >> 1 | (pixel7 & BIT_2) >> 2;
 	bitplane3 = (pixel0 & BIT_3) << 4 | (pixel1 & BIT_3) << 3 | (pixel2 & BIT_3) << 2 | (pixel3 & BIT_3) << 1 | (pixel4 & BIT_3) << 0 | (pixel5 & BIT_3) >> 1 | (pixel6 & BIT_3) >> 2 | (pixel7 & BIT_3) >> 3;
 
-	return bitplane0 << 24 | bitplane1 << 16 | bitplane2 << 8 | bitplane3;
+	return bitplane0 << 0 | bitplane1 << 8 | bitplane2 << 16 | bitplane3 << 24;
 }
 
 
