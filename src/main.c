@@ -2,6 +2,7 @@
 #include "bmp.h"
 
 #include <stdio.h>
+#include <math.h>
 
 
 int main (int argc, char* argv[]) {
@@ -10,6 +11,9 @@ int main (int argc, char* argv[]) {
 	unsigned int  column;
 	unsigned long int strip;
 	Image image;
+
+	int radius, posX, posY;
+	unsigned int frame;
 
 	setVideoMode();
 
@@ -31,11 +35,17 @@ int main (int argc, char* argv[]) {
 		}
 	}
 
-	for (y = 0; y < image.height; ++y) {
-		for (column=0; column<image.numColumns; ++column) {
-			strip = makeBitplaneStrip(image.pixels[column + (image.upsideDown ? (image.height - 1 - y) : y)*image.numColumns]);
-			drawStrip(column + 10, y + 100, strip, 0xFF);
+	for (frame=0; frame < 2000; ++frame) {
+		radius = sin(frame/1000)*20 + 50;
+		posX = 100 + sin(frame/120.0) * radius;
+		posY = 100 + cos(frame/120.0) * radius;
+		for (y = 0; y < image.height; ++y) {
+			for (column=0; column<image.numColumns; ++column) {
+				strip = makeBitplaneStrip(image.pixels[column + (image.upsideDown ? (image.height - 1 - y) : y)*image.numColumns]);
+				drawStrip(column + posX/8, y + posY, strip, 0xFF);
+			}
 		}
+		waitForFrame();
 	}
 
 	freeImage(image);
