@@ -107,14 +107,11 @@ bool loadBmp(Image *image, char* imageFilePath){
 	if (width % 8) {
 		return false;
 	}
-	printf(" width: %lu", width);
 
 	height = parseLongInt(&infoHeader[8]);
-	printf(" height: %ld", height);
 
 	// Some images are stored upside-down. Right-side-up is sigified by a negative height.
 	image->upsideDown = height >= 0;
-	printf(" upsideDown: %s", image->upsideDown ? "yes" : "no");
 	if(height < 0){
 		height *= -1;
 	}
@@ -124,7 +121,6 @@ bool loadBmp(Image *image, char* imageFilePath){
 	if(bitsPerPixel != 4) {
 		return false;
 	}
-	printf(" bitsPerPixel: %u", bitsPerPixel);
 
 	compression = parseUnsignedLongInt(&infoHeader[16]);
 	image->numColumns = width / 8;
@@ -137,7 +133,6 @@ bool loadBmp(Image *image, char* imageFilePath){
 	if (!numColors) {
 		numColors = 1 << bitsPerPixel;
 	}
-	printf(" numColors: %lu", numColors);
 
 	if (numColors > 16) {
 		return false;
