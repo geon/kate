@@ -168,7 +168,3 @@ bool loadBmp(Image *image, char* imageFilePath){
 
 	return true;
 }
-
-void freeImage (Image image) {
-	free(image.pixels);
-}
