@@ -1,6 +1,4 @@
-#define bool char
-#define true 1
-#define false 0
+#include <stdbool.h>
 
 typedef struct Image {
     unsigned int numColumns;
