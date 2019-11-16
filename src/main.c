@@ -1,5 +1,6 @@
 #include "platform/dos/ega.h"
 #include "bmp.h"
+#include "image.h"
 
 #include <stdio.h>
 #include <math.h>
@@ -39,12 +40,7 @@ int main (int argc, char* argv[]) {
 		radius = sin(frame/1000)*20 + 50;
 		posX = 100 + sin(frame/120.0) * radius;
 		posY = 100 + cos(frame/120.0) * radius;
-		for (y = 0; y < image.height; ++y) {
-			for (column=0; column<image.numColumns; ++column) {
-				strip = makeBitplaneStrip(image.pixels[column + (image.upsideDown ? (image.height - 1 - y) : y)*image.numColumns]);
-				drawStrip(column + posX/8, y + posY, strip, 0xFF);
-			}
-		}
+		drawImage(image, posX, posY);
 		waitForFrame();
 	}
 

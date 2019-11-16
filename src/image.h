@@ -12,5 +12,6 @@ typedef struct Image {
 } Image;
 
 void freeImage (Image image);
+void drawImage(Image image, unsigned int posX, unsigned int posY);
 
 #endif
