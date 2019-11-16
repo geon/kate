@@ -1,3 +1,6 @@
+#ifndef image_h
+#define image_h
+
 #include <stdbool.h>
 
 typedef struct Image {
@@ -9,3 +12,5 @@ typedef struct Image {
 } Image;
 
 void freeImage (Image image);
+
+#endif
