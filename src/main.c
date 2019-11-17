@@ -36,7 +36,7 @@ int main (int argc, char* argv[]) {
 		}
 	}
 
-	for (frame=0; frame < 2000; ++frame) {
+	for (frame=0; frame < 500; ++frame) {
 		radius = sin(frame/1000)*20 + 50;
 		posX = 100 + sin(frame/120.0) * radius;
 		posY = 100 + cos(frame/120.0) * radius;
