@@ -92,10 +92,9 @@ void drawStrip (short int column, short int y, unsigned long int strip, unsigned
 
 	/*
 	write modes:
-		* 0. The latch is ignored. "data unmodiﬁed" (latch, must still be loaded if bit mask is used?)
-		* 1. Write the latched pixels. the byte written by the cpu are irrelevant.
-
-	2 and 3 are or and and resp. Can be used to clear certain pixeld with and, then fill them with or.
+		* 0. Write the latched pixels, combined with CPU data as per register 3. Default is unmodified CPU/latch depending on mask.
+		* 1. Write the latched pixels. The byte written by the cpu are irrelevant. (Not sure how this is different from mode 0 with a zeroed out mask.)
+		* 2. Write a single color to all 8 pixels.
 	*/
 
 	short int stripOffset = y*80 + column;
@@ -114,7 +113,7 @@ void drawStrip (short int column, short int y, unsigned long int strip, unsigned
 			mov dx, 03CEh ; 6845 command register
 			; Specify mode register
 			mov al, 5
-			; Just write. Ignore latch.
+			; Write. Latched data will be used where the mask bits are 0.
 			mov ah, 0
 			; Send
 			out dx, ax
