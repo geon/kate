@@ -129,6 +129,10 @@ void drawStrip (short int column, short int y, unsigned long int strip, unsigned
 			mov ax, 0A000h
 			mov es, ax
 
+		; Load existing pixels to latch, so masking works.
+			mov bx, stripOffset
+			mov al, es:[bx]
+
 		; Enable plane 0
 			; 6845 command register
 			mov dx, 3C4h
