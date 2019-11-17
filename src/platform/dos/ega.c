@@ -118,6 +118,15 @@ void drawStrip (short int column, short int y, unsigned long int strip, unsigned
 			; Send
 			out dx, ax
 
+		; Set write mode
+			mov dx, 03CEh
+			; Data Rotate register
+			mov al, 3
+			; No bit rotation, no AND, OR or XOR.
+			mov ah, 0
+			; Send
+			out dx, ax
+
 		; Set 6845 bit mask register
 			; Specify bit mask register
 			mov al, 8
