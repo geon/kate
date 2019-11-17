@@ -36,10 +36,10 @@ int main (int argc, char* argv[]) {
 		}
 	}
 
-	for (frame=0; frame < 500; ++frame) {
-		radius = sin(frame/1000)*20 + 50;
-		posX = 100 + sin(frame/120.0) * radius;
-		posY = 100 + cos(frame/120.0) * radius;
+	for (frame=0; frame < 100; ++frame) {
+		radius = sin(frame/4.3435674)*20 + 50;
+		posX = 100 + sin(frame/10.0) * radius;
+		posY = 100 + cos(frame/10.0) * radius;
 		drawImage(image, posX, posY);
 		waitForFrame();
 	}
