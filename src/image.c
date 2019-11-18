@@ -23,8 +23,6 @@ void drawImage(Image image, unsigned int posX, unsigned int posY) {
             posXColumn = posX/8;
             posXRest = posX%8;
 
-            shiftMask = 0xff >> posXRest;
-
             stripShiftedA.planes[0] = strip.planes[0] >> posXRest;
             stripShiftedA.planes[1] = strip.planes[1] >> posXRest;
             stripShiftedA.planes[2] = strip.planes[2] >> posXRest;
@@ -36,8 +34,10 @@ void drawImage(Image image, unsigned int posX, unsigned int posY) {
             stripShiftedB.planes[3] = strip.planes[3] << (8 - posXRest);
 
             // TODO: Combine the adjecent strips, to avoid double writes.
+            shiftMask = 0xff >> posXRest;
             drawStrip(column + posXColumn, y + posY, stripShiftedA, shiftMask);
-            drawStrip(column + posXColumn + 1, y + posY, stripShiftedB, ~shiftMask);
+            shiftMask = 0xff << (8 - posXRest);
+            drawStrip(column + posXColumn + 1, y + posY, stripShiftedB, shiftMask);
         }
     }
 }
