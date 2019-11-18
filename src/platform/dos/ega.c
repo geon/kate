@@ -52,7 +52,7 @@ void drawPoint (unsigned short int x, unsigned short int y, unsigned char color)
 #define BIT_3 8
 
 
-void drawStrip (short int column, short int y, BitplaneStrip strip, unsigned char mask) {
+void drawStrip (short int column, short int y, BitplaneStrip bitplaneStrip, unsigned char mask) {
 
 	/*
 	write modes:
@@ -63,12 +63,10 @@ void drawStrip (short int column, short int y, BitplaneStrip strip, unsigned cha
 
 	short int stripOffset = y*80 + column;
 
-	unsigned char *bitStrips = (unsigned char *) &strip;
-
-	unsigned char bitplane0 = bitStrips[0];
-	unsigned char bitplane1 = bitStrips[1];
-	unsigned char bitplane2 = bitStrips[2];
-	unsigned char bitplane3 = bitStrips[3];
+	unsigned char bitplane0 = bitplaneStrip.planes[0];
+	unsigned char bitplane1 = bitplaneStrip.planes[1];
+	unsigned char bitplane2 = bitplaneStrip.planes[2];
+	unsigned char bitplane3 = bitplaneStrip.planes[3];
 
 	const unsigned char allBits = BIT_0 | BIT_1 | BIT_2 | BIT_3;
 

@@ -1,7 +1,9 @@
 #ifndef bitplane_strip_h
 #define bitplane_strip_h
 
-typedef unsigned long int BitplaneStrip;
+typedef struct BitplaneStrip {
+    unsigned char planes[4];
+} BitplaneStrip;
 
 BitplaneStrip makeBitplaneStrip (unsigned long int nibbleStrip);
 

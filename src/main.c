@@ -1,4 +1,5 @@
 #include "platform/dos/ega.h"
+#include "platform/dos/bitplane_strip.h"
 #include "bmp.h"
 #include "image.h"
 
@@ -10,7 +11,7 @@ int main (int argc, char* argv[]) {
 
 	int  y;
 	unsigned int  column;
-	unsigned long int strip;
+	BitplaneStrip strip;
 	Image image;
 
 	int radius, posX, posY;
