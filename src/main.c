@@ -19,14 +19,14 @@ int main (int argc, char* argv[]) {
 
 	setVideoMode();
 
-	if(!loadBmp(&image, "../images/bunny.bmp")) {
+	if(!loadBmp(&image, "../images/bunny.bmp", true)) {
 		printf("Loading bmp failed.");
 		return 1;
 	}
 
 	setPalette(image.palette);
 
-	strip = makeBitplaneStrip(0x01234567);
+	strip = makeBitplaneStrip(0xffffffff);
 
 	drawStrip(0, 0, strip, 0xFF);
 	copyStrip(0, 0);

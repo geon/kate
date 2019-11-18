@@ -3,6 +3,7 @@
 #include "bmp.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include <stdio.h>
 
@@ -58,13 +59,25 @@ unsigned char rgbToEga (unsigned char red, unsigned char green, unsigned char bl
 		(((blue2Bit >> 1) & 1) << 0);
 }
 
+unsigned char makeMask (unsigned long int nibbleStrip) {
+	unsigned char i;
+	unsigned char mask;
+
+	mask = 0;
+	for (i=0; i<8; ++i) {
+		mask |= (nibbleStrip & (((unsigned long int) 0xf) << (i*4))) ? (1 << i) : 0;
+	}
+
+	return mask;
+}
+
 // // Convert to rgb
 // red   = 85 * (((ega >> 1) & 2) | (ega >> 5) & 1)
 // green = 85 * (( ega       & 2) | (ega >> 4) & 1)
 // blue  = 85 * (((ega << 1) & 2) | (ega >> 3) & 1)
 
 #define BYTES_PER_COLOR_ENTRY 4
-bool loadBmp(Image *image, char* imageFilePath){
+bool loadBmp(Image *image, char* imageFilePath, bool firstColorIsTransparency) {
 
 	// TODO: Aremove allocation. Just use an array on the stack.
 	unsigned char *fileHeader = malloc(fileHeaderSize);
@@ -77,6 +90,7 @@ bool loadBmp(Image *image, char* imageFilePath){
 	unsigned int i;
 	unsigned char paletteData[16 * BYTES_PER_COLOR_ENTRY];
 	unsigned long int  dataSize;
+	unsigned long int  maskSize;
 
 	FILE* imageFile = fopen(imageFilePath, "rb");
 
@@ -164,6 +178,15 @@ bool loadBmp(Image *image, char* imageFilePath){
 	// Shuffle the bytes to match the pixel strip ordering.
 	for (i=0; i<image->numColumns * image->height; ++i) {
 		image->pixels[i] = reverseBytes(image->pixels[i]);
+	}
+
+	maskSize = image->numColumns * image->height;
+	image->mask = malloc(maskSize);
+
+	for (i=0; i<maskSize; ++i) {
+		image->mask[i] = firstColorIsTransparency
+			? makeMask(image->pixels[i])
+			: 0xff;
 	}
 
 	return true;

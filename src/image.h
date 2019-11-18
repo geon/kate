@@ -9,6 +9,7 @@ typedef struct Image {
 	bool upsideDown;
     unsigned char palette[16];
     unsigned long int *pixels;
+    unsigned char *mask;
 } Image;
 
 void freeImage (Image image);
