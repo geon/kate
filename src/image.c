@@ -13,10 +13,12 @@ void drawImage(Image image, unsigned int posX, unsigned int posY) {
     unsigned int posXColumn, posXRest;
     BitplaneStrip stripShiftedA, stripShiftedB;
     unsigned char shiftMask;
+    unsigned int stripIndex;
 
     for (y = 0; y < image.height; ++y) {
         for (column=0; column<image.numColumns; ++column) {
-            strip = makeBitplaneStrip(image.pixels[column + (image.upsideDown ? (image.height - 1 - y) : y)*image.numColumns]);
+            stripIndex = column + (image.upsideDown ? (image.height - 1 - y) : y)*image.numColumns;
+            strip = makeBitplaneStrip(image.pixels[stripIndex]);
 
             posXColumn = posX/8;
             posXRest = posX%8;
