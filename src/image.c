@@ -23,15 +23,15 @@ void drawImage(Image image, unsigned int posX, unsigned int posY) {
 
             shiftMask = 0xff >> posXRest;
 
-            stripShiftedA.planes[0] = (strip.planes[0] >> posXRest) & shiftMask;
-            stripShiftedA.planes[1] = (strip.planes[1] >> posXRest) & shiftMask;
-            stripShiftedA.planes[2] = (strip.planes[2] >> posXRest) & shiftMask;
-            stripShiftedA.planes[3] = (strip.planes[3] >> posXRest) & shiftMask;
+            stripShiftedA.planes[0] = strip.planes[0] >> posXRest;
+            stripShiftedA.planes[1] = strip.planes[1] >> posXRest;
+            stripShiftedA.planes[2] = strip.planes[2] >> posXRest;
+            stripShiftedA.planes[3] = strip.planes[3] >> posXRest;
 
-            stripShiftedB.planes[0] = (strip.planes[0] << (8 - posXRest)) & ~shiftMask;
-            stripShiftedB.planes[1] = (strip.planes[1] << (8 - posXRest)) & ~shiftMask;
-            stripShiftedB.planes[2] = (strip.planes[2] << (8 - posXRest)) & ~shiftMask;
-            stripShiftedB.planes[3] = (strip.planes[3] << (8 - posXRest)) & ~shiftMask;
+            stripShiftedB.planes[0] = strip.planes[0] << (8 - posXRest);
+            stripShiftedB.planes[1] = strip.planes[1] << (8 - posXRest);
+            stripShiftedB.planes[2] = strip.planes[2] << (8 - posXRest);
+            stripShiftedB.planes[3] = strip.planes[3] << (8 - posXRest);
 
             // TODO: Combine the adjecent strips, to avoid double writes.
             drawStrip(column + posXColumn, y + posY, stripShiftedA, shiftMask);
