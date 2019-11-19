@@ -2,12 +2,10 @@
 #include "platform/dos/bitplane_strip.h"
 #include "bmp.h"
 #include "image.h"
+#include "dirty_background_strips.h"
 
 #include <stdio.h>
 #include <math.h>
-
-#define NUM_BACKGROUND_STRIPS 640/8*350
-typedef bool DirtyBackgroundStrips[NUM_BACKGROUND_STRIPS];
 
 
 void renderBackground (DirtyBackgroundStrips dirtyBackgroundStrips) {
@@ -70,14 +68,13 @@ void renderSprites (World world, Image image, DirtyBackgroundStrips dirtyBackgro
 	}
 }
 
-DirtyBackgroundStrips dirtyBackgroundStrips;
 
 int main (int argc, char* argv[]) {
 
 	Image image;
 	unsigned int frame;
 	World world;
-	unsigned int i;
+	DirtyBackgroundStrips dirtyBackgroundStrips;
 
 	setVideoMode();
 
@@ -90,10 +87,7 @@ int main (int argc, char* argv[]) {
 
 	makeWorld(&world);
 
-	// The background has not been rendered yet, so it is by definition completely dirty.
-	for (i=0; i<NUM_BACKGROUND_STRIPS; ++i) {
-		dirtyBackgroundStrips[i] = true;
-	}
+	dirtyBackgroundStrips = makeDirtyBackgroundStrips();
 
 	for (frame=0; frame < 100; ++frame) {
 		updateWorld(&world, frame);
@@ -102,6 +96,7 @@ int main (int argc, char* argv[]) {
 		waitForFrame();
 	}
 
+	freeDirtyBackgroundStrips(dirtyBackgroundStrips);
 	freeImage(image);
 
 	printf("\n\n\ndone");
