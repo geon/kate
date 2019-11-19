@@ -7,24 +7,10 @@
 #include <math.h>
 
 
-int main (int argc, char* argv[]) {
-
+void renderBackground () {
 	int  y;
 	unsigned int  column;
 	BitplaneStrip strip;
-	Image image;
-
-	int radius, posX, posY;
-	unsigned int frame;
-
-	setVideoMode();
-
-	if(!loadBmp(&image, "../images/bunny.bmp", true)) {
-		printf("Loading bmp failed.");
-		return 1;
-	}
-
-	setPalette(image.palette);
 
 	strip = makeBitplaneStrip(0xffffffff);
 
@@ -36,12 +22,54 @@ int main (int argc, char* argv[]) {
 			pasteStrip(column, y, 0xFF);
 		}
 	}
+}
+
+
+typedef struct World {
+	int radius, posX, posY;
+} World;
+
+
+void makeWorld (World *world) {
+	world->radius = 80;
+	world->posX = 100;
+	world->posY = 100;
+}
+
+void updateWorld (World *world, unsigned int frame) {
+	world->radius = sin(frame/4.3435674)*20 + 50;
+	world->posX = 100 + sin(frame/10.0) * world->radius;
+	world->posY = 100 + cos(frame/10.0) * world->radius;
+}
+
+
+void renderSprites (World world, Image image) {
+	drawImage(image, world.posX, world.posY);
+}
+
+
+int main (int argc, char* argv[]) {
+
+	Image image;
+	unsigned int frame;
+	World world;
+
+	setVideoMode();
+
+	if(!loadBmp(&image, "../images/bunny.bmp", true)) {
+		printf("Loading bmp failed.");
+		return 1;
+	}
+
+	setPalette(image.palette);
+
+	makeWorld(&world);
+
+	renderBackground();
 
 	for (frame=0; frame < 100; ++frame) {
-		radius = sin(frame/4.3435674)*20 + 50;
-		posX = 100 + sin(frame/10.0) * radius;
-		posY = 100 + cos(frame/10.0) * radius;
-		drawImage(image, posX, posY);
+		updateWorld(&world, frame);
+		renderSprites(world, image);
 		waitForFrame();
 	}
 
