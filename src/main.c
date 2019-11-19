@@ -65,10 +65,9 @@ int main (int argc, char* argv[]) {
 
 	makeWorld(&world);
 
-	renderBackground();
-
 	for (frame=0; frame < 100; ++frame) {
 		updateWorld(&world, frame);
+		renderBackground();
 		renderSprites(world, image);
 		waitForFrame();
 	}
