@@ -6,11 +6,15 @@
 #include <stdio.h>
 #include <math.h>
 
+#define NUM_BACKGROUND_STRIPS 640/8*350
+typedef bool DirtyBackgroundStrips[NUM_BACKGROUND_STRIPS];
 
-void renderBackground () {
+
+void renderBackground (DirtyBackgroundStrips dirtyBackgroundStrips) {
 	int  y;
 	unsigned int  column;
 	BitplaneStrip strip;
+	unsigned int stripIndex;
 
 	strip = makeBitplaneStrip(0xffffffff);
 
@@ -19,7 +23,11 @@ void renderBackground () {
 
 	for (y=0; y<350; ++y) {
 		for (column=0; column<640/8; ++column) {
-			pasteStrip(column, y, 0xFF);
+			stripIndex = column + y*(640/8);
+			if (dirtyBackgroundStrips[stripIndex]) {
+				pasteStrip(column, y, 0xFF);
+				dirtyBackgroundStrips[stripIndex] = false;
+			}
 		}
 	}
 }
@@ -36,6 +44,7 @@ void makeWorld (World *world) {
 	world->posY = 100;
 }
 
+
 void updateWorld (World *world, unsigned int frame) {
 	world->radius = sin(frame/4.3435674)*20 + 50;
 	world->posX = 100 + sin(frame/10.0) * world->radius;
@@ -43,16 +52,32 @@ void updateWorld (World *world, unsigned int frame) {
 }
 
 
-void renderSprites (World world, Image image) {
+void renderSprites (World world, Image image, DirtyBackgroundStrips dirtyBackgroundStrips) {
+	int  y;
+	unsigned int  column;
+	unsigned int stripIndex;
+
 	drawImage(image, world.posX, world.posY);
+
+	// TODO: This is repeating the loop in drawImage. Move there?
+	// Mark the covered background strips as dirty.
+	for (y=world.posY; y<world.posY+64; ++y) {
+		for (column=world.posX/8; column<world.posX/8+image.numColumns+1; ++column) {
+			// The parenthesis around 640/8 is important. Without it, y*640 overflows.
+			stripIndex = column + y*(640/8);
+			dirtyBackgroundStrips[stripIndex] = true;
+		}
+	}
 }
 
+DirtyBackgroundStrips dirtyBackgroundStrips;
 
 int main (int argc, char* argv[]) {
 
 	Image image;
 	unsigned int frame;
 	World world;
+	unsigned int i;
 
 	setVideoMode();
 
@@ -65,10 +90,15 @@ int main (int argc, char* argv[]) {
 
 	makeWorld(&world);
 
+	// The background has not been rendered yet, so it is by definition completely dirty.
+	for (i=0; i<NUM_BACKGROUND_STRIPS; ++i) {
+		dirtyBackgroundStrips[i] = true;
+	}
+
 	for (frame=0; frame < 100; ++frame) {
 		updateWorld(&world, frame);
-		renderBackground();
-		renderSprites(world, image);
+		renderBackground(dirtyBackgroundStrips);
+		renderSprites(world, image, dirtyBackgroundStrips);
 		waitForFrame();
 	}
 
