@@ -69,6 +69,12 @@ void renderSprites (World world, Image image, DirtyBackgroundStrips dirtyBackgro
 }
 
 
+void renderWorld(World world, Image image, DirtyBackgroundStrips dirtyBackgroundStrips) {
+	renderBackground(dirtyBackgroundStrips);
+	renderSprites(world, image, dirtyBackgroundStrips);
+}
+
+
 int main (int argc, char* argv[]) {
 
 	Image image;
@@ -91,8 +97,7 @@ int main (int argc, char* argv[]) {
 
 	for (frame=0; frame < 100; ++frame) {
 		updateWorld(&world, frame);
-		renderBackground(dirtyBackgroundStrips);
-		renderSprites(world, image, dirtyBackgroundStrips);
+		renderWorld(world, image, dirtyBackgroundStrips);
 		waitForFrame();
 	}
 
