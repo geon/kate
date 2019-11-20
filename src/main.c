@@ -32,6 +32,10 @@ void renderBackground (DirtyBackgroundStrips dirtyBackgroundStrips) {
 
 
 typedef struct World {
+	Image image;
+	unsigned int frame;
+	DirtyBackgroundStrips dirtyBackgroundStrips;
+
 	int radius, posX, posY;
 } World;
 
@@ -40,69 +44,67 @@ void makeWorld (World *world) {
 	world->radius = 80;
 	world->posX = 100;
 	world->posY = 100;
+
+	if(!loadBmp(&world->image, "../images/bunny.bmp", true)) {
+		printf("Loading bmp failed.");
+	}
+
+	world->dirtyBackgroundStrips = makeDirtyBackgroundStrips();
+}
+
+void freeWorld (World world) {
+	freeDirtyBackgroundStrips(world.dirtyBackgroundStrips);
+	freeImage(world.image);
+}
+
+void updateWorld (World *world) {
+	world->frame++;
+	world->radius = sin(world->frame/4.3435674)*20 + 50;
+	world->posX = 100 + sin(world->frame/10.0) * world->radius;
+	world->posY = 100 + cos(world->frame/10.0) * world->radius;
 }
 
 
-void updateWorld (World *world, unsigned int frame) {
-	world->radius = sin(frame/4.3435674)*20 + 50;
-	world->posX = 100 + sin(frame/10.0) * world->radius;
-	world->posY = 100 + cos(frame/10.0) * world->radius;
-}
-
-
-void renderSprites (World world, Image image, DirtyBackgroundStrips dirtyBackgroundStrips) {
+void renderSprites (World world) {
 	int  y;
 	unsigned int  column;
 	unsigned int stripIndex;
 
-	drawImage(image, world.posX, world.posY);
+	drawImage(world.image, world.posX, world.posY);
 
 	// TODO: This is repeating the loop in drawImage. Move there?
 	// Mark the covered background strips as dirty.
 	for (y=world.posY; y<world.posY+64; ++y) {
-		for (column=world.posX/8; column<world.posX/8+image.numColumns+1; ++column) {
+		for (column=world.posX/8; column<world.posX/8+world.image.numColumns+1; ++column) {
 			// The parenthesis around 640/8 is important. Without it, y*640 overflows.
 			stripIndex = column + y*(640/8);
-			dirtyBackgroundStrips[stripIndex] = true;
+			world.dirtyBackgroundStrips[stripIndex] = true;
 		}
 	}
 }
 
 
-void renderWorld(World world, Image image, DirtyBackgroundStrips dirtyBackgroundStrips) {
-	renderBackground(dirtyBackgroundStrips);
-	renderSprites(world, image, dirtyBackgroundStrips);
+void renderWorld(World world) {
+	renderBackground(world.dirtyBackgroundStrips);
+	renderSprites(world);
 }
 
 
 int main (int argc, char* argv[]) {
 
-	Image image;
 	unsigned int frame;
 	World world;
-	DirtyBackgroundStrips dirtyBackgroundStrips;
 
 	setVideoMode();
 
-	if(!loadBmp(&image, "../images/bunny.bmp", true)) {
-		printf("Loading bmp failed.");
-		return 1;
-	}
-
-	setPalette(image.palette);
-
 	makeWorld(&world);
-
-	dirtyBackgroundStrips = makeDirtyBackgroundStrips();
+	setPalette(world.image.palette);
 
 	for (frame=0; frame < 100; ++frame) {
-		updateWorld(&world, frame);
-		renderWorld(world, image, dirtyBackgroundStrips);
+		updateWorld(&world);
+		renderWorld(world);
 		waitForFrame();
 	}
-
-	freeDirtyBackgroundStrips(dirtyBackgroundStrips);
-	freeImage(image);
 
 	printf("\n\n\ndone");
 	return 0;
