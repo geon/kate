@@ -11,11 +11,11 @@ int main (int argc, char* argv[]) {
 
 	setVideoMode();
 
-	makeWorld(&world);
-	setPalette(world.image.palette);
+	world = makeWorld();
+	setPalette(getWorldPalette(world));
 
 	for (frame=0; frame < 100; ++frame) {
-		updateWorld(&world);
+		updateWorld(world);
 		renderWorld(world);
 		waitForFrame();
 	}

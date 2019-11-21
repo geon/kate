@@ -2,10 +2,21 @@
 #include "bmp.h"
 #include "platform/dos/ega.h"
 
+#include <stdlib.h>
 #include <math.h>
 
+typedef struct WorldStruct {
+	Image image;
+	unsigned int frame;
+	DirtyBackgroundStrips dirtyBackgroundStrips;
 
-void makeWorld (World *world) {
+	int radius, posX, posY;
+} WorldStruct;
+
+
+
+World makeWorld () {
+    World world = malloc(sizeof(WorldStruct));
 	world->radius = 80;
 	world->posX = 100;
 	world->posY = 100;
@@ -13,16 +24,24 @@ void makeWorld (World *world) {
 	loadBmp(&world->image, "../images/bunny.bmp", true);
 
 	world->dirtyBackgroundStrips = makeDirtyBackgroundStrips();
+
+    return world;
 }
 
 
 void freeWorld (World world) {
-	freeDirtyBackgroundStrips(world.dirtyBackgroundStrips);
-	freeImage(world.image);
+	freeDirtyBackgroundStrips(world->dirtyBackgroundStrips);
+	freeImage(world->image);
+    free(world);
 }
 
 
-void updateWorld (World *world) {
+unsigned char * getWorldPalette(World world) {
+    return world->image.palette;
+}
+
+
+void updateWorld (World world) {
 	world->frame++;
 	world->radius = sin(world->frame/4.3435674)*20 + 50;
 	world->posX = 100 + sin(world->frame/10.0) * world->radius;
@@ -35,15 +54,15 @@ void renderSprites (World world) {
 	unsigned int  column;
 	unsigned int stripIndex;
 
-	drawImage(world.image, world.posX, world.posY);
+	drawImage(world->image, world->posX, world->posY);
 
 	// TODO: This is repeating the loop in drawImage. Move there?
 	// Mark the covered background strips as dirty.
-	for (y=world.posY; y<world.posY+64; ++y) {
-		for (column=world.posX/8; column<world.posX/8+world.image.numColumns+1; ++column) {
+	for (y=world->posY; y<world->posY+64; ++y) {
+		for (column=world->posX/8; column<world->posX/8+world->image.numColumns+1; ++column) {
 			// The parenthesis around 640/8 is important. Without it, y*640 overflows.
 			stripIndex = column + y*(640/8);
-			world.dirtyBackgroundStrips[stripIndex] = true;
+			world->dirtyBackgroundStrips[stripIndex] = true;
 		}
 	}
 }
@@ -73,6 +92,6 @@ void renderBackground (DirtyBackgroundStrips dirtyBackgroundStrips) {
 
 
 void renderWorld(World world) {
-	renderBackground(world.dirtyBackgroundStrips);
+	renderBackground(world->dirtyBackgroundStrips);
 	renderSprites(world);
 }

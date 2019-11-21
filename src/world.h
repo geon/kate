@@ -5,19 +5,12 @@
 #include "image.h"
 #include "dirty_background_strips.h"
 
+typedef struct WorldStruct *World;
 
-typedef struct World {
-	Image image;
-	unsigned int frame;
-	DirtyBackgroundStrips dirtyBackgroundStrips;
-
-	int radius, posX, posY;
-} World;
-
-
-void makeWorld (World *world);
+World makeWorld ();
 void freeWorld (World world);
-void updateWorld (World *world);
+unsigned char * getWorldPalette(World world);
+void updateWorld (World world);
 void renderWorld(World world);
 
 #endif
