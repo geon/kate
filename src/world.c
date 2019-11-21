@@ -21,7 +21,7 @@ World makeWorld () {
 	world->posX = 100;
 	world->posY = 100;
 
-	loadBmp(&world->image, "../images/bunny.bmp", true);
+	world->image = loadBmp("../images/bunny.bmp", true, NULL);
 
 	world->dirtyBackgroundStrips = makeDirtyBackgroundStrips();
 
@@ -37,7 +37,7 @@ void freeWorld (World world) {
 
 
 unsigned char * getWorldPalette(World world) {
-    return world->image.palette;
+    return getImagePalette(world->image);
 }
 
 
@@ -53,13 +53,14 @@ void renderSprites (World world) {
 	int  y;
 	unsigned int  column;
 	unsigned int stripIndex;
+    unsigned int numColumns = getImageNumColumns(world->image);
 
 	drawImage(world->image, world->posX, world->posY);
 
 	// TODO: This is repeating the loop in drawImage. Move there?
 	// Mark the covered background strips as dirty.
 	for (y=world->posY; y<world->posY+64; ++y) {
-		for (column=world->posX/8; column<world->posX/8+world->image.numColumns+1; ++column) {
+		for (column=world->posX/8; column<world->posX/8+numColumns+1; ++column) {
 			// The parenthesis around 640/8 is important. Without it, y*640 overflows.
 			stripIndex = column + y*(640/8);
 			world->dirtyBackgroundStrips[stripIndex] = true;

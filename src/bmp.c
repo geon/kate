@@ -1,6 +1,7 @@
 // https://stackoverflow.com/a/47785639/446536
 
 #include "bmp.h"
+#include "image_struct.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -77,9 +78,9 @@ unsigned char makeMask (unsigned long int nibbleStrip) {
 // blue  = 85 * (((ega << 1) & 2) | (ega >> 3) & 1)
 
 #define BYTES_PER_COLOR_ENTRY 4
-bool loadBmp(Image *image, char* imageFilePath, bool firstColorIsTransparency) {
-
-	// TODO: Aremove allocation. Just use an array on the stack.
+Image loadBmp(char* imageFilePath, bool firstColorIsTransparency, char** errorMessage) {
+	Image image = makeImage();
+	// TODO: Remove allocation. Just use an array on the stack.
 	unsigned char *fileHeader = malloc(fileHeaderSize);
 	unsigned char *infoHeader = malloc(infoHeaderSize);
 	unsigned long int width;
@@ -119,7 +120,7 @@ bool loadBmp(Image *image, char* imageFilePath, bool firstColorIsTransparency) {
 
 	// All images should be a multiple of 8 pixels wide.
 	if (width % 8) {
-		return false;
+		return NULL;
 	}
 
 	height = parseLongInt(&infoHeader[8]);
@@ -133,14 +134,14 @@ bool loadBmp(Image *image, char* imageFilePath, bool firstColorIsTransparency) {
 
 	bitsPerPixel = parseUnsignedInt(&infoHeader[14]);
 	if(bitsPerPixel != 4) {
-		return false;
+		return NULL;
 	}
 
 	compression = parseUnsignedLongInt(&infoHeader[16]);
 	image->numColumns = width / 8;
 
 	if(compression) {
-		return false;
+		return NULL;
 	}
 
 	numColors = parseUnsignedLongInt(&infoHeader[32]);
@@ -149,7 +150,7 @@ bool loadBmp(Image *image, char* imageFilePath, bool firstColorIsTransparency) {
 	}
 
 	if (numColors > 16) {
-		return false;
+		return NULL;
 	}
 
 	free(infoHeader);
@@ -189,5 +190,5 @@ bool loadBmp(Image *image, char* imageFilePath, bool firstColorIsTransparency) {
 			: 0xff;
 	}
 
-	return true;
+	return image;
 }

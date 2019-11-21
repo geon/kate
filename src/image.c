@@ -1,12 +1,39 @@
 #include "image.h"
+#include "image_struct.h"
 #include "platform/dos/ega.h"
 #include "platform/dos/bitplane_strip.h"
 #include <stdlib.h>
 
-void freeImage (Image image) {
-	free(image.pixels);
-	free(image.mask);
+
+Image makeImage () {
+    Image image = malloc(sizeof(ImageStruct));
+
+    // Empty image.
+    image->numColumns = 0;
+    image->height = 0;
+    image->upsideDown = false;
+    image->pixels = NULL;
+    image->mask = NULL;
+
+    return image;
 }
+
+
+void freeImage (Image image) {
+	free(image->pixels);
+	free(image->mask);
+}
+
+
+unsigned char * getImagePalette(Image image) {
+    return image->palette;
+}
+
+
+unsigned int getImageNumColumns(Image image) {
+    return image->numColumns;
+}
+
 
 void drawImage(Image image, unsigned int posX, unsigned int posY) {
     unsigned int y, column;
@@ -16,10 +43,10 @@ void drawImage(Image image, unsigned int posX, unsigned int posY) {
     unsigned char shiftMask;
     unsigned int stripIndex;
 
-    for (y = 0; y < image.height; ++y) {
-        for (column=0; column<image.numColumns; ++column) {
-            stripIndex = column + (image.upsideDown ? (image.height - 1 - y) : y)*image.numColumns;
-            strip = makeBitplaneStrip(image.pixels[stripIndex]);
+    for (y = 0; y < image->height; ++y) {
+        for (column=0; column<image->numColumns; ++column) {
+            stripIndex = column + (image->upsideDown ? (image->height - 1 - y) : y)*image->numColumns;
+            strip = makeBitplaneStrip(image->pixels[stripIndex]);
 
             posXColumn = posX/8;
             posXRest = posX%8;
@@ -35,9 +62,9 @@ void drawImage(Image image, unsigned int posX, unsigned int posY) {
             stripShiftedB.planes[3] = strip.planes[3] << (8 - posXRest);
 
             // TODO: Combine the adjecent strips, to avoid double writes.
-            shiftMask = image.mask[stripIndex] >> posXRest;
+            shiftMask = image->mask[stripIndex] >> posXRest;
             drawStrip(column + posXColumn, y + posY, stripShiftedA, shiftMask);
-            shiftMask = image.mask[stripIndex] << (8 - posXRest);
+            shiftMask = image->mask[stripIndex] << (8 - posXRest);
             drawStrip(column + posXColumn + 1, y + posY, stripShiftedB, shiftMask);
         }
     }

@@ -3,16 +3,12 @@
 
 #include <stdbool.h>
 
-typedef struct Image {
-    unsigned int numColumns;
-    unsigned int height;
-	bool upsideDown;
-    unsigned char palette[16];
-    unsigned long int *pixels;
-    unsigned char *mask;
-} Image;
+typedef struct ImageStruct *Image;
 
+Image makeImage ();
 void freeImage (Image image);
 void drawImage(Image image, unsigned int posX, unsigned int posY);
+unsigned char * getImagePalette(Image image);
+unsigned int getImageNumColumns(Image image);
 
 #endif

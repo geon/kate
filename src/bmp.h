@@ -4,6 +4,6 @@
 #include "image.h"
 #include <stdbool.h>
 
-bool loadBmp(Image *image, char* imageFilePath, bool firstColorIsTransparency);
+Image loadBmp(char* imageFilePath, bool firstColorIsTransparency, char **errorMessage);
 
 #endif
