@@ -61,7 +61,7 @@ void drawStrip (short int column, short int y, BitplaneStrip bitplaneStrip, unsi
 		* 2. Write a single color to all 8 pixels.
 	*/
 
-	short int stripOffset = y*80 + column;
+	short int stripOffset = y*EGA_BUFFER_NUM_COLUMNS + column;
 
 	unsigned char bitplane0 = bitplaneStrip.planes[0];
 	unsigned char bitplane1 = bitplaneStrip.planes[1];
@@ -186,7 +186,7 @@ void drawStrip (short int column, short int y, BitplaneStrip bitplaneStrip, unsi
 
 
 void copyStrip (short int column, short int y) {
-	short int stripOffset = y*80 + column;
+	short int stripOffset = y*EGA_BUFFER_NUM_COLUMNS + column;
 
 	_asm{
 		; Point ES to video memory segment
@@ -201,7 +201,7 @@ void copyStrip (short int column, short int y) {
 }
 
 void pasteStrip (short int column, short int y, unsigned char mask) {
-	short int stripOffset = y*80 + column;
+	short int stripOffset = y*EGA_BUFFER_NUM_COLUMNS + column;
 
 	_asm{
 		; Set write mode

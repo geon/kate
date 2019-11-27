@@ -3,6 +3,9 @@
 
 #include "bitplane_strip.h"
 
+#define EGA_BUFFER_NUM_COLUMNS 80
+
+
 void waitForFrame ();
 void setVideoMode ();
 void drawPoint (unsigned short int x, unsigned short int y, unsigned char color);
