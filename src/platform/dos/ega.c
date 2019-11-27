@@ -249,3 +249,22 @@ void setPalette (unsigned char palette[16]) {
 		int86(BIOS_INTERRUPT_VIDEO, &regs, &regs);
 	}
 }
+
+
+void setVirtualScreenWidth (unsigned short int numColumns) {
+
+	// 3d4h index 13h (W):  CRTC: Offset register
+	// bit 0-7  Number of bytes in a scanline / K. Where K is 2 for byte mode, 4 for
+	//          word mode and 8 for Double Word mode.
+
+	unsigned char bufferWidthInWords = numColumns/2;
+
+	_asm{
+		mov dx, 0x3d4
+		mov al, 0x13
+		mov ah, bufferWidthInWords
+		; Send
+		out dx, ax
+	}
+}
+

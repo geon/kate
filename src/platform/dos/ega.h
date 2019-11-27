@@ -3,7 +3,8 @@
 
 #include "bitplane_strip.h"
 
-#define EGA_BUFFER_NUM_COLUMNS 80
+#define EGA_BUFFER_NUM_COLUMNS 88
+#define EGA_BUFFER_NUM_COLUMNS_DEFAULT 80
 
 
 void waitForFrame ();
@@ -13,5 +14,6 @@ void drawStrip (short int column, short int y, BitplaneStrip strip, unsigned cha
 void copyStrip (short int column, short int y);
 void pasteStrip (short int column, short int y, unsigned char mask);
 void setPalette (unsigned char palette[16]);
+void setVirtualScreenWidth (unsigned short int numColumns);
 
 #endif
