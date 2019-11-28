@@ -17,7 +17,7 @@ typedef struct WorldStruct {
 
 
 World makeWorld () {
-    World world = malloc(sizeof(WorldStruct));
+	World world = malloc(sizeof(WorldStruct));
 	world->radius = 80;
 	world->posX = 100;
 	world->posY = 100;
@@ -26,19 +26,19 @@ World makeWorld () {
 
 	world->dirtyBackgroundStrips = makeDirtyBackgroundStrips();
 
-    return world;
+	return world;
 }
 
 
 void freeWorld (World world) {
 	freeDirtyBackgroundStrips(world->dirtyBackgroundStrips);
 	freeImage(world->image);
-    free(world);
+	free(world);
 }
 
 
 unsigned char * getWorldPalette(World world) {
-    return getImagePalette(world->image);
+	return getImagePalette(world->image);
 }
 
 
