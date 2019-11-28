@@ -268,3 +268,50 @@ void setVirtualScreenWidth (unsigned short int numColumns) {
 	}
 }
 
+
+void setScroll (unsigned short int x, unsigned short int y) {
+
+	unsigned short int column = x/8;
+	unsigned char restX = x%8;
+	unsigned short int offset = column + y * EGA_BUFFER_NUM_COLUMNS;
+
+	unsigned char offsetHighBits = offset >> 8;
+	unsigned char offsetLowBits = offset;
+
+	unsigned char pelRegAddress = 0x13 | 0x20;
+
+	// 3d4h index 0Ch (W):  CRTC: Start Address High Register
+	// bit 0-7  Upper 8 bits of the start address of the display buffer
+
+	// 3d4h index 0Dh (W):  CRTC: Start Address Low Register
+	// bit 0-7  Lower 8 bits of the start address of the display buffer
+
+	// 3C0h index 13h (W):  Attribute: Horizontal PEL Panning Register
+	// bit 0-3  Indicates number of pixels to shift the display left
+
+	_asm{
+		mov dx, 0x3d4
+		mov al, 0xc
+		mov ah, offsetHighBits
+		; Send
+		out dx, ax
+	}
+	_asm{
+		mov dx, 0x3d4
+		mov al, 0xd
+		mov ah, offsetLowBits
+		; Send
+		out dx, ax
+	}
+	_asm{
+		mov dx, 0x3c0
+
+		mov al, pelRegAddress
+		; Send
+		out dx, al
+
+		mov al, restX
+		; Send
+		out dx, al
+	}
+}

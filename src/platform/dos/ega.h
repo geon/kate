@@ -15,5 +15,6 @@ void copyStrip (short int column, short int y);
 void pasteStrip (short int column, short int y, unsigned char mask);
 void setPalette (unsigned char palette[16]);
 void setVirtualScreenWidth (unsigned short int numColumns);
+void setScroll (unsigned short int x, unsigned short int y);
 
 #endif

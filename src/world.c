@@ -93,6 +93,7 @@ void renderBackground (DirtyBackgroundStrips dirtyBackgroundStrips) {
 
 
 void renderWorld(World world) {
+	setScroll(world->frame/3, world->frame/2);
 	renderBackground(world->dirtyBackgroundStrips);
 	renderSprites(world);
 }
