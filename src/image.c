@@ -6,16 +6,16 @@
 
 
 Image makeImage () {
-    Image image = malloc(sizeof(ImageStruct));
+	Image image = malloc(sizeof(ImageStruct));
 
-    // Empty image.
-    image->numColumns = 0;
-    image->height = 0;
-    image->upsideDown = false;
-    image->pixels = NULL;
-    image->mask = NULL;
+	// Empty image.
+	image->numColumns = 0;
+	image->height = 0;
+	image->upsideDown = false;
+	image->pixels = NULL;
+	image->mask = NULL;
 
-    return image;
+	return image;
 }
 
 
@@ -26,10 +26,10 @@ void freeImage (Image image) {
 
 
 unsigned char * getImagePalette(Image image) {
-    return image->palette;
+	return image->palette;
 }
 
 
 unsigned int getImageNumColumns(Image image) {
-    return image->numColumns;
+	return image->numColumns;
 }
