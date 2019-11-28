@@ -50,13 +50,14 @@ void updateWorld (World world) {
 }
 
 
-void drawImage(Image image, unsigned int posX, unsigned int posY) {
+void drawImage(World world, Image image, unsigned int posX, unsigned int posY) {
 	unsigned int y, column;
 	BitplaneStrip strip;
 	unsigned int posXColumn, posXRest;
 	BitplaneStrip stripShiftedA, stripShiftedB;
 	unsigned char shiftMask;
 	unsigned int stripIndex;
+	unsigned int backgroundStripIndex;
 
 	for (y = 0; y < image->height; ++y) {
 		for (column=0; column<image->numColumns; ++column) {
@@ -65,6 +66,8 @@ void drawImage(Image image, unsigned int posX, unsigned int posY) {
 
 			posXColumn = posX/8;
 			posXRest = posX%8;
+
+			backgroundStripIndex = (posXColumn + column) + (posY + y)*(640/8);
 
 			stripShiftedA.planes[0] = strip.planes[0] >> posXRest;
 			stripShiftedA.planes[1] = strip.planes[1] >> posXRest;
@@ -79,30 +82,17 @@ void drawImage(Image image, unsigned int posX, unsigned int posY) {
 			// TODO: Combine the adjecent strips, to avoid double writes.
 			shiftMask = image->mask[stripIndex] >> posXRest;
 			drawStrip(column + posXColumn, y + posY, stripShiftedA, shiftMask);
+			world->dirtyBackgroundStrips[backgroundStripIndex] = true;
 			shiftMask = image->mask[stripIndex] << (8 - posXRest);
 			drawStrip(column + posXColumn + 1, y + posY, stripShiftedB, shiftMask);
+			world->dirtyBackgroundStrips[backgroundStripIndex+1] = true;
 		}
 	}
 }
 
 
 void renderSprites (World world) {
-	int  y;
-	unsigned int  column;
-	unsigned int stripIndex;
-    unsigned int numColumns = getImageNumColumns(world->image);
-
-	drawImage(world->image, world->posX, world->posY);
-
-	// TODO: This is repeating the loop in drawImage. Move there?
-	// Mark the covered background strips as dirty.
-	for (y=world->posY; y<world->posY+64; ++y) {
-		for (column=world->posX/8; column<world->posX/8+numColumns+1; ++column) {
-			// The parenthesis around 640/8 is important. Without it, y*640 overflows.
-			stripIndex = column + y*(640/8);
-			world->dirtyBackgroundStrips[stripIndex] = true;
-		}
-	}
+	drawImage(world, world->image, world->posX, world->posY);
 }
 
 
