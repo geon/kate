@@ -5,6 +5,8 @@
 
 #define EGA_BUFFER_NUM_COLUMNS 88
 #define EGA_BUFFER_NUM_COLUMNS_DEFAULT 80
+// Bytes per plane, or number of pixels/8.
+#define EGA_PLANE_SIZE 65536
 
 
 void waitForFrame ();
