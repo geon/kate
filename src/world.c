@@ -69,7 +69,7 @@ void renderSprites (World world) {
 }
 
 
-void renderBackground (DirtyBackgroundStrips dirtyBackgroundStrips) {
+void renderBackground (World world) {
 	int  y;
 	unsigned int  column;
 	BitplaneStrip strip;
@@ -83,9 +83,9 @@ void renderBackground (DirtyBackgroundStrips dirtyBackgroundStrips) {
 	for (y=0; y<350; ++y) {
 		for (column=0; column<640/8; ++column) {
 			stripIndex = column + y*(640/8);
-			if (dirtyBackgroundStrips[stripIndex]) {
+			if (world->dirtyBackgroundStrips[stripIndex]) {
 				pasteStrip(column, y, 0xFF);
-				dirtyBackgroundStrips[stripIndex] = false;
+				world->dirtyBackgroundStrips[stripIndex] = false;
 			}
 		}
 	}
@@ -94,6 +94,6 @@ void renderBackground (DirtyBackgroundStrips dirtyBackgroundStrips) {
 
 void renderWorld(World world) {
 	setScroll(world->frame/3, world->frame/2);
-	renderBackground(world->dirtyBackgroundStrips);
+	renderBackground(world);
 	renderSprites(world);
 }
