@@ -7,7 +7,6 @@ typedef struct ImageStruct *Image;
 
 Image makeImage ();
 void freeImage (Image image);
-void drawImage(Image image, unsigned int posX, unsigned int posY);
 unsigned char * getImagePalette(Image image);
 unsigned int getImageNumColumns(Image image);
 
