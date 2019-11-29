@@ -22,6 +22,7 @@ int main (int argc, char* argv[]) {
 	}
 
 	// Restore screen.
+	setScroll(0, 0);
 	setVirtualScreenWidth(EGA_BUFFER_NUM_COLUMNS_DEFAULT);
 
 	printf("\n\n\ndone");
