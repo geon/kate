@@ -17,7 +17,8 @@ typedef struct WorldStruct {
 
 
 World makeWorld () {
-	World world = malloc(sizeof(WorldStruct));
+    World world = malloc(sizeof(WorldStruct));
+	world->frame = 0;
 	world->radius = 80;
 	world->posX = 100;
 	world->posY = 100;
