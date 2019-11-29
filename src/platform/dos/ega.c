@@ -9,7 +9,9 @@
 
 #define BIOS_INTERRUPT_VIDEO 0X10 // The BIOS video interrupt number.
 #define VIDEO_MODE_EGA_640_350_16 0x10 // EGA 640 x 350, 16 colors.
-	
+
+unsigned char *bufferBaseAddress = (unsigned char*) (0xa000 * 16);
+
 
 void waitForFrame () {
 	// Get the address of the input status register and crt controller.
@@ -30,7 +32,7 @@ void setVideoMode () {
 	// requested mode
 	regs.h.al = VIDEO_MODE_EGA_640_350_16;
 	
-	int86(BIOS_INTERRUPT_VIDEO, &regs, &regs);
+	int386(BIOS_INTERRUPT_VIDEO, &regs, &regs);
 }
 
 
@@ -61,7 +63,7 @@ void drawStrip (short int column, short int y, BitplaneStrip bitplaneStrip, unsi
 		* 2. Write a single color to all 8 pixels.
 	*/
 
-	short int stripOffset = y*EGA_BUFFER_NUM_COLUMNS + column;
+	unsigned char *stripAddress = bufferBaseAddress + y*EGA_BUFFER_NUM_COLUMNS + column;
 
 	unsigned char bitplane0 = bitplaneStrip.planes[0];
 	unsigned char bitplane1 = bitplaneStrip.planes[1];
@@ -96,13 +98,9 @@ void drawStrip (short int column, short int y, BitplaneStrip bitplaneStrip, unsi
 			; Send bit mask
 			out dx, ax
 
-		; Point ES to video memory segment
-			mov ax, 0A000h
-			mov es, ax
-
 		; Load existing pixels to latch, so masking works.
-			mov bx, stripOffset
-			mov al, es:[bx]
+			mov ebx, stripAddress
+			mov al, [ebx]
 
 		; Enable plane 0
 			; 6845 command register
@@ -115,11 +113,11 @@ void drawStrip (short int column, short int y, BitplaneStrip bitplaneStrip, unsi
 			out dx, ax
 
 		; Draw the strip
-			mov bx, stripOffset
+			mov ebx, stripAddress
 			; Get the pixel value
 			mov al, bitplane0
 			; Write the pixel
-			mov es:[bx], al
+			mov [ebx], al
 
 		; Enable plane 1
 			; 6845 command register
@@ -132,11 +130,11 @@ void drawStrip (short int column, short int y, BitplaneStrip bitplaneStrip, unsi
 			out dx, ax
 
 		; Draw the strip
-			mov bx, stripOffset
+			mov ebx, stripAddress
 			; Get the pixel value
 			mov al, bitplane1
 			; Write the pixel
-			mov es:[bx], al
+			mov [ebx], al
 
 		; Enable plane 2
 			; 6845 command register
@@ -149,11 +147,11 @@ void drawStrip (short int column, short int y, BitplaneStrip bitplaneStrip, unsi
 			out dx, ax
 
 		; Draw the strip
-			mov bx, stripOffset
+			mov ebx, stripAddress
 			; Get the pixel value
 			mov al, bitplane2
 			; Write the pixel
-			mov es:[bx], al
+			mov [ebx], al
 
 		; Enable plane 3
 			; 6845 command register
@@ -166,11 +164,11 @@ void drawStrip (short int column, short int y, BitplaneStrip bitplaneStrip, unsi
 			out dx, ax
 
 		; Draw the strip
-			mov bx, stripOffset
+			mov ebx, stripAddress
 			; Get the pixel value
 			mov al, bitplane3
 			; Write the pixel
-			mov es:[bx], al
+			mov [ebx], al
 
 		; Re-enable all planes
 			; 6845 command register
@@ -186,22 +184,18 @@ void drawStrip (short int column, short int y, BitplaneStrip bitplaneStrip, unsi
 
 
 void copyStrip (short int column, short int y) {
-	short int stripOffset = y*EGA_BUFFER_NUM_COLUMNS + column;
+	unsigned char* stripAddress = bufferBaseAddress + y*EGA_BUFFER_NUM_COLUMNS + column;
 
 	_asm{
-		; Point ES to video memory segment
-			mov ax, 0A000h
-			mov es, ax
-
 		; Load the strip
-			mov bx, stripOffset
+			mov ebx, stripAddress
 			; Load 6845 latch registers. It stays in the latch. The value read to the register is irrelevant.
-			mov al, es:[bx]
+			mov al, [ebx]
 	}
 }
 
 void pasteStrip (short int column, short int y, unsigned char mask) {
-	short int stripOffset = y*EGA_BUFFER_NUM_COLUMNS + column;
+	unsigned char *stripAddress = bufferBaseAddress + y*EGA_BUFFER_NUM_COLUMNS + column;
 
 	_asm{
 		; Set write mode
@@ -221,14 +215,10 @@ void pasteStrip (short int column, short int y, unsigned char mask) {
 			; Send bit mask
 			out dx, ax
 
-		; Point ES to video memory segment
-			mov ax, 0A000h
-			mov es, ax
-
 		; Draw the strip
-			mov bx, stripOffset
+			mov ebx, stripAddress
 			; Write the pixel. The value is irrelevant.
-			mov es:[bx], 0
+			mov [ebx], 0
 	}
 }
 
@@ -238,7 +228,7 @@ void setPalette (unsigned char palette[16]) {
 	int i;
 
 	// Service 0. Set an individual palette register.
-	regs.x.ax = 0x1000;
+	regs.w.ax = 0x1000;
 
 	for (i=0; i<16; ++i) {
 		// BL holds the palette index to be set. (0-15)
@@ -246,7 +236,7 @@ void setPalette (unsigned char palette[16]) {
 		// BH holds the new color.
 		regs.h.bh = palette[i];
 		// Tell BIOS to set it.
-		int86(BIOS_INTERRUPT_VIDEO, &regs, &regs);
+		int386(BIOS_INTERRUPT_VIDEO, &regs, &regs);
 	}
 }
 
