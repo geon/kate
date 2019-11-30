@@ -107,10 +107,12 @@ void renderSprites (World world, bool alternateBuffer) {
 }
 
 
-void renderBackground (World world) {
+void renderBackground (World world, bool alternateBuffer) {
 	unsigned long int i;
 	BitplaneStrip strip;
 	bool *dirtyBackgroundStrips;
+	unsigned short int bufferStripIndexStart;
+	unsigned short int stripIndex;
 
 	strip = makeBitplaneStrip(0xffffffff);
 
@@ -118,10 +120,13 @@ void renderBackground (World world) {
 	copyStrip(0);
 
 	dirtyBackgroundStrips = world->dirtyBackgroundStrips;
-	for (i=0; i<EGA_PLANE_SIZE; ++i) {
-		if (dirtyBackgroundStrips[i]) {
-			pasteStrip(i, 0xFF);
-			dirtyBackgroundStrips[i] = false;
+	bufferStripIndexStart = stripCoordToIndex(world->scroll.x/8, world->scroll.y, alternateBuffer);
+	for (i=0; i<EGA_BUFFER_SIZE; ++i) {
+		// Assign to a `unsigned short int`, to force an overflow and make it start over from 0, just like the EGA bit planes.
+		stripIndex = bufferStripIndexStart + i;
+		if (dirtyBackgroundStrips[stripIndex]) {
+			pasteStrip(stripIndex, 0xFF);
+			dirtyBackgroundStrips[stripIndex] = false;
 		}
 	}
 }
@@ -130,6 +135,6 @@ void renderBackground (World world) {
 void renderWorld(World world) {
 	bool alternateBuffer = true;
 	setScroll(world->scroll.x, world->scroll.y, alternateBuffer);
-	renderBackground(world);
+	renderBackground(world, alternateBuffer);
 	renderSprites(world, alternateBuffer);
 }
