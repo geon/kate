@@ -6,14 +6,20 @@
 #include <stdlib.h>
 #include <math.h>
 
+typedef struct WorldScroll {
+	unsigned short int x;
+	unsigned short int y;
+} WorldScroll;
+
+
 typedef struct WorldStruct {
 	Image image;
 	unsigned int frame;
 	DirtyBackgroundStrips dirtyBackgroundStrips;
 
 	int radius, posX, posY;
+	WorldScroll scroll;
 } WorldStruct;
-
 
 
 World makeWorld () {
@@ -22,6 +28,8 @@ World makeWorld () {
 	world->radius = 80;
 	world->posX = 100;
 	world->posY = 100;
+	world->scroll.x = 0;
+	world->scroll.y = 0;
 
 	world->image = loadBmp("../images/bunny.bmp", true, NULL);
 
@@ -48,6 +56,8 @@ void updateWorld (World world) {
 	world->radius = sin(world->frame/4.3435674)*20 + 50;
 	world->posX = 100 + sin(world->frame/10.0) * world->radius;
 	world->posY = 100 + cos(world->frame/10.0) * world->radius;
+	world->scroll.x = world->frame/3;
+	world->scroll.y = world->frame/2;
 }
 
 
@@ -119,7 +129,7 @@ void renderBackground (World world) {
 
 void renderWorld(World world) {
 	bool alternateBuffer = true;
-	setScroll(world->frame/3, world->frame/2, alternateBuffer);
+	setScroll(world->scroll.x, world->scroll.y, alternateBuffer);
 	renderBackground(world);
 	renderSprites(world, alternateBuffer);
 }
