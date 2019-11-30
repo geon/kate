@@ -98,23 +98,18 @@ void renderSprites (World world) {
 
 
 void renderBackground (World world) {
-	int  y;
-	unsigned int  column;
+	unsigned long int i;
 	BitplaneStrip strip;
-	unsigned int stripIndex;
 
 	strip = makeBitplaneStrip(0xffffffff);
 
 	drawStrip(0, strip, 0xFF);
 	copyStrip(0);
 
-	for (y=0; y<350; ++y) {
-		for (column=0; column<640/8; ++column) {
-			stripIndex = stripCoordToIndex(column, y);
-			if (world->dirtyBackgroundStrips[stripIndex]) {
-				pasteStrip(stripIndex, 0xFF);
-				world->dirtyBackgroundStrips[stripIndex] = false;
-			}
+	for (i=0; i<EGA_PLANE_SIZE; ++i) {
+		if (world->dirtyBackgroundStrips[i]) {
+			pasteStrip(i, 0xFF);
+			world->dirtyBackgroundStrips[i] = false;
 		}
 	}
 }
