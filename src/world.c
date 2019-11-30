@@ -82,10 +82,10 @@ void drawImage(World world, Image image, unsigned int posX, unsigned int posY) {
 
 			// TODO: Combine the adjecent strips, to avoid double writes.
 			shiftMask = image->mask[sourceStripIndex] >> posXRest;
-			drawStrip(stripCoordToIndex(column + posXColumn, y + posY), stripShiftedA, shiftMask);
+			drawStrip(destinationStripIndex, stripShiftedA, shiftMask);
 			world->dirtyBackgroundStrips[destinationStripIndex] = true;
 			shiftMask = image->mask[sourceStripIndex] << (8 - posXRest);
-			drawStrip(stripCoordToIndex(column + posXColumn + 1, y + posY), stripShiftedB, shiftMask);
+			drawStrip(destinationStripIndex + 1, stripShiftedB, shiftMask);
 			world->dirtyBackgroundStrips[destinationStripIndex+1] = true;
 		}
 	}
