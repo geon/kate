@@ -82,10 +82,10 @@ void drawImage(World world, Image image, unsigned int posX, unsigned int posY) {
 
 			// TODO: Combine the adjecent strips, to avoid double writes.
 			shiftMask = image->mask[stripIndex] >> posXRest;
-			drawStrip(column + posXColumn, y + posY, stripShiftedA, shiftMask);
+			drawStrip(stripCoordToIndex(column + posXColumn, y + posY), stripShiftedA, shiftMask);
 			world->dirtyBackgroundStrips[backgroundStripIndex] = true;
 			shiftMask = image->mask[stripIndex] << (8 - posXRest);
-			drawStrip(column + posXColumn + 1, y + posY, stripShiftedB, shiftMask);
+			drawStrip(stripCoordToIndex(column + posXColumn + 1, y + posY), stripShiftedB, shiftMask);
 			world->dirtyBackgroundStrips[backgroundStripIndex+1] = true;
 		}
 	}
@@ -105,14 +105,14 @@ void renderBackground (World world) {
 
 	strip = makeBitplaneStrip(0xffffffff);
 
-	drawStrip(0, 0, strip, 0xFF);
-	copyStrip(0, 0);
+	drawStrip(0, strip, 0xFF);
+	copyStrip(0);
 
 	for (y=0; y<350; ++y) {
 		for (column=0; column<640/8; ++column) {
 			stripIndex = column + y*(640/8);
 			if (world->dirtyBackgroundStrips[stripIndex]) {
-				pasteStrip(column, y, 0xFF);
+				pasteStrip(stripCoordToIndex(column, y), 0xFF);
 				world->dirtyBackgroundStrips[stripIndex] = false;
 			}
 		}

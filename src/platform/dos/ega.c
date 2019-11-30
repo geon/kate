@@ -48,13 +48,18 @@ void drawPoint (unsigned short int x, unsigned short int y, unsigned char color)
 }
 
 
+unsigned short int stripCoordToIndex (unsigned short int column, unsigned short int y) {
+	return y*EGA_BUFFER_NUM_COLUMNS + column;
+}
+
+
 #define BIT_0 1
 #define BIT_1 2
 #define BIT_2 4
 #define BIT_3 8
 
 
-void drawStrip (short int column, short int y, BitplaneStrip bitplaneStrip, unsigned char mask) {
+void drawStrip (unsigned short int index, BitplaneStrip bitplaneStrip, unsigned char mask) {
 
 	/*
 	write modes:
@@ -63,7 +68,7 @@ void drawStrip (short int column, short int y, BitplaneStrip bitplaneStrip, unsi
 		* 2. Write a single color to all 8 pixels.
 	*/
 
-	unsigned char *stripAddress = bufferBaseAddress + y*EGA_BUFFER_NUM_COLUMNS + column;
+	unsigned char *stripAddress = bufferBaseAddress + index;
 
 	unsigned char bitplane0 = bitplaneStrip.planes[0];
 	unsigned char bitplane1 = bitplaneStrip.planes[1];
@@ -183,8 +188,8 @@ void drawStrip (short int column, short int y, BitplaneStrip bitplaneStrip, unsi
 }
 
 
-void copyStrip (short int column, short int y) {
-	unsigned char* stripAddress = bufferBaseAddress + y*EGA_BUFFER_NUM_COLUMNS + column;
+void copyStrip (unsigned short int index) {
+	unsigned char* stripAddress = bufferBaseAddress + index;
 
 	_asm{
 		; Load the strip
@@ -194,8 +199,8 @@ void copyStrip (short int column, short int y) {
 	}
 }
 
-void pasteStrip (short int column, short int y, unsigned char mask) {
-	unsigned char *stripAddress = bufferBaseAddress + y*EGA_BUFFER_NUM_COLUMNS + column;
+void pasteStrip (unsigned short int index, unsigned char mask) {
+	unsigned char *stripAddress = bufferBaseAddress + index;
 
 	_asm{
 		; Set write mode

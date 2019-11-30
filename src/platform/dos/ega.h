@@ -12,9 +12,10 @@
 void waitForFrame ();
 void setVideoMode ();
 void drawPoint (unsigned short int x, unsigned short int y, unsigned char color);
-void drawStrip (short int column, short int y, BitplaneStrip strip, unsigned char mask);
-void copyStrip (short int column, short int y);
-void pasteStrip (short int column, short int y, unsigned char mask);
+unsigned short int stripCoordToIndex (unsigned short int column, unsigned short int y);
+void drawStrip (unsigned short int index, BitplaneStrip strip, unsigned char mask);
+void copyStrip (unsigned short int index);
+void pasteStrip (unsigned short int index, unsigned char mask);
 void setPalette (unsigned char palette[16]);
 void setVirtualScreenWidth (unsigned short int numColumns);
 void setScroll (unsigned short int x, unsigned short int y);
