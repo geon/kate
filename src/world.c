@@ -68,7 +68,7 @@ void drawImage(World world, Image image, unsigned int posX, unsigned int posY) {
 			posXColumn = posX/8;
 			posXRest = posX%8;
 
-			backgroundStripIndex = (posXColumn + column) + (posY + y)*(640/8);
+			backgroundStripIndex = stripCoordToIndex(posXColumn + column, posY + y);
 
 			stripShiftedA.planes[0] = strip.planes[0] >> posXRest;
 			stripShiftedA.planes[1] = strip.planes[1] >> posXRest;
@@ -110,9 +110,9 @@ void renderBackground (World world) {
 
 	for (y=0; y<350; ++y) {
 		for (column=0; column<640/8; ++column) {
-			stripIndex = column + y*(640/8);
+			stripIndex = stripCoordToIndex(column, y);
 			if (world->dirtyBackgroundStrips[stripIndex]) {
-				pasteStrip(stripCoordToIndex(column, y), 0xFF);
+				pasteStrip(stripIndex, 0xFF);
 				world->dirtyBackgroundStrips[stripIndex] = false;
 			}
 		}
