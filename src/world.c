@@ -100,16 +100,18 @@ void renderSprites (World world) {
 void renderBackground (World world) {
 	unsigned long int i;
 	BitplaneStrip strip;
+	bool *dirtyBackgroundStrips;
 
 	strip = makeBitplaneStrip(0xffffffff);
 
 	drawStrip(0, strip, 0xFF);
 	copyStrip(0);
 
+	dirtyBackgroundStrips = world->dirtyBackgroundStrips;
 	for (i=0; i<EGA_PLANE_SIZE; ++i) {
-		if (world->dirtyBackgroundStrips[i]) {
+		if (dirtyBackgroundStrips[i]) {
 			pasteStrip(i, 0xFF);
-			world->dirtyBackgroundStrips[i] = false;
+			dirtyBackgroundStrips[i] = false;
 		}
 	}
 }
