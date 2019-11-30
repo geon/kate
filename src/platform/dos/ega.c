@@ -268,7 +268,7 @@ void setScroll (unsigned short int x, unsigned short int y) {
 
 	unsigned short int column = x/8;
 	unsigned char restX = x%8;
-	unsigned short int offset = column + y * EGA_BUFFER_NUM_COLUMNS;
+	unsigned short int offset = stripCoordToIndex(column, y);
 
 	unsigned char offsetHighBits = offset >> 8;
 	unsigned char offsetLowBits = offset;
