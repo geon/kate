@@ -51,7 +51,7 @@ void updateWorld (World world) {
 }
 
 
-void drawImage(World world, Image image, unsigned int posX, unsigned int posY) {
+void drawImage(World world, Image image, unsigned int posX, unsigned int posY, bool alternateBuffer) {
 	unsigned int y, column;
 	BitplaneStrip strip;
 	unsigned int posXColumn, posXRest;
@@ -68,7 +68,7 @@ void drawImage(World world, Image image, unsigned int posX, unsigned int posY) {
 			posXColumn = posX/8;
 			posXRest = posX%8;
 
-			destinationStripIndex = stripCoordToIndex(posXColumn + column, posY + y);
+			destinationStripIndex = stripCoordToIndex(posXColumn + column, posY + y, alternateBuffer);
 
 			stripShiftedA.planes[0] = strip.planes[0] >> posXRest;
 			stripShiftedA.planes[1] = strip.planes[1] >> posXRest;
@@ -92,8 +92,8 @@ void drawImage(World world, Image image, unsigned int posX, unsigned int posY) {
 }
 
 
-void renderSprites (World world) {
-	drawImage(world, world->image, world->posX, world->posY);
+void renderSprites (World world, bool alternateBuffer) {
+	drawImage(world, world->image, world->posX, world->posY, alternateBuffer);
 }
 
 
@@ -118,7 +118,8 @@ void renderBackground (World world) {
 
 
 void renderWorld(World world) {
-	setScroll(world->frame/3, world->frame/2);
+	bool alternateBuffer = true;
+	setScroll(world->frame/3, world->frame/2, alternateBuffer);
 	renderBackground(world);
-	renderSprites(world);
+	renderSprites(world, alternateBuffer);
 }
