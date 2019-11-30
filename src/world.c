@@ -57,13 +57,13 @@ void drawImage(World world, Image image, unsigned int posX, unsigned int posY) {
 	unsigned int posXColumn, posXRest;
 	BitplaneStrip stripShiftedA, stripShiftedB;
 	unsigned char shiftMask;
-	unsigned int stripIndex;
+	unsigned int sourceStripIndex;
 	unsigned int backgroundStripIndex;
 
 	for (y = 0; y < image->height; ++y) {
 		for (column=0; column<image->numColumns; ++column) {
-			stripIndex = column + (image->upsideDown ? (image->height - 1 - y) : y)*image->numColumns;
-			strip = makeBitplaneStrip(image->pixels[stripIndex]);
+			sourceStripIndex = column + (image->upsideDown ? (image->height - 1 - y) : y)*image->numColumns;
+			strip = makeBitplaneStrip(image->pixels[sourceStripIndex]);
 
 			posXColumn = posX/8;
 			posXRest = posX%8;
@@ -81,10 +81,10 @@ void drawImage(World world, Image image, unsigned int posX, unsigned int posY) {
 			stripShiftedB.planes[3] = strip.planes[3] << (8 - posXRest);
 
 			// TODO: Combine the adjecent strips, to avoid double writes.
-			shiftMask = image->mask[stripIndex] >> posXRest;
+			shiftMask = image->mask[sourceStripIndex] >> posXRest;
 			drawStrip(stripCoordToIndex(column + posXColumn, y + posY), stripShiftedA, shiftMask);
 			world->dirtyBackgroundStrips[backgroundStripIndex] = true;
-			shiftMask = image->mask[stripIndex] << (8 - posXRest);
+			shiftMask = image->mask[sourceStripIndex] << (8 - posXRest);
 			drawStrip(stripCoordToIndex(column + posXColumn + 1, y + posY), stripShiftedB, shiftMask);
 			world->dirtyBackgroundStrips[backgroundStripIndex+1] = true;
 		}
