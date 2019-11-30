@@ -18,7 +18,6 @@ int main (int argc, char* argv[]) {
 	for (frame=0; frame < 100; ++frame) {
 		updateWorld(world);
 		renderWorld(world);
-		waitForFrame();
 	}
 
 	// Restore screen.

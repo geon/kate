@@ -133,8 +133,9 @@ void renderBackground (World world, bool alternateBuffer) {
 
 
 void renderWorld(World world) {
-	bool alternateBuffer = true;
-	setScroll(world->scroll.x, world->scroll.y, alternateBuffer);
+	bool alternateBuffer = world->frame%2;
 	renderBackground(world, alternateBuffer);
 	renderSprites(world, alternateBuffer);
+	setScroll(world->scroll.x, world->scroll.y, alternateBuffer);
+	waitForFrame();
 }
