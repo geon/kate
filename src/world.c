@@ -136,6 +136,10 @@ void renderWorld(World world) {
 	bool alternateBuffer = world->frame%2;
 	renderBackground(world, alternateBuffer);
 	renderSprites(world, alternateBuffer);
+	// Sets the start-address of the next frame.
+	// The value won't be latched by the EGA card until the vertical retrace.
+	// It is not possible to change the actual used address during a frame.
 	setScroll(world->scroll.x, world->scroll.y, alternateBuffer);
+	// V-sync.
 	waitForFrame();
 }
