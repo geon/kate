@@ -14,6 +14,7 @@ typedef struct WorldScroll {
 
 typedef struct WorldStruct {
 	Image image;
+	Image backgroundImage;
 	unsigned int frame;
 	DirtyBackgroundStrips dirtyBackgroundStrips;
 
@@ -32,7 +33,7 @@ World makeWorld () {
 	world->scroll.y = 0;
 
 	world->image = loadBmp("../images/bunny.bmp", true, NULL);
-
+	world->backgroundImage =  loadBmp("../images/bunny2.bmp", false, NULL);
 	world->dirtyBackgroundStrips = makeDirtyBackgroundStrips();
 
 	return world;
@@ -41,6 +42,7 @@ World makeWorld () {
 
 void freeWorld (World world) {
 	freeDirtyBackgroundStrips(world->dirtyBackgroundStrips);
+	freeImage(world->backgroundImage);
 	freeImage(world->image);
 	free(world);
 }
@@ -118,7 +120,7 @@ void renderBackground (World world, bool alternateBuffer) {
 	unsigned short int sourceStripY;
 	unsigned short int sourceStripIndex;
 	unsigned short int bufferStart;
-	Image backgroundImage = world->image;
+	Image backgroundImage = world->backgroundImage;
 
 	dirtyBackgroundStrips = world->dirtyBackgroundStrips;
 	bufferStripIndexStart = stripCoordToIndex(world->scroll.x/8, world->scroll.y, alternateBuffer);
