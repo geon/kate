@@ -12,6 +12,7 @@ const int bytesPerPixel = 3; /// red, green, blue
 const int fileHeaderSize = 14;
 const int infoHeaderSize = 40;
 
+char *errorfileOpen = "Could not open the image file.";
 char *errorMessagePartialStrip = "All images should be a multiple of 8 pixels wide.";
 char *errorMessageNumBits = "Only 4-bits-per-pixel images are supported.";
 char *errorMessageCompression = "Compressed images are not supported.";
@@ -99,6 +100,12 @@ Image loadBmp(char* imageFilePath, bool firstColorIsTransparency, char** errorMe
 	unsigned long int  maskSize;
 
 	FILE* imageFile = fopen(imageFilePath, "rb");
+	if (!imageFile) {
+		if (errorMessage) {
+			*errorMessage = errorfileOpen;
+		}
+		return NULL;
+	}
 
 	// TODO: Replace with fseek?
 	fread(fileHeader, 1, fileHeaderSize, imageFile);
