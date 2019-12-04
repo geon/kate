@@ -37,7 +37,7 @@ World makeWorld (char **errorMessage) {
 		return NULL;
 	}
 
-	world->backgroundImage =  loadBmp("../images/bunny2.bmp", false, errorMessage);
+	world->backgroundImage =  loadBmp("../images/backgr.bmp", false, errorMessage);
 	if(!world->backgroundImage) {
 		return NULL;
 	}
