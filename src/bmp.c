@@ -12,6 +12,11 @@ const int bytesPerPixel = 3; /// red, green, blue
 const int fileHeaderSize = 14;
 const int infoHeaderSize = 40;
 
+char *errorMessagePartialStrip = "All images should be a multiple of 8 pixels wide.";
+char *errorMessageNumBits = "Only 4-bits-per-pixel images are supported.";
+char *errorMessageCompression = "Compressed images are not supported.";
+char *errorMessagePalette = "Max supported palette length is 16 colors.";
+
 unsigned long int parseUnsignedLongInt (unsigned char *data) {
 	return 
 		((unsigned long int) data[0]) |
@@ -120,6 +125,9 @@ Image loadBmp(char* imageFilePath, bool firstColorIsTransparency, char** errorMe
 
 	// All images should be a multiple of 8 pixels wide.
 	if (width % 8) {
+		if (errorMessage) {
+			*errorMessage = errorMessagePartialStrip;
+		}
 		return NULL;
 	}
 
@@ -134,6 +142,9 @@ Image loadBmp(char* imageFilePath, bool firstColorIsTransparency, char** errorMe
 
 	bitsPerPixel = parseUnsignedInt(&infoHeader[14]);
 	if(bitsPerPixel != 4) {
+		if (errorMessage) {
+			*errorMessage = errorMessageNumBits;
+		}
 		return NULL;
 	}
 
@@ -141,6 +152,9 @@ Image loadBmp(char* imageFilePath, bool firstColorIsTransparency, char** errorMe
 	image->numColumns = width / 8;
 
 	if(compression) {
+		if (errorMessage) {
+			*errorMessage = errorMessageCompression;
+		}
 		return NULL;
 	}
 
@@ -150,6 +164,9 @@ Image loadBmp(char* imageFilePath, bool firstColorIsTransparency, char** errorMe
 	}
 
 	if (numColors > 16) {
+		if (errorMessage) {
+			*errorMessage = errorMessagePalette;
+		}
 		return NULL;
 	}
 
