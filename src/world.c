@@ -23,9 +23,7 @@ typedef struct WorldStruct {
 } WorldStruct;
 
 
-World makeWorld () {
-	char *errorMessage;
-
+World makeWorld (char **errorMessage) {
     World world = malloc(sizeof(WorldStruct));
 	world->frame = 0;
 	world->radius = 80;
@@ -34,14 +32,14 @@ World makeWorld () {
 	world->scroll.x = 0;
 	world->scroll.y = 0;
 
-	world->image = loadBmp("../images/bunny.bmp", true, &errorMessage);
+	world->image = loadBmp("../images/bunny.bmp", true, errorMessage);
 	if(!world->image) {
-		printf(errorMessage);
+		return NULL;
 	}
 
-	world->backgroundImage =  loadBmp("../images/bunny2.bmp", false, &errorMessage);
+	world->backgroundImage =  loadBmp("../images/bunny2.bmp", false, errorMessage);
 	if(!world->backgroundImage) {
-		printf(errorMessage);
+		return NULL;
 	}
 
 	world->dirtyBackgroundStrips = makeDirtyBackgroundStrips();

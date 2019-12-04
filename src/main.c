@@ -5,13 +5,18 @@
 
 
 int main (int argc, char* argv[]) {
-
+	char *errorMessage;
 	unsigned int frame;
 	World world;
 
 	setVideoMode();
 
-	world = makeWorld();
+	world = makeWorld(&errorMessage);
+	if (!world) {
+		printf(errorMessage);
+		return 1;
+	}
+
 	setPalette(getWorldPalette(world));
 	setVirtualScreenWidth(EGA_BUFFER_NUM_COLUMNS);
 

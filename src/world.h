@@ -7,7 +7,7 @@
 
 typedef struct WorldStruct *World;
 
-World makeWorld ();
+World makeWorld (char **errorMessage);
 void freeWorld (World world);
 unsigned char * getWorldPalette(World world);
 void updateWorld (World world);
