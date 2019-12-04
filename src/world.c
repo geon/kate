@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <math.h>
 
+#define NUM_BUNNY_IMAGES 4
+
 typedef struct WorldScroll {
 	unsigned short int x;
 	unsigned short int y;
@@ -13,7 +15,7 @@ typedef struct WorldScroll {
 
 
 typedef struct WorldStruct {
-	Image image;
+	Image bunnyImages[NUM_BUNNY_IMAGES];
 	Image backgroundImage;
 	unsigned int frame;
 	DirtyBackgroundStrips dirtyBackgroundStrips;
@@ -32,10 +34,10 @@ World makeWorld (char **errorMessage) {
 	world->scroll.x = 0;
 	world->scroll.y = 0;
 
-	world->image = loadBmp("../images/bunny.bmp", true, errorMessage);
-	if(!world->image) {
-		return NULL;
-	}
+	world->bunnyImages[2] = loadBmp("../images/bunny1.bmp", true, errorMessage);
+	world->bunnyImages[3] = loadBmp("../images/bunny2.bmp", true, errorMessage);
+	world->bunnyImages[0] = loadBmp("../images/bunny3.bmp", true, errorMessage);
+	world->bunnyImages[1] = loadBmp("../images/bunny4.bmp", true, errorMessage);
 
 	world->backgroundImage =  loadBmp("../images/backgr.bmp", false, errorMessage);
 	if(!world->backgroundImage) {
@@ -49,15 +51,19 @@ World makeWorld (char **errorMessage) {
 
 
 void freeWorld (World world) {
+	unsigned int i;
+
 	freeDirtyBackgroundStrips(world->dirtyBackgroundStrips);
 	freeImage(world->backgroundImage);
-	freeImage(world->image);
+	for (i=0; i<NUM_BUNNY_IMAGES; ++i) {
+		freeImage(world->bunnyImages[i]);
+	}
 	free(world);
 }
 
 
 unsigned char * getWorldPalette(World world) {
-	return getImagePalette(world->image);
+	return getImagePalette(world->backgroundImage);
 }
 
 
@@ -113,7 +119,11 @@ void drawImage(World world, Image image, unsigned int posX, unsigned int posY, b
 
 
 void renderSprites (World world, bool alternateBuffer) {
-	drawImage(world, world->image, world->posX, world->posY, alternateBuffer);
+	unsigned int i;
+
+	for (i=0; i<NUM_BUNNY_IMAGES; ++i) {
+		drawImage(world, world->bunnyImages[i], world->posX + i*64, world->posY, alternateBuffer);
+	}
 }
 
 
