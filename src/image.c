@@ -22,6 +22,7 @@ Image makeImage () {
 void freeImage (Image image) {
 	free(image->pixels);
 	free(image->mask);
+	free(image);
 }
 
 
