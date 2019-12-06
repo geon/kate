@@ -28,8 +28,3 @@ void freeImage (Image image) {
 unsigned char * getImagePalette(Image image) {
 	return image->palette;
 }
-
-
-unsigned int getImageNumColumns(Image image) {
-	return image->numColumns;
-}

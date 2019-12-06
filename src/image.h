@@ -8,6 +8,5 @@ typedef struct ImageStruct *Image;
 Image makeImage ();
 void freeImage (Image image);
 unsigned char * getImagePalette(Image image);
-unsigned int getImageNumColumns(Image image);
 
 #endif
