@@ -1,7 +1,8 @@
 #include "world.h"
 #include "bmp.h"
 #include "platform/dos/ega.h"
-#include "image_struct.h"
+#include "sprite.h"
+#include "sprite_struct.h"
 
 #include <stdlib.h>
 #include <math.h>
@@ -15,8 +16,8 @@ typedef struct WorldScroll {
 
 
 typedef struct WorldStruct {
-	Image bunnyImages[NUM_BUNNY_IMAGES];
-	Image backgroundImage;
+	Sprite bunnyImages[NUM_BUNNY_IMAGES];
+	Sprite backgroundImage;
 	unsigned int frame;
 	DirtyBackgroundStrips dirtyBackgroundStrips;
 
@@ -26,6 +27,7 @@ typedef struct WorldStruct {
 
 
 World makeWorld (char **errorMessage) {
+	Image image;
     World world = malloc(sizeof(WorldStruct));
 	world->frame = 0;
 	world->radius = 80;
@@ -34,12 +36,26 @@ World makeWorld (char **errorMessage) {
 	world->scroll.x = 0;
 	world->scroll.y = 0;
 
-	world->bunnyImages[2] = loadBmp("../images/bunny1.bmp", true, errorMessage);
-	world->bunnyImages[3] = loadBmp("../images/bunny2.bmp", true, errorMessage);
-	world->bunnyImages[0] = loadBmp("../images/bunny3.bmp", true, errorMessage);
-	world->bunnyImages[1] = loadBmp("../images/bunny4.bmp", true, errorMessage);
+	image = loadBmp("../images/bunny1.bmp", true, errorMessage);
+	world->bunnyImages[2] = makeSprite(image);
+	freeImage(image);
 
-	world->backgroundImage =  loadBmp("../images/backgr.bmp", false, errorMessage);
+	image = loadBmp("../images/bunny2.bmp", true, errorMessage);
+	world->bunnyImages[3] = makeSprite(image);
+	freeImage(image);
+
+	image = loadBmp("../images/bunny3.bmp", true, errorMessage);
+	world->bunnyImages[0] = makeSprite(image);
+	freeImage(image);
+
+	image = loadBmp("../images/bunny4.bmp", true, errorMessage);
+	world->bunnyImages[1] = makeSprite(image);
+	freeImage(image);
+
+	image = loadBmp("../images/backgr.bmp", false, errorMessage);
+	world->backgroundImage = makeSprite(image);
+	freeImage(image);
+
 	if(!world->backgroundImage) {
 		return NULL;
 	}
@@ -54,16 +70,16 @@ void freeWorld (World world) {
 	unsigned int i;
 
 	freeDirtyBackgroundStrips(world->dirtyBackgroundStrips);
-	freeImage(world->backgroundImage);
+	freeSprite(world->backgroundImage);
 	for (i=0; i<NUM_BUNNY_IMAGES; ++i) {
-		freeImage(world->bunnyImages[i]);
+		freeSprite(world->bunnyImages[i]);
 	}
 	free(world);
 }
 
 
 unsigned char * getWorldPalette(World world) {
-	return getImagePalette(world->backgroundImage);
+	return getSpritePalette(world->backgroundImage);
 }
 
 
@@ -77,7 +93,7 @@ void updateWorld (World world) {
 }
 
 
-void drawImage(World world, Image image, unsigned int posX, unsigned int posY, bool alternateBuffer) {
+void drawSprite(World world, Sprite sprite, unsigned int posX, unsigned int posY, bool alternateBuffer) {
 	unsigned int y, column;
 	BitplaneStrip strip;
 	unsigned int posXColumn, posXRest;
@@ -86,10 +102,10 @@ void drawImage(World world, Image image, unsigned int posX, unsigned int posY, b
 	unsigned int sourceStripIndex;
 	unsigned int destinationStripIndex;
 
-	for (y = 0; y < image->height; ++y) {
-		for (column=0; column<image->numColumns; ++column) {
-			sourceStripIndex = column + (image->upsideDown ? (image->height - 1 - y) : y)*image->numColumns;
-			strip = makeBitplaneStrip(image->pixels[sourceStripIndex]);
+	for (y = 0; y < sprite->height; ++y) {
+		for (column=0; column<sprite->numColumns; ++column) {
+			sourceStripIndex = column + y*sprite->numColumns;
+			strip = sprite->bitPlaneStrips[sourceStripIndex];
 
 			posXColumn = posX/8;
 			posXRest = posX%8;
@@ -107,10 +123,10 @@ void drawImage(World world, Image image, unsigned int posX, unsigned int posY, b
 			stripShiftedB.planes[3] = strip.planes[3] << (8 - posXRest);
 
 			// TODO: Combine the adjecent strips, to avoid double writes.
-			shiftMask = image->mask[sourceStripIndex] >> posXRest;
+			shiftMask = sprite->mask[sourceStripIndex] >> posXRest;
 			drawStrip(destinationStripIndex, stripShiftedA, shiftMask);
 			world->dirtyBackgroundStrips[destinationStripIndex] = true;
-			shiftMask = image->mask[sourceStripIndex] << (8 - posXRest);
+			shiftMask = sprite->mask[sourceStripIndex] << (8 - posXRest);
 			drawStrip(destinationStripIndex + 1, stripShiftedB, shiftMask);
 			world->dirtyBackgroundStrips[destinationStripIndex+1] = true;
 		}
@@ -122,7 +138,7 @@ void renderSprites (World world, bool alternateBuffer) {
 	unsigned int i;
 
 	for (i=0; i<NUM_BUNNY_IMAGES; ++i) {
-		drawImage(world, world->bunnyImages[i], world->posX + i*64, world->posY, alternateBuffer);
+		drawSprite(world, world->bunnyImages[i], world->posX + i*64, world->posY, alternateBuffer);
 	}
 }
 
@@ -138,7 +154,7 @@ void renderBackground (World world, bool alternateBuffer) {
 	unsigned short int sourceStripY;
 	unsigned short int sourceStripIndex;
 	unsigned short int bufferStart;
-	Image backgroundImage = world->backgroundImage;
+	Sprite backgroundImage = world->backgroundImage;
 
 	dirtyBackgroundStrips = world->dirtyBackgroundStrips;
 	bufferStripIndexStart = stripCoordToIndex(world->scroll.x/8, world->scroll.y, alternateBuffer);
@@ -153,10 +169,10 @@ void renderBackground (World world, bool alternateBuffer) {
 			sourceStripColumn = destinationStripColumn % backgroundImage->numColumns;
 			sourceStripY = destinationStripY % backgroundImage->height;
 
-			sourceStripIndex = sourceStripColumn + (backgroundImage->upsideDown ? (backgroundImage->height - 1 - sourceStripY) : sourceStripY) * backgroundImage->numColumns;
+			sourceStripIndex = sourceStripColumn + sourceStripY * backgroundImage->numColumns;
 			drawStrip(
 				destinationStripIndex,
-				makeBitplaneStrip(backgroundImage->pixels[sourceStripIndex]),
+				backgroundImage->bitPlaneStrips[sourceStripIndex],
 				0xFF
 			);
 			dirtyBackgroundStrips[destinationStripIndex] = false;

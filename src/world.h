@@ -2,7 +2,6 @@
 #define world_h
 
 #include "platform/dos/bitplane_strip.h"
-#include "image.h"
 #include "dirty_background_strips.h"
 
 typedef struct WorldStruct *World;
