@@ -26,7 +26,7 @@ typedef struct WorldStruct {
 	unsigned int frame;
 	DirtyBackgroundStrips dirtyBackgroundStrips;
 
-	int radius, posX, posY;
+	int posX, posY;
 	WorldScroll scroll;
 } WorldStruct;
 
@@ -54,7 +54,6 @@ bool worldLoadSprite (World world, char *imagePath, char **errorMessage) {
 World makeWorld (char **errorMessage) {
     World world = malloc(sizeof(WorldStruct));
 	world->frame = 0;
-	world->radius = 80;
 	world->posX = 100;
 	world->posY = 100;
 	world->scroll.x = 0;
@@ -95,10 +94,12 @@ unsigned char * getWorldPalette(World world) {
 
 
 void updateWorld (World world) {
+	unsigned int radius;
+
 	world->frame++;
-	world->radius = sin(world->frame/4.3435674)*20 + 50;
-	world->posX = 100 + sin(world->frame/10.0) * world->radius;
-	world->posY = 100 + cos(world->frame/10.0) * world->radius;
+	radius = sin(world->frame/4.3435674)*20 + 50;
+	world->posX = 100 + sin(world->frame/10.0) * radius;
+	world->posY = 100 + cos(world->frame/10.0) * radius;
 	world->scroll.x = world->frame/3;
 	world->scroll.y = world->frame/2;
 }
