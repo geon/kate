@@ -2,6 +2,7 @@
 #include "bmp.h"
 #include "platform/dos/ega.h"
 #include "sprite.h"
+#include "sprite_instance.h"
 #include "sprite_struct.h"
 
 #include <stdlib.h>
@@ -103,7 +104,7 @@ void updateWorld (World world) {
 }
 
 
-void drawSprite(World world, Sprite sprite, unsigned int posX, unsigned int posY, bool alternateBuffer) {
+void drawSprite(World world, SpriteInstance *spriteInstance, bool alternateBuffer) {
 	unsigned int y, column;
 	BitplaneStrip strip;
 	unsigned int posXColumn, posXRest;
@@ -112,15 +113,15 @@ void drawSprite(World world, Sprite sprite, unsigned int posX, unsigned int posY
 	unsigned int sourceStripIndex;
 	unsigned int destinationStripIndex;
 
-	for (y = 0; y < sprite->height; ++y) {
-		for (column=0; column<sprite->numColumns; ++column) {
-			sourceStripIndex = column + y*sprite->numColumns;
-			strip = sprite->bitPlaneStrips[sourceStripIndex];
+	for (y = 0; y < spriteInstance->sprite->height; ++y) {
+		for (column=0; column<spriteInstance->sprite->numColumns; ++column) {
+			sourceStripIndex = column + y*spriteInstance->sprite->numColumns;
+			strip = spriteInstance->sprite->bitPlaneStrips[sourceStripIndex];
 
-			posXColumn = posX/8;
-			posXRest = posX%8;
+			posXColumn = spriteInstance->posX/8;
+			posXRest = spriteInstance->posX%8;
 
-			destinationStripIndex = stripCoordToIndex(posXColumn + column, posY + y, alternateBuffer);
+			destinationStripIndex = stripCoordToIndex(posXColumn + column, spriteInstance->posY + y, alternateBuffer);
 
 			stripShiftedA.planes[0] = strip.planes[0] >> posXRest;
 			stripShiftedA.planes[1] = strip.planes[1] >> posXRest;
@@ -133,10 +134,10 @@ void drawSprite(World world, Sprite sprite, unsigned int posX, unsigned int posY
 			stripShiftedB.planes[3] = strip.planes[3] << (8 - posXRest);
 
 			// TODO: Combine the adjecent strips, to avoid double writes.
-			shiftMask = sprite->mask[sourceStripIndex] >> posXRest;
+			shiftMask = spriteInstance->sprite->mask[sourceStripIndex] >> posXRest;
 			drawStrip(destinationStripIndex, stripShiftedA, shiftMask);
 			world->dirtyBackgroundStrips[destinationStripIndex] = true;
-			shiftMask = sprite->mask[sourceStripIndex] << (8 - posXRest);
+			shiftMask = spriteInstance->sprite->mask[sourceStripIndex] << (8 - posXRest);
 			drawStrip(destinationStripIndex + 1, stripShiftedB, shiftMask);
 			world->dirtyBackgroundStrips[destinationStripIndex+1] = true;
 		}
@@ -146,9 +147,11 @@ void drawSprite(World world, Sprite sprite, unsigned int posX, unsigned int posY
 
 void renderSprites (World world, bool alternateBuffer) {
 	unsigned int i;
+	SpriteInstance instance;
 
 	for (i=0; i<NUM_BUNNY_IMAGES; ++i) {
-		drawSprite(world, world->sprites[i], world->posX + i*64, world->posY, alternateBuffer);
+		instance = makeSpriteInstance(world->sprites[i], world->posX+i*64, world->posY);
+		drawSprite(world, &instance, alternateBuffer);
 	}
 }
 
