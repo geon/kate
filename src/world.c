@@ -23,10 +23,12 @@ typedef struct WorldStruct {
 	unsigned short int numSprites;
 	Sprite *sprites;
 
+	unsigned short int numSpriteInstances;
+	SpriteInstance *spriteInstances;
+
 	unsigned int frame;
 	DirtyBackgroundStrips dirtyBackgroundStrips;
 
-	int posX, posY;
 	WorldScroll scroll;
 } WorldStruct;
 
@@ -52,10 +54,9 @@ bool worldLoadSprite (World world, char *imagePath, char **errorMessage) {
 
 
 World makeWorld (char **errorMessage) {
+	unsigned short int i;
     World world = malloc(sizeof(WorldStruct));
 	world->frame = 0;
-	world->posX = 100;
-	world->posY = 100;
 	world->scroll.x = 0;
 	world->scroll.y = 0;
 
@@ -69,6 +70,12 @@ World makeWorld (char **errorMessage) {
 		worldLoadSprite(world, "../images/backgr.bmp", errorMessage)
 	)) {
 		return NULL;
+	}
+
+	world->numSpriteInstances = NUM_BUNNY_IMAGES;
+	world->spriteInstances = malloc(sizeof(SpriteInstance) * NUM_BUNNY_IMAGES);
+	for (i=0; i<NUM_BUNNY_IMAGES; ++i) {
+		world->spriteInstances[i] = makeSpriteInstance(world->sprites[i], 0, 0);
 	}
 
 	world->dirtyBackgroundStrips = makeDirtyBackgroundStrips();
@@ -95,13 +102,23 @@ unsigned char * getWorldPalette(World world) {
 
 void updateWorld (World world) {
 	unsigned int radius;
+	unsigned short int i;
+	unsigned int posX;
+	unsigned int posY;
 
 	world->frame++;
+
 	radius = sin(world->frame/4.3435674)*20 + 50;
-	world->posX = 100 + sin(world->frame/10.0) * radius;
-	world->posY = 100 + cos(world->frame/10.0) * radius;
+	posX = 100 + sin(world->frame/10.0) * radius;
+	posY = 100 + cos(world->frame/10.0) * radius;
+
 	world->scroll.x = world->frame/3;
 	world->scroll.y = world->frame/2;
+
+	for (i=0; i<NUM_BUNNY_IMAGES; ++i) {
+		world->spriteInstances[i].posX = posX + i*64;
+		world->spriteInstances[i].posY = posY;
+	}
 }
 
 
@@ -148,11 +165,9 @@ void drawSprite(World world, SpriteInstance *spriteInstance, bool alternateBuffe
 
 void renderSprites (World world, bool alternateBuffer) {
 	unsigned int i;
-	SpriteInstance instance;
 
-	for (i=0; i<NUM_BUNNY_IMAGES; ++i) {
-		instance = makeSpriteInstance(world->sprites[i], world->posX+i*64, world->posY);
-		drawSprite(world, &instance, alternateBuffer);
+	for (i=0; i<world->numSpriteInstances; ++i) {
+		drawSprite(world, &world->spriteInstances[i], alternateBuffer);
 	}
 }
 
