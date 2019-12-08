@@ -6,6 +6,7 @@
 
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
 
 #define NUM_BUNNY_IMAGES 4
 
@@ -16,8 +17,11 @@ typedef struct WorldScroll {
 
 
 typedef struct WorldStruct {
-	Sprite bunnyImages[NUM_BUNNY_IMAGES];
-	Sprite backgroundImage;
+	unsigned char palette[16];
+
+	unsigned short int numSprites;
+	Sprite *sprites;
+
 	unsigned int frame;
 	DirtyBackgroundStrips dirtyBackgroundStrips;
 
@@ -26,8 +30,27 @@ typedef struct WorldStruct {
 } WorldStruct;
 
 
-World makeWorld (char **errorMessage) {
+bool worldLoadSprite (World world, char *imagePath, char **errorMessage) {
 	Image image;
+	Sprite sprite;
+
+	image = loadBmp(imagePath, true, errorMessage);
+	if (!image) {
+		return false;
+	}
+
+	sprite = makeSprite(image);
+	freeImage(image);
+
+	// TODO: Make sure it is the same palette, or remap colors.
+	world->sprites[world->numSprites++] = sprite;
+	memcpy(world->palette, sprite->palette, 16);
+
+	return true;
+}
+
+
+World makeWorld (char **errorMessage) {
     World world = malloc(sizeof(WorldStruct));
 	world->frame = 0;
 	world->radius = 80;
@@ -36,27 +59,15 @@ World makeWorld (char **errorMessage) {
 	world->scroll.x = 0;
 	world->scroll.y = 0;
 
-	image = loadBmp("../images/bunny1.bmp", true, errorMessage);
-	world->bunnyImages[2] = makeSprite(image);
-	freeImage(image);
-
-	image = loadBmp("../images/bunny2.bmp", true, errorMessage);
-	world->bunnyImages[3] = makeSprite(image);
-	freeImage(image);
-
-	image = loadBmp("../images/bunny3.bmp", true, errorMessage);
-	world->bunnyImages[0] = makeSprite(image);
-	freeImage(image);
-
-	image = loadBmp("../images/bunny4.bmp", true, errorMessage);
-	world->bunnyImages[1] = makeSprite(image);
-	freeImage(image);
-
-	image = loadBmp("../images/backgr.bmp", false, errorMessage);
-	world->backgroundImage = makeSprite(image);
-	freeImage(image);
-
-	if(!world->backgroundImage) {
+	world->numSprites = 0;
+	world->sprites = malloc(sizeof(Sprite) * (NUM_BUNNY_IMAGES + 1));
+	if (!(
+		worldLoadSprite(world, "../images/bunny3.bmp", errorMessage) &&
+		worldLoadSprite(world, "../images/bunny4.bmp", errorMessage) &&
+		worldLoadSprite(world, "../images/bunny1.bmp", errorMessage) &&
+		worldLoadSprite(world, "../images/bunny2.bmp", errorMessage) &&
+		worldLoadSprite(world, "../images/backgr.bmp", errorMessage)
+	)) {
 		return NULL;
 	}
 
@@ -70,16 +81,15 @@ void freeWorld (World world) {
 	unsigned int i;
 
 	freeDirtyBackgroundStrips(world->dirtyBackgroundStrips);
-	freeSprite(world->backgroundImage);
-	for (i=0; i<NUM_BUNNY_IMAGES; ++i) {
-		freeSprite(world->bunnyImages[i]);
+	for (i=0; i<world->numSprites; ++i) {
+		freeSprite(world->sprites[i]);
 	}
 	free(world);
 }
 
 
 unsigned char * getWorldPalette(World world) {
-	return getSpritePalette(world->backgroundImage);
+	return world->palette;
 }
 
 
@@ -138,7 +148,7 @@ void renderSprites (World world, bool alternateBuffer) {
 	unsigned int i;
 
 	for (i=0; i<NUM_BUNNY_IMAGES; ++i) {
-		drawSprite(world, world->bunnyImages[i], world->posX + i*64, world->posY, alternateBuffer);
+		drawSprite(world, world->sprites[i], world->posX + i*64, world->posY, alternateBuffer);
 	}
 }
 
@@ -154,7 +164,7 @@ void renderBackground (World world, bool alternateBuffer) {
 	unsigned short int sourceStripY;
 	unsigned short int sourceStripIndex;
 	unsigned short int bufferStart;
-	Sprite backgroundImage = world->backgroundImage;
+	Sprite backgroundImage = world->sprites[NUM_BUNNY_IMAGES];
 
 	dirtyBackgroundStrips = world->dirtyBackgroundStrips;
 	bufferStripIndexStart = stripCoordToIndex(world->scroll.x/8, world->scroll.y, alternateBuffer);
