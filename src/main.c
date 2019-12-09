@@ -29,6 +29,8 @@ int main (int argc, char* argv[]) {
 	setScroll(0, 0, false);
 	setVirtualScreenWidth(EGA_BUFFER_NUM_COLUMNS_DEFAULT);
 
+	freeWorld(world);
+
 	printf("\n\n\ndone");
 	return 0;
 }
