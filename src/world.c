@@ -115,7 +115,7 @@ void updateWorld (World world) {
 	world->scroll.x = world->frame/3;
 	world->scroll.y = world->frame/2;
 
-	for (i=0; i<NUM_BUNNY_IMAGES; ++i) {
+	for (i=0; i<world->numSpriteInstances; ++i) {
 		world->spriteInstances[i].posX = posX + i*64;
 		world->spriteInstances[i].posY = posY;
 	}
@@ -183,7 +183,7 @@ void renderBackground (World world, bool alternateBuffer) {
 	unsigned short int sourceStripY;
 	unsigned short int sourceStripIndex;
 	unsigned short int bufferStart;
-	Sprite backgroundImage = world->sprites[NUM_BUNNY_IMAGES];
+	Sprite backgroundImage = world->sprites[world->numSpriteInstances];
 
 	dirtyBackgroundStrips = world->dirtyBackgroundStrips;
 	bufferStripIndexStart = stripCoordToIndex(world->scroll.x/8, world->scroll.y, alternateBuffer);
