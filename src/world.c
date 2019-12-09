@@ -9,8 +9,6 @@
 #include <math.h>
 #include <string.h>
 
-#define NUM_BUNNY_IMAGES 4
-
 typedef struct WorldScroll {
 	unsigned short int x;
 	unsigned short int y;
@@ -55,27 +53,31 @@ bool worldLoadSprite (World world, char *imagePath, char **errorMessage) {
 
 World makeWorld (char **errorMessage) {
 	unsigned short int i;
+	char *spritePaths[] =  {
+		"../images/bunny3.bmp",
+		"../images/bunny4.bmp",
+		"../images/bunny1.bmp",
+		"../images/bunny2.bmp"
+	};
+	unsigned int spritePathArrayLength = sizeof(spritePaths) / sizeof(spritePaths[0]);
     World world = malloc(sizeof(WorldStruct));
 	world->frame = 0;
 	world->scroll.x = 0;
 	world->scroll.y = 0;
 
 	world->numSprites = 0;
-	world->sprites = malloc(sizeof(Sprite) * (NUM_BUNNY_IMAGES + 1));
-	if (!(
-		worldLoadSprite(world, "../images/bunny3.bmp", errorMessage) &&
-		worldLoadSprite(world, "../images/bunny4.bmp", errorMessage) &&
-		worldLoadSprite(world, "../images/bunny1.bmp", errorMessage) &&
-		worldLoadSprite(world, "../images/bunny2.bmp", errorMessage) &&
-		worldLoadSprite(world, "../images/backgr.bmp", errorMessage)
-	)) {
-		return NULL;
+	world->sprites = malloc(sizeof(Sprite) * spritePathArrayLength);
+	world->numSpriteInstances = spritePathArrayLength;
+	world->spriteInstances = malloc(sizeof(SpriteInstance) * world->numSpriteInstances);
+	for (i=0; i<spritePathArrayLength; ++i) {
+		if (!worldLoadSprite(world, spritePaths[i], errorMessage)) {
+			return NULL;
+		}
+		world->spriteInstances[i] = makeSpriteInstance(world->sprites[i], 0, 0);
 	}
 
-	world->numSpriteInstances = NUM_BUNNY_IMAGES;
-	world->spriteInstances = malloc(sizeof(SpriteInstance) * NUM_BUNNY_IMAGES);
-	for (i=0; i<NUM_BUNNY_IMAGES; ++i) {
-		world->spriteInstances[i] = makeSpriteInstance(world->sprites[i], 0, 0);
+	if (!worldLoadSprite(world, "../images/backgr.bmp", errorMessage)) {
+		return NULL;
 	}
 
 	world->dirtyBackgroundStrips = makeDirtyBackgroundStrips();
