@@ -31,7 +31,7 @@ typedef struct WorldStruct {
 } WorldStruct;
 
 
-bool worldLoadSprite (World world, char *imagePath, char **errorMessage) {
+Sprite worldLoadSprite (World world, char *imagePath, char **errorMessage) {
 	Image image;
 	Sprite sprite;
 
@@ -47,7 +47,7 @@ bool worldLoadSprite (World world, char *imagePath, char **errorMessage) {
 	world->sprites[world->numSprites++] = sprite;
 	memcpy(world->palette, sprite->palette, 16);
 
-	return true;
+	return sprite;
 }
 
 
@@ -60,6 +60,7 @@ World makeWorld (char **errorMessage) {
 		"../images/bunny2.bmp"
 	};
 	unsigned int spritePathArrayLength = sizeof(spritePaths) / sizeof(spritePaths[0]);
+	Sprite sprite;
     World world = malloc(sizeof(WorldStruct));
 	world->frame = 0;
 	world->scroll.x = 0;
@@ -70,10 +71,10 @@ World makeWorld (char **errorMessage) {
 	world->numSpriteInstances = spritePathArrayLength;
 	world->spriteInstances = malloc(sizeof(SpriteInstance) * world->numSpriteInstances);
 	for (i=0; i<spritePathArrayLength; ++i) {
-		if (!worldLoadSprite(world, spritePaths[i], errorMessage)) {
+		if (!(sprite = worldLoadSprite(world, spritePaths[i], errorMessage))) {
 			return NULL;
 		}
-		world->spriteInstances[i] = makeSpriteInstance(world->sprites[i], 0, 0);
+		world->spriteInstances[i] = makeSpriteInstance(sprite, 0, 0);
 	}
 
 	if (!worldLoadSprite(world, "../images/backgr.bmp", errorMessage)) {
