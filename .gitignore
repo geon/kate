@@ -5,3 +5,4 @@ watcom/*.map
 watcom/*.mk
 watcom/*.mk1
 watcom/*.sym
+watcom/*.err
