@@ -94,6 +94,7 @@ void freeWorld (World world) {
 	for (i=0; i<world->numSprites; ++i) {
 		freeSprite(world->sprites[i]);
 	}
+	free(world->spriteInstances);
 	free(world);
 }
 
