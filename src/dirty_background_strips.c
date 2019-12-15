@@ -7,20 +7,20 @@
 
 
 DirtyBackgroundStrips makeDirtyBackgroundStrips () {
-    DirtyBackgroundStrips dirtyBackgroundStrips;
-    unsigned long int i;
+	DirtyBackgroundStrips dirtyBackgroundStrips;
+	unsigned long int i;
 
-    dirtyBackgroundStrips = malloc(EGA_PLANE_SIZE * sizeof(bool));
+	dirtyBackgroundStrips = malloc(EGA_PLANE_SIZE * sizeof(bool));
 
-    // The background has not been rendered yet, so it is by definition completely dirty.
-    for (i=0; i<EGA_PLANE_SIZE; ++i) {
-        dirtyBackgroundStrips[i] = true;
-    }
+	// The background has not been rendered yet, so it is by definition completely dirty.
+	for (i=0; i<EGA_PLANE_SIZE; ++i) {
+		dirtyBackgroundStrips[i] = true;
+	}
 
-    return dirtyBackgroundStrips;
+	return dirtyBackgroundStrips;
 }
 
 
 void freeDirtyBackgroundStrips (DirtyBackgroundStrips dirtyBackgroundStrips) {
-    free(dirtyBackgroundStrips);
+	free(dirtyBackgroundStrips);
 }
