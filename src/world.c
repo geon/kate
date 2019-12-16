@@ -176,39 +176,50 @@ void renderSprites (World world, bool alternateBuffer) {
 }
 
 
-void renderBackground (World world, bool alternateBuffer) {
-	unsigned long int i;
-	bool *dirtyBackgroundStrips;
-	unsigned short int bufferStripIndexStart;
-	unsigned short int destinationStripColumn;
-	unsigned short int destinationStripY;
-	unsigned short int destinationStripIndex;
+BitplaneStrip getStripAtWorldCoord(Sprite backgroundImage, unsigned short int column, unsigned short int y) {
 	unsigned short int sourceStripColumn;
 	unsigned short int sourceStripY;
 	unsigned short int sourceStripIndex;
+
+	sourceStripColumn = column % backgroundImage->numColumns;
+	sourceStripY = y % backgroundImage->height;
+
+	sourceStripIndex = sourceStripColumn + sourceStripY * backgroundImage->numColumns;
+
+	return backgroundImage->bitPlaneStrips[sourceStripIndex];
+}
+
+
+void renderBackground (World world, bool alternateBuffer) {
+	unsigned long int column, y;
+	bool *dirtyBackgroundStrips;
+	unsigned short int bufferStripIndexStart;
+	unsigned short int destinationStripIndex;
 	unsigned short int bufferStart;
 	Sprite backgroundImage = world->sprites[world->numSpriteInstances];
 
+	unsigned short int worldStartColumn =world->scroll.x/8;
+	unsigned short int worldStartY = world->scroll.y;
+
 	dirtyBackgroundStrips = world->dirtyBackgroundStrips;
-	bufferStripIndexStart = stripCoordToIndex(world->scroll.x/8, world->scroll.y, alternateBuffer);
+	bufferStripIndexStart = stripCoordToIndex(worldStartColumn, worldStartY, alternateBuffer);
 	bufferStart = stripCoordToIndex(0, 0, alternateBuffer);
-	for (i=0; i<EGA_BUFFER_SIZE; ++i) {
-		// Assign to a `unsigned short int`, to force an overflow and make it start over from 0, just like the EGA bit planes.
-		destinationStripIndex = bufferStripIndexStart + i;
-		if (dirtyBackgroundStrips[destinationStripIndex]) {
-			destinationStripColumn = (destinationStripIndex - bufferStart) % EGA_BUFFER_NUM_COLUMNS;
-			destinationStripY = (destinationStripIndex - bufferStart) / EGA_BUFFER_NUM_COLUMNS;
 
-			sourceStripColumn = destinationStripColumn % backgroundImage->numColumns;
-			sourceStripY = destinationStripY % backgroundImage->height;
+	destinationStripIndex = bufferStripIndexStart;
+	for (y=0; y<350; ++y) {
+		for (column=0; column<EGA_BUFFER_NUM_COLUMNS; ++column) {
 
-			sourceStripIndex = sourceStripColumn + sourceStripY * backgroundImage->numColumns;
-			drawStrip(
-				destinationStripIndex,
-				backgroundImage->bitPlaneStrips[sourceStripIndex],
-				0xFF
-			);
-			dirtyBackgroundStrips[destinationStripIndex] = false;
+			//Using a `unsigned short int`, to force an overflow and make it start over from 0, just like the EGA bit planes.
+			if (dirtyBackgroundStrips[destinationStripIndex]) {
+				drawStrip(
+					destinationStripIndex,
+					getStripAtWorldCoord(backgroundImage, worldStartColumn + column, worldStartY + y),
+					0xFF
+				);
+				dirtyBackgroundStrips[destinationStripIndex] = false;
+			}
+
+			++destinationStripIndex;
 		}
 	}
 }
