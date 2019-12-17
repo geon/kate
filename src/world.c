@@ -113,11 +113,11 @@ void updateWorld (World world) {
 	world->frame++;
 
 	radius = sin(world->frame/4.3435674)*20 + 50;
-	posX = 100 + sin(world->frame/10.0) * radius;
-	posY = 100 + cos(world->frame/10.0) * radius;
+	posX = 200 + sin(world->frame/10.0) * radius;
+	posY = 200 + cos(world->frame/10.0) * radius;
 
-	world->scroll.x = world->frame/3;
-	world->scroll.y = world->frame/2;
+	world->scroll.x = world->frame;
+	world->scroll.y = world->frame;
 
 	for (i=0; i<world->numSpriteInstances; ++i) {
 		world->spriteInstances[i].posX = posX + i*64;
