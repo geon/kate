@@ -4,9 +4,13 @@
 #include <stdbool.h>
 
 
-typedef bool *DirtyBackgroundStrips;
+typedef struct DirtyBackgroundStripsStruct *DirtyBackgroundStrips;
 
 DirtyBackgroundStrips makeDirtyBackgroundStrips ();
 void freeDirtyBackgroundStrips (DirtyBackgroundStrips dirtyBackgroundStrips);
+unsigned long int getDirtyBackgroundStripsNumIndices (DirtyBackgroundStrips dirtyBackgroundStrips);
+unsigned short int *getDirtyBackgroundStripsIndices (DirtyBackgroundStrips dirtyBackgroundStrips);
+void clearDirtyBackgroundStrips (DirtyBackgroundStrips dirtyBackgroundStrips);
+void markDirtyBackgroundStrips (DirtyBackgroundStrips dirtyBackgroundStrips, unsigned short int index);
 
 #endif
