@@ -104,6 +104,12 @@ unsigned char * getWorldPalette(World world) {
 }
 
 
+void setWorldScroll (World world, unsigned short x, unsigned short y) {
+	world->scroll.x = x;
+	world->scroll.y = y;
+}
+
+
 void updateWorld (World world) {
 	unsigned int radius;
 	unsigned short int i;
@@ -116,8 +122,7 @@ void updateWorld (World world) {
 	posX = 200 + sin(world->frame/10.0) * radius;
 	posY = 200 + cos(world->frame/10.0) * radius;
 
-	world->scroll.x = world->frame;
-	world->scroll.y = world->frame;
+	setWorldScroll(world, world->frame, world->frame);
 
 	for (i=0; i<world->numSpriteInstances; ++i) {
 		world->spriteInstances[i].posX = posX + i*64;
