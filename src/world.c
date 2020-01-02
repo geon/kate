@@ -143,7 +143,7 @@ void drawSprite(World world, SpriteInstance *spriteInstance, bool alternateBuffe
 			posXColumn = spriteInstance->posX/8;
 			posXRest = spriteInstance->posX%8;
 
-			destinationStripIndex = stripCoordToIndex(posXColumn + column, spriteInstance->posY + y, alternateBuffer);
+			destinationStripIndex = stripWorldCoordToBufferIndex(posXColumn + column, spriteInstance->posY + y, alternateBuffer);
 
 			stripShiftedA.planes[0] = strip.planes[0] >> posXRest;
 			stripShiftedA.planes[1] = strip.planes[1] >> posXRest;
@@ -192,7 +192,7 @@ BitplaneStrip getStripAtWorldCoord(Sprite backgroundImage, unsigned short int co
 
 void renderBackground (World world, bool alternateBuffer) {
 	unsigned long int i;
-	unsigned short int bufferStripIndexStart = stripCoordToIndex(world->scroll.x/8, world->scroll.y, alternateBuffer);
+	unsigned short int bufferStripIndexStart = stripWorldCoordToBufferIndex(world->scroll.x/8, world->scroll.y, alternateBuffer);
 	unsigned long int numIndices = getDirtyBackgroundStripsNumIndices(world->dirtyBackgroundStrips);
 	unsigned short int *indices = getDirtyBackgroundStripsIndices(world->dirtyBackgroundStrips);
 

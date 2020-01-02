@@ -16,7 +16,7 @@
 void waitForFrame ();
 void setVideoMode ();
 void drawPoint (unsigned short int x, unsigned short int y, unsigned char color);
-unsigned short int stripCoordToIndex (unsigned short int column, unsigned short int y, bool alternateBuffer);
+unsigned short int stripWorldCoordToBufferIndex (unsigned short int column, unsigned short int y, bool alternateBuffer);
 void drawStrip (unsigned short int index, BitplaneStrip strip, unsigned char mask);
 void copyStrip (unsigned short int index);
 void pasteStrip (unsigned short int index, unsigned char mask);
