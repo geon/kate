@@ -131,6 +131,20 @@ void updateWorld (World world) {
 }
 
 
+unsigned short int stripWorldCoordToBufferIndex (unsigned short int column, unsigned short int y, bool alternateBuffer) {
+	return y*EGA_BUFFER_NUM_COLUMNS + column + (alternateBuffer ? EGA_BUFFER_SIZE : 0);
+}
+
+
+void setScroll (unsigned short int x, unsigned short int y, bool alternateBuffer) {
+	unsigned short int column = x/8;
+	unsigned char restX = x%8;
+	unsigned short int offset = stripWorldCoordToBufferIndex(column, y, alternateBuffer);
+
+	setBufferOffset(offset, restX);
+}
+
+
 void drawSprite(World world, SpriteInstance *spriteInstance, bool alternateBuffer) {
 	unsigned int y, column;
 	BitplaneStrip strip;

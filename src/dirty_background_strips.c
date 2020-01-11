@@ -1,6 +1,6 @@
 #include "dirty_background_strips.h";
 
-#include "platform/dos/ega.h"
+#include "world.h"
 
 #include <stdbool.h>
 #include <stdlib.h>

@@ -48,11 +48,6 @@ void drawPoint (unsigned short int x, unsigned short int y, unsigned char color)
 }
 
 
-unsigned short int stripWorldCoordToBufferIndex (unsigned short int column, unsigned short int y, bool alternateBuffer) {
-	return y*EGA_BUFFER_NUM_COLUMNS + column + (alternateBuffer ? EGA_BUFFER_SIZE : 0);
-}
-
-
 #define BIT_0 1
 #define BIT_1 2
 #define BIT_2 4
@@ -264,11 +259,7 @@ void setVirtualScreenWidth (unsigned short int numColumns) {
 }
 
 
-void setScroll (unsigned short int x, unsigned short int y, bool alternateBuffer) {
-
-	unsigned short int column = x/8;
-	unsigned char restX = x%8;
-	unsigned short int offset = stripWorldCoordToBufferIndex(column, y, alternateBuffer);
+void setBufferOffset (unsigned short int offset, unsigned char restX) {
 
 	unsigned char offsetHighBits = offset >> 8;
 	unsigned char offsetLowBits = offset;
