@@ -23,7 +23,7 @@ void waitForFrame () {
 }
 
 
-// Set vodeo mode to EGA 640x350 16c.
+// Set video mode to EGA 640x350 16c.
 void setVideoMode () {
 	union REGS regs;
 
