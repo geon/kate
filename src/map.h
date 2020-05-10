@@ -3,12 +3,13 @@
 
 #include "platform/dos/bitplane_strip.h"
 #include "sprite.h"
+#include "strip_coord.h"
 
 typedef struct MapStruct *Map;
 
 Map makeMap (char **errorMessage);
 void freeMap (Map map);
-BitplaneStrip getStripAtWorldCoord (Map map, unsigned short int column, unsigned short int y);
+BitplaneStrip getStripAtWorldCoord (Map map, StripCoord worldCoord);
 
 #endif
 

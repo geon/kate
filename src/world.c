@@ -5,6 +5,7 @@
 #include "sprite_instance.h"
 #include "sprite_struct.h"
 #include "map.h"
+#include "strip_coord.h"
 
 #include <stdlib.h>
 #include <math.h>
@@ -205,12 +206,13 @@ void renderBackground (World world, bool alternateBuffer) {
 	unsigned short int *indices = getDirtyBackgroundStripsIndices(world->dirtyBackgroundStrips);
 
 	for (i=0; i<numIndices; ++i) {
-		unsigned short int column = (indices[i]-bufferStripIndexStart) % EGA_BUFFER_NUM_COLUMNS;
-		unsigned short int y = (indices[i]-bufferStripIndexStart) / EGA_BUFFER_NUM_COLUMNS;
+		StripCoord worldCoord;
+		worldCoord.column = (indices[i]-bufferStripIndexStart) % EGA_BUFFER_NUM_COLUMNS;
+		worldCoord.y = (indices[i]-bufferStripIndexStart) / EGA_BUFFER_NUM_COLUMNS;
 
 		drawStrip(
 			indices[i],
-			getStripAtWorldCoord(world->map, column, y),
+			getStripAtWorldCoord(world->map, worldCoord),
 			0xFF
 		);
 	}
