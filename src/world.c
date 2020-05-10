@@ -28,6 +28,7 @@ typedef struct WorldStruct {
 	unsigned int frame;
 	DirtyBackgroundStrips dirtyBackgroundStrips;
 
+	Map map;
 	WorldScroll scroll;
 } WorldStruct;
 
@@ -78,7 +79,7 @@ World makeWorld (char **errorMessage) {
 		world->spriteInstances[i] = makeSpriteInstance(sprite, 0, 0);
 	}
 
-	if (!worldLoadSprite(world, "../images/backgr.bmp", errorMessage)) {
+	if (!(world->map = makeMap(errorMessage))) {
 		return NULL;
 	}
 
@@ -91,6 +92,7 @@ World makeWorld (char **errorMessage) {
 void freeWorld (World world) {
 	unsigned int i;
 
+	freeMap(world->map);
 	freeDirtyBackgroundStrips(world->dirtyBackgroundStrips);
 	for (i=0; i<world->numSprites; ++i) {
 		freeSprite(world->sprites[i]);
@@ -208,7 +210,7 @@ void renderBackground (World world, bool alternateBuffer) {
 
 		drawStrip(
 			indices[i],
-			getStripAtWorldCoord(world->sprites[world->numSpriteInstances], column, y),
+			getStripAtWorldCoord(world->map, column, y),
 			0xFF
 		);
 	}

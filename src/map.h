@@ -4,7 +4,11 @@
 #include "platform/dos/bitplane_strip.h"
 #include "sprite.h"
 
-BitplaneStrip getStripAtWorldCoord(Sprite backgroundImage, unsigned short int column, unsigned short int y);
+typedef struct MapStruct *Map;
+
+Map makeMap (char **errorMessage);
+void freeMap (Map map);
+BitplaneStrip getStripAtWorldCoord (Map map, unsigned short int column, unsigned short int y);
 
 #endif
 
