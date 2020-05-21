@@ -199,24 +199,35 @@ void renderSprites (World world, bool alternateBuffer) {
 }
 
 
-StripCoord mapBufferIndexToWorldCoord (unsigned short int bufferIndex, unsigned short bufferStripIndexStart) {
+StripCoord mapBufferIndexToBufferCoord (unsigned short int bufferIndex, WorldScroll worldScroll, bool alternateBuffer) {
+	unsigned short int bufferStripIndexStart = stripWorldCoordToBufferIndex(worldScroll.x/8, worldScroll.y, alternateBuffer);
+	StripCoord bufferCoord;
+	bufferCoord.column = (bufferIndex - bufferStripIndexStart) % EGA_BUFFER_NUM_COLUMNS;
+	bufferCoord.y = (bufferIndex - bufferStripIndexStart) / EGA_BUFFER_NUM_COLUMNS;
+	return  bufferCoord;
+}
+
+
+StripCoord mapBufferCoordToWorldCoord (StripCoord bufferCoord, WorldScroll worldScroll) {
 	StripCoord worldCoord;
-	worldCoord.column = (bufferIndex - bufferStripIndexStart) % EGA_BUFFER_NUM_COLUMNS;
-	worldCoord.y = (bufferIndex - bufferStripIndexStart) / EGA_BUFFER_NUM_COLUMNS;
+	worldCoord.column = bufferCoord.column + worldScroll.x/8;
+	worldCoord.y = bufferCoord.y + worldScroll.y;
 	return  worldCoord;
 }
 
 
 void renderBackground (World world, bool alternateBuffer) {
 	unsigned long int i;
-	unsigned short int bufferStripIndexStart = stripWorldCoordToBufferIndex(world->scroll.x/8, world->scroll.y, alternateBuffer);
 	unsigned long int numIndices = getDirtyBackgroundStripsNumIndices(world->dirtyBackgroundStrips);
 	unsigned short int *indices = getDirtyBackgroundStripsIndices(world->dirtyBackgroundStrips);
 
 	for (i=0; i<numIndices; ++i) {
+		StripCoord bufferCoord = mapBufferIndexToBufferCoord(indices[i], world->scroll, alternateBuffer);
+		StripCoord worldCoord = mapBufferCoordToWorldCoord(bufferCoord, world->scroll);
+
 		drawStrip(
 			indices[i],
-			getStripAtWorldCoord(world->map, mapBufferIndexToWorldCoord(indices[i], bufferStripIndexStart)),
+			getStripAtWorldCoord(world->map, worldCoord),
 			0xFF
 		);
 	}
