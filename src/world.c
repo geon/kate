@@ -222,8 +222,10 @@ void renderBackground (World world, bool alternateBuffer) {
 	unsigned short int *indices = getDirtyBackgroundStripsIndices(world->dirtyBackgroundStrips);
 
 	for (i=0; i<numIndices; ++i) {
-		StripCoord bufferCoord = mapBufferIndexToBufferCoord(indices[i], world->scroll, alternateBuffer);
-		StripCoord worldCoord = mapBufferCoordToWorldCoord(bufferCoord, world->scroll);
+		StripCoord bufferCoord;
+		StripCoord worldCoord;
+		bufferCoord = mapBufferIndexToBufferCoord(indices[i], world->scroll, alternateBuffer);
+		worldCoord = mapBufferCoordToWorldCoord(bufferCoord, world->scroll);
 
 		drawStrip(
 			indices[i],
