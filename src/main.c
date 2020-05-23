@@ -1,5 +1,6 @@
 #include "platform/dos/ega.h"
 #include "world.h"
+#include "buffer.h"
 
 #include <stdio.h>
 

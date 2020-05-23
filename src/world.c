@@ -6,6 +6,7 @@
 #include "sprite_struct.h"
 #include "map.h"
 #include "strip_coord.h"
+#include "buffer.h"
 
 #include <stdlib.h>
 #include <math.h>
@@ -19,6 +20,7 @@ typedef struct WorldScroll {
 
 typedef struct WorldStruct {
 	unsigned char palette[16];
+	Buffer buffer;
 
 	unsigned short int numSprites;
 	Sprite *sprites;
@@ -30,7 +32,6 @@ typedef struct WorldStruct {
 	DirtyBackgroundStrips dirtyBackgroundStrips;
 
 	Map map;
-	WorldScroll scroll;
 } WorldStruct;
 
 
@@ -65,9 +66,8 @@ World makeWorld (char **errorMessage) {
 	unsigned int spritePathArrayLength = sizeof(spritePaths) / sizeof(spritePaths[0]);
 	Sprite sprite;
     World world = malloc(sizeof(WorldStruct));
+	world->buffer = makeBuffer();
 	world->frame = 0;
-	world->scroll.x = 0;
-	world->scroll.y = 0;
 
 	world->numSprites = 0;
 	world->sprites = malloc(sizeof(Sprite) * spritePathArrayLength);
@@ -109,8 +109,8 @@ unsigned char * getWorldPalette(World world) {
 
 
 void setWorldScroll (World world, unsigned short x, unsigned short y) {
-	world->scroll.x = x;
-	world->scroll.y = y;
+	world->buffer.scroll.column = x/8;
+	world->buffer.scroll.y = y;
 }
 
 
@@ -120,6 +120,7 @@ void updateWorld (World world) {
 	unsigned int posX;
 	unsigned int posY;
 
+	updateBuffer(&world->buffer);
 	world->frame++;
 
 	radius = sin(world->frame/4.3435674)*20 + 50;
@@ -132,11 +133,6 @@ void updateWorld (World world) {
 		world->spriteInstances[i].posX = posX + i*64;
 		world->spriteInstances[i].posY = posY;
 	}
-}
-
-
-unsigned short int stripWorldCoordToBufferIndex (unsigned short int column, unsigned short int y, bool alternateBuffer) {
-	return y*EGA_BUFFER_NUM_COLUMNS + column + (alternateBuffer ? EGA_BUFFER_SIZE : 0);
 }
 
 
@@ -199,36 +195,16 @@ void renderSprites (World world, bool alternateBuffer) {
 }
 
 
-StripCoord mapBufferIndexToBufferCoord (unsigned short int bufferIndex, StripCoord worldScroll, bool alternateBuffer) {
-	unsigned short int bufferStripIndexStart = stripWorldCoordToBufferIndex(worldScroll.column, worldScroll.y, alternateBuffer);
-	StripCoord bufferCoord;
-	bufferCoord.column = (bufferIndex - bufferStripIndexStart) % EGA_BUFFER_NUM_COLUMNS;
-	bufferCoord.y = (bufferIndex - bufferStripIndexStart) / EGA_BUFFER_NUM_COLUMNS;
-	return  bufferCoord;
-}
-
-
-StripCoord mapBufferCoordToWorldCoord (StripCoord bufferCoord, StripCoord worldScroll) {
-	StripCoord worldCoord;
-	worldCoord.column = bufferCoord.column + worldScroll.column;
-	worldCoord.y = bufferCoord.y + worldScroll.y;
-	return  worldCoord;
-}
-
-
 void renderBackground (World world, bool alternateBuffer) {
 	unsigned long int i;
 	unsigned long int numIndices = getDirtyBackgroundStripsNumIndices(world->dirtyBackgroundStrips);
 	unsigned short int *indices = getDirtyBackgroundStripsIndices(world->dirtyBackgroundStrips);
 
 	for (i=0; i<numIndices; ++i) {
-		StripCoord bufferScroll;
 		StripCoord bufferCoord;
 		StripCoord worldCoord;
-		bufferScroll.column = world->scroll.x/8;
-		bufferScroll.y = world->scroll.y;
-		bufferCoord = mapBufferIndexToBufferCoord(indices[i], bufferScroll, alternateBuffer);
-		worldCoord = mapBufferCoordToWorldCoord(bufferCoord, bufferScroll);
+		bufferCoord = mapBufferIndexToBufferCoord(indices[i], world->buffer.scroll, alternateBuffer);
+		worldCoord = mapBufferCoordToWorldCoord(world->buffer.scroll, bufferCoord);
 
 		drawStrip(
 			indices[i],
@@ -242,13 +218,12 @@ void renderBackground (World world, bool alternateBuffer) {
 
 
 void renderWorld(World world) {
-	bool alternateBuffer = world->frame%2;
-	renderBackground(world, alternateBuffer);
-	renderSprites(world, alternateBuffer);
+	renderBackground(world, world->buffer.alternateBuffer);
+	renderSprites(world, world->buffer.alternateBuffer);
 	// Sets the start-address of the next frame.
 	// The value won't be latched by the EGA card until the vertical retrace.
 	// It is not possible to change the actual used address during a frame.
-	worldSetScroll(world->scroll.x, world->scroll.y, alternateBuffer);
+	worldSetScroll(world->buffer.scroll.column*8, world->buffer.scroll.y, world->buffer.alternateBuffer);
 	// V-sync.
 	waitForFrame();
 }

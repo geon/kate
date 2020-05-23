@@ -1,6 +1,7 @@
 #include "dirty_background_strips.h";
 
 #include "world.h"
+#include "buffer.h"
 
 #include <stdbool.h>
 #include <stdlib.h>
