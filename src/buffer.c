@@ -17,7 +17,7 @@ Buffer makeBuffer () {
 
 
 void updateBuffer (Buffer *buffer) {
-	buffer->alternateBuffer = !buffer->alternateBuffer;
+	// buffer->alternateBuffer = !buffer->alternateBuffer;
 }
 
 
