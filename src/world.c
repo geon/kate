@@ -140,7 +140,7 @@ unsigned short int stripWorldCoordToBufferIndex (unsigned short int column, unsi
 }
 
 
-void setScroll (unsigned short int x, unsigned short int y, bool alternateBuffer) {
+void worldSetScroll (unsigned short int x, unsigned short int y, bool alternateBuffer) {
 	unsigned short int column = x/8;
 	unsigned char restX = x%8;
 	unsigned short int offset = stripWorldCoordToBufferIndex(column, y, alternateBuffer);
@@ -243,7 +243,7 @@ void renderWorld(World world) {
 	// Sets the start-address of the next frame.
 	// The value won't be latched by the EGA card until the vertical retrace.
 	// It is not possible to change the actual used address during a frame.
-	setScroll(world->scroll.x, world->scroll.y, alternateBuffer);
+	worldSetScroll(world->scroll.x, world->scroll.y, alternateBuffer);
 	// V-sync.
 	waitForFrame();
 }

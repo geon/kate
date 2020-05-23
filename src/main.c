@@ -26,7 +26,7 @@ int main (int argc, char* argv[]) {
 	}
 
 	// Restore screen.
-	setScroll(0, 0, false);
+	worldSetScroll(0, 0, false);
 	setVirtualScreenWidth(EGA_BUFFER_NUM_COLUMNS_DEFAULT);
 
 	freeWorld(world);
