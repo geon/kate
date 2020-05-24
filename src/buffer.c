@@ -27,13 +27,13 @@ void setBufferScroll (Buffer *buffer, unsigned short int column, unsigned short 
 }
 
 
-unsigned short int stripWorldCoordToBufferIndex (unsigned short int column, unsigned short int y, bool alternateBuffer) {
+unsigned short int bufferIndexStart (unsigned short int column, unsigned short int y, bool alternateBuffer) {
 	return y*EGA_BUFFER_NUM_COLUMNS + column + (alternateBuffer ? EGA_BUFFER_SIZE : 0);
 }
 
 
 StripCoord bufferMapBufferIndexToBufferCoord (Buffer *buffer, unsigned short int bufferIndex) {
-	unsigned short int bufferStripIndexStart = stripWorldCoordToBufferIndex(buffer->scroll.column, buffer->scroll.y, buffer->alternateBuffer);
+	unsigned short int bufferStripIndexStart = bufferIndexStart(buffer->scroll.column, buffer->scroll.y, buffer->alternateBuffer);
 	StripCoord bufferCoord;
 	bufferCoord.column = (bufferIndex - bufferStripIndexStart) % EGA_BUFFER_NUM_COLUMNS;
 	bufferCoord.y = (bufferIndex - bufferStripIndexStart) / EGA_BUFFER_NUM_COLUMNS;

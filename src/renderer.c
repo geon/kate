@@ -95,7 +95,7 @@ void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, bool alternat
 			strip = spriteInstance->sprite->bitPlaneStrips[sourceStripIndex];
 			posXColumn = spriteInstance->posX/8;
 			posXRest = spriteInstance->posX%8;
-			destinationStripIndex = stripWorldCoordToBufferIndex(posXColumn + column, spriteInstance->posY + y, alternateBuffer);
+			destinationStripIndex = bufferIndexStart(posXColumn + column, spriteInstance->posY + y, alternateBuffer);
 			stripShiftedA.planes[0] = strip.planes[0] >> posXRest;
 			stripShiftedA.planes[1] = strip.planes[1] >> posXRest;
 			stripShiftedA.planes[2] = strip.planes[2] >> posXRest;
