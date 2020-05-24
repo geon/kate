@@ -11,6 +11,6 @@ void freeWorld (World world);
 unsigned char * getWorldPalette(World world);
 void worldUpdate (World world);
 void setWorldScroll (unsigned short int x, unsigned short int y, bool alternateBuffer);
-void renderWorld(World world);
+void worldRender(World world);
 
 #endif

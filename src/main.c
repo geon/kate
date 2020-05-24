@@ -32,7 +32,7 @@ int main (int argc, char* argv[]) {
 
 	for (frame=0; frame < 100; ++frame) {
 		worldUpdate(world);
-		renderWorld(world);
+		worldRender(world);
 	}
 
 	// Restore screen.
