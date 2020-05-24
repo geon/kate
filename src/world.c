@@ -66,7 +66,7 @@ void freeWorld (World world) {
 }
 
 
-void updateWorld (World world) {
+void worldUpdate (World world) {
 	unsigned int radius;
 	unsigned short int i;
 	unsigned int posX;

@@ -31,7 +31,7 @@ int main (int argc, char* argv[]) {
 	setVirtualScreenWidth(EGA_BUFFER_NUM_COLUMNS);
 
 	for (frame=0; frame < 100; ++frame) {
-		updateWorld(world);
+		worldUpdate(world);
 		renderWorld(world);
 	}
 
