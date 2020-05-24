@@ -133,7 +133,7 @@ void renderBackground (Renderer renderer, Map map) {
 	for (i=0; i<numIndices; ++i) {
 		StripCoord bufferCoord;
 		StripCoord worldCoord;
-		bufferCoord = mapBufferIndexToBufferCoord(&renderer->buffer, indices[i]);
+		bufferCoord = bufferMapBufferIndexToBufferCoord(&renderer->buffer, indices[i]);
 		worldCoord = bufferMapBufferCoordToWorldCoord(&renderer->buffer, bufferCoord);
 
 		drawStrip(
