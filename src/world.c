@@ -85,7 +85,7 @@ void worldUpdate (World world) {
 }
 
 
-void worldSetScroll (unsigned short int x, unsigned short int y, bool alternateBuffer) {
+void setWorldScroll (unsigned short int x, unsigned short int y, bool alternateBuffer) {
 	unsigned short int column = x/8;
 	unsigned char restX = x%8;
 	unsigned short int offset = stripWorldCoordToBufferIndex(column, y, alternateBuffer);

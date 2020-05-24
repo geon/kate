@@ -10,7 +10,7 @@ World makeWorld (Renderer renderer, char **errorMessage);
 void freeWorld (World world);
 unsigned char * getWorldPalette(World world);
 void worldUpdate (World world);
-void worldSetScroll (unsigned short int x, unsigned short int y, bool alternateBuffer);
+void setWorldScroll (unsigned short int x, unsigned short int y, bool alternateBuffer);
 void renderWorld(World world);
 
 #endif
