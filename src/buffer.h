@@ -26,6 +26,6 @@ void updateBuffer (Buffer *buffer);
 void setBufferScroll (Buffer *buffer, unsigned short int column, unsigned short int y);
 unsigned short int stripWorldCoordToBufferIndex (unsigned short int column, unsigned short int y, bool alternateBuffer);
 StripCoord mapBufferIndexToBufferCoord (unsigned short int bufferIndex, StripCoord worldScroll, bool alternateBuffer);
-StripCoord mapBufferCoordToWorldCoord (StripCoord bufferCoord, StripCoord worldScroll);
+StripCoord mapBufferCoordToWorldCoord (Buffer *buffer, StripCoord worldScroll);
 
 #endif

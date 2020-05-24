@@ -41,9 +41,9 @@ StripCoord mapBufferIndexToBufferCoord (unsigned short int bufferIndex, StripCoo
 }
 
 
-StripCoord mapBufferCoordToWorldCoord (StripCoord bufferCoord, StripCoord worldScroll) {
+StripCoord mapBufferCoordToWorldCoord (Buffer *buffer, StripCoord worldScroll) {
 	StripCoord worldCoord;
-	worldCoord.column = bufferCoord.column + worldScroll.column;
-	worldCoord.y = bufferCoord.y + worldScroll.y;
+	worldCoord.column = buffer->scroll.column + worldScroll.column;
+	worldCoord.y = buffer->scroll.y + worldScroll.y;
 	return  worldCoord;
 }
