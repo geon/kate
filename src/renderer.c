@@ -125,7 +125,7 @@ void renderSprites (Renderer renderer, unsigned int numSpriteInstances, SpriteIn
 }
 
 
-void renderBackground (Renderer renderer, Map map, bool alternateBuffer) {
+void renderBackground (Renderer renderer, Map map) {
 	unsigned long int i;
 	unsigned long int numIndices = getDirtyBackgroundStripsNumIndices(renderer->dirtyBackgroundStrips);
 	unsigned short int *indices = getDirtyBackgroundStripsIndices(renderer->dirtyBackgroundStrips);
@@ -133,7 +133,7 @@ void renderBackground (Renderer renderer, Map map, bool alternateBuffer) {
 	for (i=0; i<numIndices; ++i) {
 		StripCoord bufferCoord;
 		StripCoord worldCoord;
-		bufferCoord = mapBufferIndexToBufferCoord(indices[i], renderer->buffer.scroll, alternateBuffer);
+		bufferCoord = mapBufferIndexToBufferCoord(&renderer->buffer, indices[i]);
 		worldCoord = bufferMapBufferCoordToWorldCoord(&renderer->buffer, bufferCoord);
 
 		drawStrip(
@@ -150,7 +150,7 @@ void renderBackground (Renderer renderer, Map map, bool alternateBuffer) {
 void rendererRender(Renderer renderer, unsigned int numSpriteInstances, SpriteInstance *spriteInstances, Map map) {
 	updateBuffer(&renderer->buffer);
 
-	renderBackground(renderer, map, renderer->buffer.alternateBuffer);
+	renderBackground(renderer, map);
 	renderSprites(renderer, numSpriteInstances, spriteInstances, renderer->buffer.alternateBuffer);
 	// Sets the start-address of the next frame.
 	// The value won't be latched by the EGA card until the vertical retrace.
