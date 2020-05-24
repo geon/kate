@@ -83,19 +83,16 @@ Sprite rendererLoadSprite (Renderer renderer, char *imagePath, char **errorMessa
 
 void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, bool alternateBuffer) {
 	unsigned int y, column;
-	BitplaneStrip strip;
-	unsigned int posXColumn, posXRest;
-	BitplaneStrip stripShiftedA, stripShiftedB;
-	unsigned char shiftMask;
-	unsigned int sourceStripIndex;
-	unsigned int destinationStripIndex;
 	for (y = 0; y < spriteInstance->sprite->height; ++y) {
 		for (column=0; column<spriteInstance->sprite->numColumns; ++column) {
-			sourceStripIndex = column + y*spriteInstance->sprite->numColumns;
-			strip = spriteInstance->sprite->bitPlaneStrips[sourceStripIndex];
-			posXColumn = spriteInstance->posX/8;
-			posXRest = spriteInstance->posX%8;
-			destinationStripIndex = bufferIndexStart(posXColumn + column, spriteInstance->posY + y, alternateBuffer);
+			unsigned int sourceStripIndex = column + y*spriteInstance->sprite->numColumns;
+			BitplaneStrip strip = spriteInstance->sprite->bitPlaneStrips[sourceStripIndex];
+			unsigned int posXColumn = spriteInstance->posX/8;
+			unsigned int posXRest = spriteInstance->posX%8;
+			unsigned int destinationStripIndex = bufferIndexStart(posXColumn + column, spriteInstance->posY + y, alternateBuffer);
+			unsigned char shiftMask;
+			BitplaneStrip stripShiftedA, stripShiftedB;
+
 			stripShiftedA.planes[0] = strip.planes[0] >> posXRest;
 			stripShiftedA.planes[1] = strip.planes[1] >> posXRest;
 			stripShiftedA.planes[2] = strip.planes[2] >> posXRest;
