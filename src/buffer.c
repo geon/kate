@@ -32,6 +32,22 @@ unsigned short int bufferIndexStart (unsigned short int column, unsigned short i
 }
 
 
+StripCoord bufferMapWorldCoordToBufferCoord (Buffer *buffer, StripCoord worldCoord) {
+	StripCoord bufferCoord;
+	bufferCoord.column = worldCoord.column - buffer->scroll.column;
+	bufferCoord.y = worldCoord.y - buffer->scroll.y;
+	return  bufferCoord;
+}
+
+
+unsigned short int bufferMapBufferCoordToBufferIndex (Buffer *buffer, StripCoord bufferCoord) {
+	return
+		bufferIndexStart(buffer->scroll.column, buffer->scroll.y, buffer->alternateBuffer) +
+		bufferCoord.y*EGA_BUFFER_NUM_COLUMNS + bufferCoord.column +
+		(buffer->alternateBuffer ? EGA_BUFFER_SIZE : 0);;
+}
+
+
 StripCoord bufferMapBufferIndexToBufferCoord (Buffer *buffer, unsigned short int bufferIndex) {
 	unsigned short int bufferStripIndexStart = bufferIndexStart(buffer->scroll.column, buffer->scroll.y, buffer->alternateBuffer);
 	StripCoord bufferCoord;

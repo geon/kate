@@ -24,7 +24,10 @@ typedef struct Buffer {
 Buffer makeBuffer ();
 void updateBuffer (Buffer *buffer);
 void setBufferScroll (Buffer *buffer, unsigned short int column, unsigned short int y);
-unsigned short int bufferIndexStart (unsigned short int column, unsigned short int y, bool alternateBuffer);
+
+StripCoord bufferMapWorldCoordToBufferCoord (Buffer *buffer, StripCoord worldCoord);
+unsigned short int bufferMapBufferCoordToBufferIndex (Buffer *buffer, StripCoord bufferCoord);
+
 StripCoord bufferMapBufferIndexToBufferCoord (Buffer *buffer, unsigned short int bufferIndex);
 StripCoord bufferMapBufferCoordToWorldCoord (Buffer *buffer, StripCoord bufferCoord);
 
