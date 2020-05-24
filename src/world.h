@@ -1,13 +1,12 @@
 #ifndef world_h
 #define world_h
 
-#include "platform/dos/bitplane_strip.h"
-#include "dirty_background_strips.h"
+#include "renderer.h"
 
 
 typedef struct WorldStruct *World;
 
-World makeWorld (char **errorMessage);
+World makeWorld (Renderer renderer, char **errorMessage);
 void freeWorld (World world);
 unsigned char * getWorldPalette(World world);
 void updateWorld (World world);
