@@ -21,7 +21,7 @@ void updateBuffer (Buffer *buffer) {
 }
 
 
-void setScroll (Buffer *buffer, unsigned short int column, unsigned short int y) {
+void setBufferScroll (Buffer *buffer, unsigned short int column, unsigned short int y) {
 	buffer->scroll.column = column;
 	buffer->scroll.y = y;
 }
