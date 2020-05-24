@@ -138,7 +138,7 @@ void renderBackground (Renderer renderer, Map map, bool alternateBuffer) {
 
 		drawStrip(
 			indices[i],
-			getStripAtWorldCoord(map, worldCoord),
+			getMapStripAtWorldCoord(map, worldCoord),
 			0xFF
 		);
 	}

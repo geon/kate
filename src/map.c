@@ -42,7 +42,7 @@ void freeMap (Map map) {
 }
 
 
-BitplaneStrip getStripAtWorldCoord(Map map, StripCoord worldCoord) {
+BitplaneStrip getMapStripAtWorldCoord(Map map, StripCoord worldCoord) {
     Sprite backgroundImage = map->sprite;
 	unsigned short int sourceStripColumn;
 	unsigned short int sourceStripY;
