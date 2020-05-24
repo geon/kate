@@ -12,11 +12,6 @@
 #include <math.h>
 #include <string.h>
 
-typedef struct WorldScroll {
-	unsigned short int x;
-	unsigned short int y;
-} WorldScroll;
-
 
 typedef struct WorldStruct {
 	Renderer renderer;
