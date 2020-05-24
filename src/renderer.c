@@ -147,7 +147,7 @@ void renderBackground (Renderer renderer, Map map, bool alternateBuffer) {
 }
 
 
-void render(Renderer renderer, unsigned int numSpriteInstances, SpriteInstance *spriteInstances, Map map) {
+void rendererRender(Renderer renderer, unsigned int numSpriteInstances, SpriteInstance *spriteInstances, Map map) {
 	updateBuffer(&renderer->buffer);
 
 	renderBackground(renderer, map, renderer->buffer.alternateBuffer);

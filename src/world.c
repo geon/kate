@@ -95,5 +95,5 @@ void worldSetScroll (unsigned short int x, unsigned short int y, bool alternateB
 
 
 void renderWorld(World world) {
-	render(world->renderer, world->numSpriteInstances, world->spriteInstances, world->map);
+	rendererRender(world->renderer, world->numSpriteInstances, world->spriteInstances, world->map);
 }
