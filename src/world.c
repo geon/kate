@@ -5,7 +5,7 @@
 #include "sprite_instance.h"
 #include "sprite_struct.h"
 #include "map.h"
-#include "strip_coord.h"
+#include "pixel_coord.h"
 #include "buffer.h"
 
 #include <stdlib.h>
@@ -20,6 +20,7 @@ typedef struct WorldStruct {
 
 	unsigned int frame;
 	Map map;
+	PixelCoord scroll;
 } WorldStruct;
 
 
@@ -69,6 +70,9 @@ void worldUpdate (World world) {
 
 	world->frame++;
 
+	world->scroll.x = world->frame;
+	world->scroll.y = world->frame;
+
 	radius = sin(world->frame/4.3435674)*20 + 50;
 	posX = 200 + sin(world->frame/10.0) * radius;
 	posY = 200 + cos(world->frame/10.0) * radius;
@@ -81,5 +85,5 @@ void worldUpdate (World world) {
 
 
 void worldRender(World world) {
-	rendererRender(world->renderer, world->numSpriteInstances, world->spriteInstances, world->map);
+	rendererRender(world->renderer, world->numSpriteInstances, world->spriteInstances, world->map, world->scroll);
 }

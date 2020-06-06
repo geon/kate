@@ -3,6 +3,8 @@
 
 #include "platform/dos/ega.h"
 #include "strip_coord.h"
+#include "ega_scroll_coord.h"
+#include "pixel_coord.h"
 
 #include <stdlib.h>
 
@@ -16,14 +18,14 @@
 
 
 typedef struct Buffer {
-	StripCoord scroll;
+	EgaScrollCoord scroll;
 	bool alternateBuffer;
 } Buffer;
 
 
 Buffer makeBuffer ();
 void updateBuffer (Buffer *buffer);
-void setBufferScroll (Buffer *buffer, unsigned short int column, unsigned short int y);
+void setBufferScroll (Buffer *buffer, PixelCoord scroll);
 
 StripCoord bufferMapWorldCoordToBufferCoord (Buffer *buffer, StripCoord worldCoord);
 unsigned short int bufferMapBufferCoordToBufferIndex (Buffer *buffer, StripCoord bufferCoord);

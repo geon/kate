@@ -8,6 +8,10 @@
 #include "sprite_instance.h"
 #include "sprite_struct.h"
 #include "map.h"
+#include "strip_coord.h"
+#include "pixel_coord.h"
+#include "ega_scroll_coord.h"
+#include "coord_conversion.h"
 
 #include <stdlib.h>
 #include <math.h>
@@ -152,15 +156,29 @@ void renderBackground (Renderer renderer, Map map) {
 }
 
 
-void rendererRender(Renderer renderer, unsigned int numSpriteInstances, SpriteInstance *spriteInstances, Map map) {
+rendererSetBufferOffset (Renderer renderer, PixelCoord scroll) {
+	EgaScrollCoord bufferScroll = makeEgaScrollCoordFromPixelCoord(scroll);
+	StripCoord stripScroll = makeStripCoordFromEgaScrollCoord(bufferScroll);
+	unsigned short bufferIndex = bufferMapBufferCoordToBufferIndex(
+		&renderer->buffer,
+		bufferMapWorldCoordToBufferCoord(&renderer->buffer, stripScroll)
+	);
+	setBufferOffset(bufferIndex, bufferScroll.restX);
+}
+
+
+void rendererRender(Renderer renderer, unsigned int numSpriteInstances, SpriteInstance *spriteInstances, Map map, PixelCoord scroll) {
 	updateBuffer(&renderer->buffer);
+	setBufferScroll(&renderer->buffer, scroll);
 
 	renderBackground(renderer, map);
 	renderSprites(renderer, numSpriteInstances, spriteInstances, renderer->buffer.alternateBuffer);
+
 	// Sets the start-address of the next frame.
 	// The value won't be latched by the EGA card until the vertical retrace.
 	// It is not possible to change the actual used address during a frame.
-	// setScroll(renderer->buffer, scrollX, scrollY);
+	rendererSetBufferOffset (renderer, scroll);
+
 	// V-sync.
 	waitForFrame();
 }

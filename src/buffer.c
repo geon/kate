@@ -1,6 +1,7 @@
 #include "buffer.h"
 #include "platform/dos/ega.h"
 #include "strip_coord.h"
+#include "coord_conversion.h"
 
 #include <stdlib.h>
 
@@ -10,6 +11,7 @@ Buffer makeBuffer () {
 
 	buffer.alternateBuffer = false;
 	buffer.scroll.column = 0;
+	buffer.scroll.restX = 0;
 	buffer.scroll.y = 0;
 
 	return buffer;
@@ -21,9 +23,9 @@ void updateBuffer (Buffer *buffer) {
 }
 
 
-void setBufferScroll (Buffer *buffer, unsigned short int column, unsigned short int y) {
-	buffer->scroll.column = column;
-	buffer->scroll.y = y;
+void setBufferScroll (Buffer *buffer, PixelCoord scroll) {
+	// TODO: Update dirty strips, using old and new scroll value.
+	buffer->scroll = makeEgaScrollCoordFromPixelCoord(scroll);
 }
 
 
