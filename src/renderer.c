@@ -85,7 +85,7 @@ Sprite rendererLoadSprite (Renderer renderer, char *imagePath, char **errorMessa
 }
 
 
-void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, bool alternateBuffer) {
+void drawSprite(Renderer renderer, SpriteInstance *spriteInstance) {
 	unsigned int y, column;
 	for (y = 0; y < spriteInstance->sprite->height; ++y) {
 		for (column=0; column<spriteInstance->sprite->numColumns; ++column) {
@@ -125,11 +125,11 @@ void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, bool alternat
 }
 
 
-void renderSprites (Renderer renderer, unsigned int numSpriteInstances, SpriteInstance *spriteInstances, bool alternateBuffer) {
+void renderSprites (Renderer renderer, unsigned int numSpriteInstances, SpriteInstance *spriteInstances) {
 	unsigned int i;
 
 	for (i=0; i<numSpriteInstances; ++i) {
-		drawSprite(renderer, &spriteInstances[i], alternateBuffer);
+		drawSprite(renderer, &spriteInstances[i]);
 	}
 }
 
@@ -172,7 +172,7 @@ void rendererRender(Renderer renderer, unsigned int numSpriteInstances, SpriteIn
 	setBufferScroll(&renderer->buffer, scroll);
 
 	renderBackground(renderer, map);
-	renderSprites(renderer, numSpriteInstances, spriteInstances, renderer->buffer.alternateBuffer);
+	renderSprites(renderer, numSpriteInstances, spriteInstances);
 
 	// Sets the start-address of the next frame.
 	// The value won't be latched by the EGA card until the vertical retrace.
