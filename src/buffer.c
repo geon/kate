@@ -45,8 +45,7 @@ StripCoord bufferMapWorldCoordToBufferCoord (Buffer *buffer, StripCoord worldCoo
 unsigned short int bufferMapBufferCoordToBufferIndex (Buffer *buffer, StripCoord bufferCoord) {
 	return
 		bufferIndexStart(buffer->scroll.column, buffer->scroll.y, buffer->alternateBuffer) +
-		bufferCoord.y*EGA_BUFFER_NUM_COLUMNS + bufferCoord.column +
-		(buffer->alternateBuffer ? EGA_BUFFER_SIZE : 0);;
+		bufferCoord.y*EGA_BUFFER_NUM_COLUMNS + bufferCoord.column;
 }
 
 
