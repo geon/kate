@@ -3,7 +3,6 @@
 #include "platform/dos/ega.h"
 #include "platform/dos/bitplane_strip.h"
 #include "buffer.h"
-#include "dirty_background_strips.h"
 #include "sprite.h"
 #include "sprite_instance.h"
 #include "sprite_struct.h"
@@ -26,8 +25,6 @@ typedef struct RendererStruct {
 
 	unsigned short int numSprites;
 	Sprite *sprites;
-
-	DirtyBackgroundStrips dirtyBackgroundStrips;
 } RendererStruct;
 
 
@@ -39,8 +36,6 @@ Renderer makeRenderer (char **errorMessage) {
 	// TODO: Make it dynamic.
 	renderer->sprites = malloc(sizeof(Sprite) * 100);
 
-	renderer->dirtyBackgroundStrips = makeDirtyBackgroundStrips();
-
 	return renderer;
 }
 
@@ -48,7 +43,6 @@ Renderer makeRenderer (char **errorMessage) {
 void freeRenderer (Renderer renderer) {
 	unsigned int i;
 
-	freeDirtyBackgroundStrips(renderer->dirtyBackgroundStrips);
 	for (i=0; i<renderer->numSprites; ++i) {
 		freeSprite(renderer->sprites[i]);
 	}
@@ -117,10 +111,10 @@ void drawSprite(Renderer renderer, SpriteInstance *spriteInstance) {
 			// TODO: Combine the adjecent strips, to avoid double writes.
 			shiftMask = spriteInstance->sprite->mask[sourceStripIndex] >> posXRest;
 			drawStrip(destinationStripIndex, stripShiftedA, shiftMask);
-			markDirtyBackgroundStrips(renderer->dirtyBackgroundStrips, destinationStripIndex);
+			bufferMarkDirtyBackgroundStrips(renderer->buffer, destinationStripIndex);
 			shiftMask = spriteInstance->sprite->mask[sourceStripIndex] << (8 - posXRest);
 			drawStrip(destinationStripIndex + 1, stripShiftedB, shiftMask);
-			markDirtyBackgroundStrips(renderer->dirtyBackgroundStrips, destinationStripIndex+1);
+			bufferMarkDirtyBackgroundStrips(renderer->buffer, destinationStripIndex+1);
 		}
 	}
 }
@@ -137,8 +131,8 @@ void renderSprites (Renderer renderer, unsigned int numSpriteInstances, SpriteIn
 
 void renderBackground (Renderer renderer, Map map) {
 	unsigned long int i;
-	unsigned long int numIndices = getDirtyBackgroundStripsNumIndices(renderer->dirtyBackgroundStrips);
-	unsigned short int *indices = getDirtyBackgroundStripsIndices(renderer->dirtyBackgroundStrips);
+	unsigned long int numIndices = bufferGetDirtyBackgroundStripsNumIndices(renderer->buffer);
+	unsigned short int *indices = bufferGetDirtyBackgroundStripsIndices(renderer->buffer);
 
 	for (i=0; i<numIndices; ++i) {
 		StripCoord bufferCoord;
@@ -153,7 +147,7 @@ void renderBackground (Renderer renderer, Map map) {
 		);
 	}
 
-	clearDirtyBackgroundStrips(renderer->dirtyBackgroundStrips);
+	bufferClearDirtyBackgroundStrips(renderer->buffer);
 }
 
 

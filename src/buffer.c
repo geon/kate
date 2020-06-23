@@ -9,6 +9,8 @@
 typedef struct BufferStruct {
 	EgaScrollCoord scroll;
 	bool alternateBuffer;
+	// TODO: Split into 2; one for each doubled buffer.
+	DirtyBackgroundStrips dirtyBackgroundStrips;
 } BufferStruct;
 
 
@@ -19,12 +21,14 @@ Buffer makeBuffer () {
 	buffer->scroll.column = 0;
 	buffer->scroll.restX = 0;
 	buffer->scroll.y = 0;
+	buffer->dirtyBackgroundStrips = makeDirtyBackgroundStrips();
 
 	return buffer;
 }
 
 
 void freeBuffer (Buffer buffer) {
+	freeDirtyBackgroundStrips(buffer->dirtyBackgroundStrips);
 	free(buffer);
 }
 
@@ -74,4 +78,24 @@ StripCoord bufferMapBufferCoordToWorldCoord (Buffer buffer, StripCoord bufferCoo
 	worldCoord.column = buffer->scroll.column + bufferCoord.column;
 	worldCoord.y = buffer->scroll.y + bufferCoord.y;
 	return  worldCoord;
+}
+
+
+unsigned long int bufferGetDirtyBackgroundStripsNumIndices (Buffer buffer) {
+	return getDirtyBackgroundStripsNumIndices(buffer->dirtyBackgroundStrips);
+}
+
+
+unsigned short int *bufferGetDirtyBackgroundStripsIndices (Buffer buffer) {
+	return getDirtyBackgroundStripsIndices(buffer->dirtyBackgroundStrips);
+}
+
+
+void bufferClearDirtyBackgroundStrips (Buffer buffer) {
+	clearDirtyBackgroundStrips(buffer->dirtyBackgroundStrips);
+}
+
+
+void bufferMarkDirtyBackgroundStrips(Buffer buffer, unsigned short int bufferIndex) {
+	markDirtyBackgroundStrips(buffer->dirtyBackgroundStrips, bufferIndex);
 }

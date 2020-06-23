@@ -5,6 +5,7 @@
 #include "strip_coord.h"
 #include "ega_scroll_coord.h"
 #include "pixel_coord.h"
+#include "dirty_background_strips.h"
 
 #include <stdlib.h>
 
@@ -30,5 +31,10 @@ unsigned short int bufferMapBufferCoordToBufferIndex (Buffer buffer, StripCoord 
 
 StripCoord bufferMapBufferIndexToBufferCoord (Buffer buffer, unsigned short int bufferIndex);
 StripCoord bufferMapBufferCoordToWorldCoord (Buffer buffer, StripCoord bufferCoord);
+
+unsigned long int bufferGetDirtyBackgroundStripsNumIndices (Buffer buffer);
+unsigned short int *bufferGetDirtyBackgroundStripsIndices (Buffer buffer);
+void bufferClearDirtyBackgroundStrips (Buffer buffer);
+void bufferMarkDirtyBackgroundStrips(Buffer buffer, unsigned short int bufferIndex);
 
 #endif
