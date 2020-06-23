@@ -70,8 +70,8 @@ void worldUpdate (World world) {
 
 	world->frame++;
 
-	world->scroll.x = world->frame;
-	world->scroll.y = world->frame;
+	world->scroll.x = world->frame * 5;
+	world->scroll.y = world->frame * 5;
 
 	radius = sin(world->frame/4.3435674)*20 + 50;
 	posX = world->scroll.x + 200 + sin(world->frame/10.0) * radius;
