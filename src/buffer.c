@@ -9,8 +9,7 @@
 typedef struct BufferStruct {
 	EgaScrollCoord scroll;
 	bool alternateBuffer;
-	// TODO: Split into 2; one for each doubled buffer.
-	DirtyBackgroundStrips dirtyBackgroundStrips;
+	DirtyBackgroundStrips dirtyBackgroundStrips[2];
 } BufferStruct;
 
 
@@ -21,14 +20,16 @@ Buffer makeBuffer () {
 	buffer->scroll.column = 0;
 	buffer->scroll.restX = 0;
 	buffer->scroll.y = 0;
-	buffer->dirtyBackgroundStrips = makeDirtyBackgroundStrips();
+	buffer->dirtyBackgroundStrips[0] = makeDirtyBackgroundStrips(0);
+	buffer->dirtyBackgroundStrips[1] = makeDirtyBackgroundStrips(1);
 
 	return buffer;
 }
 
 
 void freeBuffer (Buffer buffer) {
-	freeDirtyBackgroundStrips(buffer->dirtyBackgroundStrips);
+	freeDirtyBackgroundStrips(buffer->dirtyBackgroundStrips[1]);
+	freeDirtyBackgroundStrips(buffer->dirtyBackgroundStrips[0]);
 	free(buffer);
 }
 
@@ -82,20 +83,20 @@ StripCoord bufferMapBufferCoordToWorldCoord (Buffer buffer, StripCoord bufferCoo
 
 
 unsigned long int bufferGetDirtyBackgroundStripsNumIndices (Buffer buffer) {
-	return getDirtyBackgroundStripsNumIndices(buffer->dirtyBackgroundStrips);
+	return getDirtyBackgroundStripsNumIndices(buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0]);
 }
 
 
 unsigned short int *bufferGetDirtyBackgroundStripsIndices (Buffer buffer) {
-	return getDirtyBackgroundStripsIndices(buffer->dirtyBackgroundStrips);
+	return getDirtyBackgroundStripsIndices(buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0]);
 }
 
 
 void bufferClearDirtyBackgroundStrips (Buffer buffer) {
-	clearDirtyBackgroundStrips(buffer->dirtyBackgroundStrips);
+	clearDirtyBackgroundStrips(buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0]);
 }
 
 
 void bufferMarkDirtyBackgroundStrips(Buffer buffer, unsigned short int bufferIndex) {
-	markDirtyBackgroundStrips(buffer->dirtyBackgroundStrips, bufferIndex);
+	markDirtyBackgroundStrips(buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0], bufferIndex);
 }

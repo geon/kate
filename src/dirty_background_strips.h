@@ -6,7 +6,7 @@
 
 typedef struct DirtyBackgroundStripsStruct *DirtyBackgroundStrips;
 
-DirtyBackgroundStrips makeDirtyBackgroundStrips ();
+DirtyBackgroundStrips makeDirtyBackgroundStrips (bool alternateBuffer);
 void freeDirtyBackgroundStrips (DirtyBackgroundStrips dirtyBackgroundStrips);
 unsigned long int getDirtyBackgroundStripsNumIndices (DirtyBackgroundStrips dirtyBackgroundStrips);
 unsigned short int *getDirtyBackgroundStripsIndices (DirtyBackgroundStrips dirtyBackgroundStrips);

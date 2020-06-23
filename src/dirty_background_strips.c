@@ -13,16 +13,18 @@ typedef struct DirtyBackgroundStripsStruct {
 } DirtyBackgroundStripsStruct;
 
 
-DirtyBackgroundStrips makeDirtyBackgroundStrips () {
+DirtyBackgroundStrips makeDirtyBackgroundStrips (bool alternateBuffer) {
 	DirtyBackgroundStrips dirtyBackgroundStrips;
+	unsigned short startIndex;
 	unsigned long int i;
 
 	dirtyBackgroundStrips = malloc(sizeof(DirtyBackgroundStripsStruct));
 
 	// The background has not been rendered yet, so it is by definition completely dirty.
-	dirtyBackgroundStrips->numIndices = EGA_PLANE_SIZE;
-	for (i=0; i<EGA_PLANE_SIZE; ++i) {
-		dirtyBackgroundStrips->indices[i] = i;
+	startIndex = alternateBuffer ? EGA_BUFFER_SIZE : 0;
+	dirtyBackgroundStrips->numIndices = EGA_BUFFER_SIZE;
+	for (i=0; i<dirtyBackgroundStrips->numIndices; ++i) {
+		dirtyBackgroundStrips->indices[i] = startIndex + i;
 	}
 
 	return dirtyBackgroundStrips;
