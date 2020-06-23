@@ -6,24 +6,35 @@
 #include <stdlib.h>
 
 
-Buffer makeBuffer () {
-	Buffer buffer;
+typedef struct BufferStruct {
+	EgaScrollCoord scroll;
+	bool alternateBuffer;
+} BufferStruct;
 
-	buffer.alternateBuffer = false;
-	buffer.scroll.column = 0;
-	buffer.scroll.restX = 0;
-	buffer.scroll.y = 0;
+
+Buffer makeBuffer () {
+	Buffer buffer = malloc(sizeof(BufferStruct));
+
+	buffer->alternateBuffer = false;
+	buffer->scroll.column = 0;
+	buffer->scroll.restX = 0;
+	buffer->scroll.y = 0;
 
 	return buffer;
 }
 
 
-void updateBuffer (Buffer *buffer) {
+void freeBuffer (Buffer buffer) {
+	free(buffer);
+}
+
+
+void updateBuffer (Buffer buffer) {
 	// buffer->alternateBuffer = !buffer->alternateBuffer;
 }
 
 
-void setBufferScroll (Buffer *buffer, PixelCoord scroll) {
+void setBufferScroll (Buffer buffer, PixelCoord scroll) {
 	// TODO: Update dirty strips, using old and new scroll value.
 	buffer->scroll = makeEgaScrollCoordFromPixelCoord(scroll);
 }
@@ -34,7 +45,7 @@ unsigned short int bufferIndexStart (unsigned short int column, unsigned short i
 }
 
 
-StripCoord bufferMapWorldCoordToBufferCoord (Buffer *buffer, StripCoord worldCoord) {
+StripCoord bufferMapWorldCoordToBufferCoord (Buffer buffer, StripCoord worldCoord) {
 	StripCoord bufferCoord;
 	bufferCoord.column = worldCoord.column - buffer->scroll.column;
 	bufferCoord.y = worldCoord.y - buffer->scroll.y;
@@ -42,14 +53,14 @@ StripCoord bufferMapWorldCoordToBufferCoord (Buffer *buffer, StripCoord worldCoo
 }
 
 
-unsigned short int bufferMapBufferCoordToBufferIndex (Buffer *buffer, StripCoord bufferCoord) {
+unsigned short int bufferMapBufferCoordToBufferIndex (Buffer buffer, StripCoord bufferCoord) {
 	return
 		bufferIndexStart(buffer->scroll.column, buffer->scroll.y, buffer->alternateBuffer) +
 		bufferCoord.y*EGA_BUFFER_NUM_COLUMNS + bufferCoord.column;
 }
 
 
-StripCoord bufferMapBufferIndexToBufferCoord (Buffer *buffer, unsigned short int bufferIndex) {
+StripCoord bufferMapBufferIndexToBufferCoord (Buffer buffer, unsigned short int bufferIndex) {
 	unsigned short int bufferStripIndexStart = bufferIndexStart(buffer->scroll.column, buffer->scroll.y, buffer->alternateBuffer);
 	StripCoord bufferCoord;
 	bufferCoord.column = (bufferIndex - bufferStripIndexStart) % EGA_BUFFER_NUM_COLUMNS;
@@ -58,7 +69,7 @@ StripCoord bufferMapBufferIndexToBufferCoord (Buffer *buffer, unsigned short int
 }
 
 
-StripCoord bufferMapBufferCoordToWorldCoord (Buffer *buffer, StripCoord bufferCoord) {
+StripCoord bufferMapBufferCoordToWorldCoord (Buffer buffer, StripCoord bufferCoord) {
 	StripCoord worldCoord;
 	worldCoord.column = buffer->scroll.column + bufferCoord.column;
 	worldCoord.y = buffer->scroll.y + bufferCoord.y;

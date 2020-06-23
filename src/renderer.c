@@ -52,6 +52,7 @@ void freeRenderer (Renderer renderer) {
 	for (i=0; i<renderer->numSprites; ++i) {
 		freeSprite(renderer->sprites[i]);
 	}
+	freeBuffer(renderer->buffer);
 	free(renderer);
 }
 
@@ -101,8 +102,8 @@ void drawSprite(Renderer renderer, SpriteInstance *spriteInstance) {
 			worldCoord.column = posXColumn + column;
 			worldCoord.y = spriteInstance->posY + y;
 			destinationStripIndex = bufferMapBufferCoordToBufferIndex(
-				&renderer->buffer,
-				bufferMapWorldCoordToBufferCoord(&renderer->buffer, worldCoord)
+				renderer->buffer,
+				bufferMapWorldCoordToBufferCoord(renderer->buffer, worldCoord)
 			);
 
 			stripShiftedA.planes[0] = strip.planes[0] >> posXRest;
@@ -142,8 +143,8 @@ void renderBackground (Renderer renderer, Map map) {
 	for (i=0; i<numIndices; ++i) {
 		StripCoord bufferCoord;
 		StripCoord worldCoord;
-		bufferCoord = bufferMapBufferIndexToBufferCoord(&renderer->buffer, indices[i]);
-		worldCoord = bufferMapBufferCoordToWorldCoord(&renderer->buffer, bufferCoord);
+		bufferCoord = bufferMapBufferIndexToBufferCoord(renderer->buffer, indices[i]);
+		worldCoord = bufferMapBufferCoordToWorldCoord(renderer->buffer, bufferCoord);
 
 		drawStrip(
 			indices[i],
@@ -160,16 +161,16 @@ void rendererSetBufferOffset (Renderer renderer, PixelCoord scroll) {
 	EgaScrollCoord bufferScroll = makeEgaScrollCoordFromPixelCoord(scroll);
 	StripCoord stripScroll = makeStripCoordFromEgaScrollCoord(bufferScroll);
 	unsigned short bufferIndex = bufferMapBufferCoordToBufferIndex(
-		&renderer->buffer,
-		bufferMapWorldCoordToBufferCoord(&renderer->buffer, stripScroll)
+		renderer->buffer,
+		bufferMapWorldCoordToBufferCoord(renderer->buffer, stripScroll)
 	);
 	setBufferOffset(bufferIndex, bufferScroll.restX);
 }
 
 
 void rendererRender(Renderer renderer, unsigned int numSpriteInstances, SpriteInstance *spriteInstances, Map map, PixelCoord scroll) {
-	updateBuffer(&renderer->buffer);
-	setBufferScroll(&renderer->buffer, scroll);
+	updateBuffer(renderer->buffer);
+	setBufferScroll(renderer->buffer, scroll);
 
 	renderBackground(renderer, map);
 	renderSprites(renderer, numSpriteInstances, spriteInstances);

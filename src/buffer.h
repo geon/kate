@@ -16,21 +16,19 @@
 // Half of the 64 kB plane for each of the 2 buffers.
 #define EGA_BUFFER_SIZE 32768
 
-
-typedef struct Buffer {
-	EgaScrollCoord scroll;
-	bool alternateBuffer;
-} Buffer;
+typedef struct BufferStruct *Buffer;
 
 
 Buffer makeBuffer ();
-void updateBuffer (Buffer *buffer);
-void setBufferScroll (Buffer *buffer, PixelCoord scroll);
+void freeBuffer (Buffer buffer);
 
-StripCoord bufferMapWorldCoordToBufferCoord (Buffer *buffer, StripCoord worldCoord);
-unsigned short int bufferMapBufferCoordToBufferIndex (Buffer *buffer, StripCoord bufferCoord);
+void updateBuffer (Buffer buffer);
+void setBufferScroll (Buffer buffer, PixelCoord scroll);
 
-StripCoord bufferMapBufferIndexToBufferCoord (Buffer *buffer, unsigned short int bufferIndex);
-StripCoord bufferMapBufferCoordToWorldCoord (Buffer *buffer, StripCoord bufferCoord);
+StripCoord bufferMapWorldCoordToBufferCoord (Buffer buffer, StripCoord worldCoord);
+unsigned short int bufferMapBufferCoordToBufferIndex (Buffer buffer, StripCoord bufferCoord);
+
+StripCoord bufferMapBufferIndexToBufferCoord (Buffer buffer, unsigned short int bufferIndex);
+StripCoord bufferMapBufferCoordToWorldCoord (Buffer buffer, StripCoord bufferCoord);
 
 #endif
