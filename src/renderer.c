@@ -156,7 +156,7 @@ void renderBackground (Renderer renderer, Map map) {
 }
 
 
-rendererSetBufferOffset (Renderer renderer, PixelCoord scroll) {
+void rendererSetBufferOffset (Renderer renderer, PixelCoord scroll) {
 	EgaScrollCoord bufferScroll = makeEgaScrollCoordFromPixelCoord(scroll);
 	StripCoord stripScroll = makeStripCoordFromEgaScrollCoord(bufferScroll);
 	unsigned short bufferIndex = bufferMapBufferCoordToBufferIndex(
