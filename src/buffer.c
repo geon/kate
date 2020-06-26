@@ -40,9 +40,74 @@ void updateBuffer (Buffer buffer) {
 }
 
 
+#define EGA_SCREEN_NUM_COLUMNS 80
+#define EGA_SCREEN_HEIGHT 350
 void setBufferScroll (Buffer buffer, PixelCoord scroll) {
-	// TODO: Update dirty strips, using old and new scroll value.
+	int xChange = scroll.x/8 - buffer->scroll.column;
+	int yChange = scroll.y - buffer->scroll.y;
+
+	// Actually scroll.
 	buffer->scroll = makeEgaScrollCoordFromPixelCoord(scroll);
+
+	// Mark the new edge strips as dirty.
+
+	// Mark the bottom/top edge.
+	{
+		unsigned short int beginY = yChange < 0
+			? 0
+			: max(0, EGA_SCREEN_HEIGHT - 1 - yChange);
+		unsigned short int endY = yChange < 0
+			? -yChange
+			: EGA_SCREEN_HEIGHT;
+		unsigned short int dirtyColumn, dirtyY;
+		for (dirtyY=beginY; dirtyY<endY; ++dirtyY) {
+			for (dirtyColumn=0; dirtyColumn<=EGA_SCREEN_NUM_COLUMNS; ++dirtyColumn) {
+				StripCoord dirtyCoord;
+				dirtyCoord.column = dirtyColumn + scroll.x/8;
+				dirtyCoord.y = dirtyY + scroll.y;
+				dirtyBackgroundStripsMark(
+					buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0],
+					bufferMapBufferCoordToBufferIndex(
+						buffer,
+						bufferMapWorldCoordToBufferCoord(buffer, dirtyCoord)
+					)
+				);
+			}
+		}
+	}
+
+	// Mark the left/right edge, where it does not overlap the top/bottom.
+	{
+		// The range in Y not covered above.
+		unsigned short int beginY = yChange < 0
+			? -yChange
+			: 0;
+		unsigned short int endY = yChange < 0
+			? EGA_SCREEN_HEIGHT
+			: max(0, EGA_SCREEN_HEIGHT - 1 - yChange);
+
+		unsigned short int beginColumn = xChange < 0
+			? 0
+			: max(0, EGA_SCREEN_NUM_COLUMNS - 1 - xChange);
+		unsigned short int endColumn = xChange < 0
+			? -xChange
+			: EGA_SCREEN_NUM_COLUMNS;
+		unsigned short int dirtyColumn, dirtyY;
+		for (dirtyY=beginY; dirtyY<endY; ++dirtyY) {
+			for (dirtyColumn=beginColumn; dirtyColumn<=endColumn; ++dirtyColumn) {
+				StripCoord dirtyCoord;
+				dirtyCoord.column = dirtyColumn + scroll.x/8;
+				dirtyCoord.y = dirtyY + scroll.y;
+				dirtyBackgroundStripsMark(
+					buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0],
+					bufferMapBufferCoordToBufferIndex(
+						buffer,
+						bufferMapWorldCoordToBufferCoord(buffer, dirtyCoord)
+					)
+				);
+			}
+		}
+	}
 }
 
 
