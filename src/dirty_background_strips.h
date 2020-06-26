@@ -10,7 +10,7 @@ DirtyBackgroundStrips makeDirtyBackgroundStrips (bool alternateBuffer);
 void freeDirtyBackgroundStrips (DirtyBackgroundStrips dirtyBackgroundStrips);
 unsigned long int getDirtyBackgroundStripsNumIndices (DirtyBackgroundStrips dirtyBackgroundStrips);
 unsigned short int *getDirtyBackgroundStripsIndices (DirtyBackgroundStrips dirtyBackgroundStrips);
-void clearDirtyBackgroundStrips (DirtyBackgroundStrips dirtyBackgroundStrips);
-void markDirtyBackgroundStrips (DirtyBackgroundStrips dirtyBackgroundStrips, unsigned short int index);
+void dirtyBackgroundStripsClear (DirtyBackgroundStrips dirtyBackgroundStrips);
+void dirtyBackgroundStripsMark (DirtyBackgroundStrips dirtyBackgroundStrips, unsigned short int index);
 
 #endif

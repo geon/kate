@@ -43,10 +43,10 @@ unsigned short int *getDirtyBackgroundStripsIndices (DirtyBackgroundStrips dirty
 	return dirtyBackgroundStrips->indices;
 }
 
-void clearDirtyBackgroundStrips (DirtyBackgroundStrips dirtyBackgroundStrips) {
+void dirtyBackgroundStripsClear (DirtyBackgroundStrips dirtyBackgroundStrips) {
 	dirtyBackgroundStrips->numIndices = 0;
 }
 
-void markDirtyBackgroundStrips (DirtyBackgroundStrips dirtyBackgroundStrips, unsigned short int index) {
+void dirtyBackgroundStripsMark (DirtyBackgroundStrips dirtyBackgroundStrips, unsigned short int index) {
 	dirtyBackgroundStrips->indices[dirtyBackgroundStrips->numIndices++] = index;
 }

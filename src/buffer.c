@@ -94,10 +94,10 @@ unsigned short int *bufferGetDirtyBackgroundStripsIndices (Buffer buffer) {
 
 
 void bufferClearDirtyBackgroundStrips (Buffer buffer) {
-	clearDirtyBackgroundStrips(buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0]);
+	dirtyBackgroundStripsClear(buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0]);
 }
 
 
 void bufferMarkDirtyBackgroundStrips(Buffer buffer, unsigned short int bufferIndex) {
-	markDirtyBackgroundStrips(buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0], bufferIndex);
+	dirtyBackgroundStripsMark(buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0], bufferIndex);
 }
