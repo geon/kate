@@ -1,4 +1,4 @@
-#include "dirty_background_strips.h";
+#include "dirty_background_strips.h"
 
 #include "world.h"
 #include "buffer.h"
