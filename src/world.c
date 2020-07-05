@@ -63,23 +63,16 @@ void freeWorld (World world) {
 
 
 void worldUpdate (World world) {
-	unsigned int radius;
 	unsigned short int i;
-	unsigned int posX;
-	unsigned int posY;
 
 	world->frame++;
 
 	world->scroll.x = world->frame * 5;
 	world->scroll.y = world->frame * 5;
 
-	radius = sin(world->frame/4.3435674)*20 + 50;
-	posX = world->scroll.x + 200 + sin(world->frame/10.0) * radius;
-	posY = world->scroll.y + 200 + cos(world->frame/10.0) * radius;
-
 	for (i=0; i<world->numSpriteInstances; ++i) {
-		world->spriteInstances[i].posX = posX + i*64;
-		world->spriteInstances[i].posY = posY;
+		world->spriteInstances[i].posX = world->scroll.x + 150 + i*64;
+		world->spriteInstances[i].posY = world->scroll.y + 150;
 	}
 }
 
