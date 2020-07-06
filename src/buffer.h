@@ -31,6 +31,8 @@ unsigned short int bufferMapBufferCoordToBufferIndex (Buffer buffer, StripCoord 
 
 StripCoord bufferMapBufferIndexToBufferCoord (Buffer buffer, unsigned short int bufferIndex);
 StripCoord bufferMapBufferCoordToWorldCoord (Buffer buffer, StripCoord bufferCoord);
+StripCoord bufferStaticMapBufferIndexToBufferCoord (EgaScrollCoord bufferScroll, bool alternateBuffer, unsigned short int bufferIndex);
+StripCoord bufferStaticMapBufferCoordToWorldCoord (EgaScrollCoord bufferScroll, StripCoord bufferCoord);
 
 unsigned long int bufferGetDirtyBackgroundStripsNumIndices (Buffer buffer);
 unsigned short int *bufferGetDirtyBackgroundStripsIndices (Buffer buffer);

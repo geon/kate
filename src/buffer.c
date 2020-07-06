@@ -132,7 +132,17 @@ unsigned short int bufferMapBufferCoordToBufferIndex (Buffer buffer, StripCoord 
 
 
 StripCoord bufferMapBufferIndexToBufferCoord (Buffer buffer, unsigned short int bufferIndex) {
-	unsigned short int bufferStripIndexStart = bufferIndexStart(buffer->scroll.column, buffer->scroll.y, buffer->alternateBuffer);
+	return bufferStaticMapBufferIndexToBufferCoord(buffer->scroll, buffer->alternateBuffer, bufferIndex);
+}
+
+
+StripCoord bufferMapBufferCoordToWorldCoord (Buffer buffer, StripCoord bufferCoord) {
+	return bufferStaticMapBufferCoordToWorldCoord(buffer->scroll, bufferCoord);
+}
+
+
+StripCoord bufferStaticMapBufferIndexToBufferCoord (EgaScrollCoord bufferScroll, bool alternateBuffer, unsigned short int bufferIndex) {
+	unsigned short int bufferStripIndexStart = bufferIndexStart(bufferScroll.column, bufferScroll.y, alternateBuffer);
 	StripCoord bufferCoord;
 	bufferCoord.column = (bufferIndex - bufferStripIndexStart) % EGA_BUFFER_NUM_COLUMNS;
 	bufferCoord.y = (bufferIndex - bufferStripIndexStart) / EGA_BUFFER_NUM_COLUMNS;
@@ -140,10 +150,10 @@ StripCoord bufferMapBufferIndexToBufferCoord (Buffer buffer, unsigned short int 
 }
 
 
-StripCoord bufferMapBufferCoordToWorldCoord (Buffer buffer, StripCoord bufferCoord) {
+StripCoord bufferStaticMapBufferCoordToWorldCoord (EgaScrollCoord bufferScroll, StripCoord bufferCoord) {
 	StripCoord worldCoord;
-	worldCoord.column = buffer->scroll.column + bufferCoord.column;
-	worldCoord.y = buffer->scroll.y + bufferCoord.y;
+	worldCoord.column = bufferScroll.column + bufferCoord.column;
+	worldCoord.y = bufferScroll.y + bufferCoord.y;
 	return  worldCoord;
 }
 
