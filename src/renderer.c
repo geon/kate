@@ -135,10 +135,7 @@ void renderBackground (Renderer renderer, Map map) {
 	unsigned short int *indices = bufferGetDirtyBackgroundStripsIndices(renderer->buffer);
 
 	for (i=0; i<numIndices; ++i) {
-		StripCoord bufferCoord;
-		StripCoord worldCoord;
-		bufferCoord = bufferMapBufferIndexToBufferCoord(renderer->buffer, indices[i]);
-		worldCoord = bufferMapBufferCoordToWorldCoord(renderer->buffer, bufferCoord);
+		StripCoord worldCoord = bufferMapBufferIndexToWorldCoord(renderer->buffer, indices[i]);
 
 		drawStrip(
 			indices[i],

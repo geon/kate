@@ -143,13 +143,15 @@ unsigned short int bufferStaticMapBufferCoordToBufferIndex (EgaScrollCoord buffe
 }
 
 
-StripCoord bufferMapBufferIndexToBufferCoord (Buffer buffer, unsigned short int bufferIndex) {
-	return bufferStaticMapBufferIndexToBufferCoord(buffer->scroll, buffer->alternateBuffer, bufferIndex);
-}
-
-
-StripCoord bufferMapBufferCoordToWorldCoord (Buffer buffer, StripCoord bufferCoord) {
-	return bufferStaticMapBufferCoordToWorldCoord(buffer->scroll, bufferCoord);
+StripCoord bufferMapBufferIndexToWorldCoord (Buffer buffer, unsigned short int bufferIndex) {
+	return bufferStaticMapBufferCoordToWorldCoord(
+		buffer->scroll,
+		bufferStaticMapBufferIndexToBufferCoord(
+			buffer->scroll,
+			buffer->alternateBuffer,
+			bufferIndex
+		)
+	);
 }
 
 
