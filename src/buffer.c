@@ -36,7 +36,7 @@ void freeBuffer (Buffer buffer) {
 
 // TODO: Move code from `rendererSetBufferOffset` here, and rename to `switchBuffer`?
 void updateBuffer (Buffer buffer) {
-	// buffer->alternateBuffer = !buffer->alternateBuffer;
+	buffer->alternateBuffer = !buffer->alternateBuffer;
 }
 
 
