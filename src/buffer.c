@@ -66,7 +66,11 @@ void setBufferScroll (Buffer buffer, PixelCoord scroll) {
 				dirtyCoord.column = dirtyColumn + scroll.x/8;
 				dirtyCoord.y = dirtyY + scroll.y;
 				dirtyBackgroundStripsMark(
-					buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0],
+					buffer->dirtyBackgroundStrips[0],
+					dirtyCoord
+				);
+				dirtyBackgroundStripsMark(
+					buffer->dirtyBackgroundStrips[1],
 					dirtyCoord
 				);
 			}
@@ -96,7 +100,11 @@ void setBufferScroll (Buffer buffer, PixelCoord scroll) {
 				dirtyCoord.column = dirtyColumn + scroll.x/8;
 				dirtyCoord.y = dirtyY + scroll.y;
 				dirtyBackgroundStripsMark(
-					buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0],
+					buffer->dirtyBackgroundStrips[0],
+					dirtyCoord
+				);
+				dirtyBackgroundStripsMark(
+					buffer->dirtyBackgroundStrips[1],
 					dirtyCoord
 				);
 			}
