@@ -95,9 +95,9 @@ void drawSprite(Renderer renderer, SpriteInstance *spriteInstance) {
 
 			worldCoord.column = posXColumn + column;
 			worldCoord.y = spriteInstance->posY + y;
-			destinationStripIndex = bufferMapBufferCoordToBufferIndex(
+			destinationStripIndex = bufferMapWorldCoordToBufferIndex(
 				renderer->buffer,
-				bufferMapWorldCoordToBufferCoord(renderer->buffer, worldCoord)
+				worldCoord
 			);
 
 			stripShiftedA.planes[0] = strip.planes[0] >> posXRest;
@@ -154,9 +154,9 @@ void renderBackground (Renderer renderer, Map map) {
 void rendererSetBufferOffset (Renderer renderer, PixelCoord scroll) {
 	EgaScrollCoord bufferScroll = makeEgaScrollCoordFromPixelCoord(scroll);
 	StripCoord stripScroll = makeStripCoordFromEgaScrollCoord(bufferScroll);
-	unsigned short bufferIndex = bufferMapBufferCoordToBufferIndex(
+	unsigned short bufferIndex = bufferMapWorldCoordToBufferIndex(
 		renderer->buffer,
-		bufferMapWorldCoordToBufferCoord(renderer->buffer, stripScroll)
+		stripScroll
 	);
 	setBufferOffset(bufferIndex, bufferScroll.restX);
 }

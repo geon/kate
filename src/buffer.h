@@ -26,8 +26,7 @@ void freeBuffer (Buffer buffer);
 void updateBuffer (Buffer buffer);
 void setBufferScroll (Buffer buffer, PixelCoord scroll);
 
-StripCoord bufferMapWorldCoordToBufferCoord (Buffer buffer, StripCoord worldCoord);
-unsigned short int bufferMapBufferCoordToBufferIndex (Buffer buffer, StripCoord bufferCoord);
+unsigned short int bufferMapWorldCoordToBufferIndex (Buffer buffer, StripCoord worldCoord);
 StripCoord bufferStaticMapWorldCoordToBufferCoord (EgaScrollCoord bufferScroll, StripCoord worldCoord);
 unsigned short int bufferStaticMapBufferCoordToBufferIndex (EgaScrollCoord bufferScroll, bool alternateBuffer, StripCoord bufferCoord);
 

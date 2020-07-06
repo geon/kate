@@ -67,9 +67,9 @@ void setBufferScroll (Buffer buffer, PixelCoord scroll) {
 				dirtyCoord.y = dirtyY + scroll.y;
 				dirtyBackgroundStripsMark(
 					buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0],
-					bufferMapBufferCoordToBufferIndex(
+					bufferMapWorldCoordToBufferIndex(
 						buffer,
-						bufferMapWorldCoordToBufferCoord(buffer, dirtyCoord)
+						dirtyCoord
 					)
 				);
 			}
@@ -100,9 +100,9 @@ void setBufferScroll (Buffer buffer, PixelCoord scroll) {
 				dirtyCoord.y = dirtyY + scroll.y;
 				dirtyBackgroundStripsMark(
 					buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0],
-					bufferMapBufferCoordToBufferIndex(
+					bufferMapWorldCoordToBufferIndex(
 						buffer,
-						bufferMapWorldCoordToBufferCoord(buffer, dirtyCoord)
+						dirtyCoord
 					)
 				);
 			}
@@ -116,13 +116,15 @@ unsigned short int bufferIndexStart (unsigned short int column, unsigned short i
 }
 
 
-StripCoord bufferMapWorldCoordToBufferCoord (Buffer buffer, StripCoord worldCoord) {
-	return bufferStaticMapWorldCoordToBufferCoord (buffer->scroll, worldCoord);
-}
-
-
-unsigned short int bufferMapBufferCoordToBufferIndex (Buffer buffer, StripCoord bufferCoord) {
-	return bufferStaticMapBufferCoordToBufferIndex (buffer->scroll, buffer->alternateBuffer, bufferCoord);
+unsigned short int bufferMapWorldCoordToBufferIndex (Buffer buffer, StripCoord worldCoord) {
+	return  bufferStaticMapBufferCoordToBufferIndex(
+		buffer->scroll,
+		buffer->alternateBuffer,
+		bufferStaticMapWorldCoordToBufferCoord(
+			buffer->scroll,
+			worldCoord
+		)
+	);
 }
 
 
