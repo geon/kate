@@ -28,6 +28,8 @@ void setBufferScroll (Buffer buffer, PixelCoord scroll);
 
 StripCoord bufferMapWorldCoordToBufferCoord (Buffer buffer, StripCoord worldCoord);
 unsigned short int bufferMapBufferCoordToBufferIndex (Buffer buffer, StripCoord bufferCoord);
+StripCoord bufferStaticMapWorldCoordToBufferCoord (EgaScrollCoord bufferScroll, StripCoord worldCoord);
+unsigned short int bufferStaticMapBufferCoordToBufferIndex (EgaScrollCoord bufferScroll, bool alternateBuffer, StripCoord bufferCoord);
 
 StripCoord bufferMapBufferIndexToBufferCoord (Buffer buffer, unsigned short int bufferIndex);
 StripCoord bufferMapBufferCoordToWorldCoord (Buffer buffer, StripCoord bufferCoord);

@@ -117,16 +117,26 @@ unsigned short int bufferIndexStart (unsigned short int column, unsigned short i
 
 
 StripCoord bufferMapWorldCoordToBufferCoord (Buffer buffer, StripCoord worldCoord) {
-	StripCoord bufferCoord;
-	bufferCoord.column = worldCoord.column - buffer->scroll.column;
-	bufferCoord.y = worldCoord.y - buffer->scroll.y;
-	return  bufferCoord;
+	return bufferStaticMapWorldCoordToBufferCoord (buffer->scroll, worldCoord);
 }
 
 
 unsigned short int bufferMapBufferCoordToBufferIndex (Buffer buffer, StripCoord bufferCoord) {
+	return bufferStaticMapBufferCoordToBufferIndex (buffer->scroll, buffer->alternateBuffer, bufferCoord);
+}
+
+
+StripCoord bufferStaticMapWorldCoordToBufferCoord (EgaScrollCoord bufferScroll, StripCoord worldCoord) {
+	StripCoord bufferCoord;
+	bufferCoord.column = worldCoord.column - bufferScroll.column;
+	bufferCoord.y = worldCoord.y - bufferScroll.y;
+	return  bufferCoord;
+}
+
+
+unsigned short int bufferStaticMapBufferCoordToBufferIndex (EgaScrollCoord bufferScroll, bool alternateBuffer, StripCoord bufferCoord) {
 	return
-		bufferIndexStart(buffer->scroll.column, buffer->scroll.y, buffer->alternateBuffer) +
+		bufferIndexStart(bufferScroll.column, bufferScroll.y, alternateBuffer) +
 		bufferCoord.y*EGA_BUFFER_NUM_COLUMNS + bufferCoord.column;
 }
 
