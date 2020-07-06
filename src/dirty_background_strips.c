@@ -8,23 +8,27 @@
 
 
 typedef struct DirtyBackgroundStripsStruct {
-	unsigned long int numIndices;
-	unsigned short int indices[EGA_PLANE_SIZE];
+	unsigned long int numCoords;
+	StripCoord coords[EGA_PLANE_SIZE];
 } DirtyBackgroundStripsStruct;
 
 
 DirtyBackgroundStrips makeDirtyBackgroundStrips (bool alternateBuffer) {
-	DirtyBackgroundStrips dirtyBackgroundStrips;
-	unsigned short startIndex;
-	unsigned long int i;
+	unsigned long int column;
+	unsigned long int y;
 
+	DirtyBackgroundStrips dirtyBackgroundStrips;
 	dirtyBackgroundStrips = malloc(sizeof(DirtyBackgroundStripsStruct));
+	dirtyBackgroundStrips->numCoords = 0;
 
 	// The background has not been rendered yet, so it is by definition completely dirty.
-	startIndex = alternateBuffer ? EGA_BUFFER_SIZE : 0;
-	dirtyBackgroundStrips->numIndices = EGA_BUFFER_SIZE;
-	for (i=0; i<dirtyBackgroundStrips->numIndices; ++i) {
-		dirtyBackgroundStrips->indices[i] = startIndex + i;
+	for (column=0; column<EGA_BUFFER_NUM_COLUMNS_DEFAULT; ++column) {
+		for (y=0; y<EGA_BUFFER_NUM_ROWS_DEFAULT; ++y) {
+			StripCoord coord;
+			coord.column = column;
+			coord.y = y;
+			dirtyBackgroundStripsMark(dirtyBackgroundStrips, coord);
+		}
 	}
 
 	return dirtyBackgroundStrips;
@@ -35,18 +39,18 @@ void freeDirtyBackgroundStrips (DirtyBackgroundStrips dirtyBackgroundStrips) {
 	free(dirtyBackgroundStrips);
 }
 
-unsigned long int getDirtyBackgroundStripsNumIndices (DirtyBackgroundStrips dirtyBackgroundStrips) {
-	return dirtyBackgroundStrips->numIndices;
+unsigned long int getDirtyBackgroundStripsNumCoords (DirtyBackgroundStrips dirtyBackgroundStrips) {
+	return dirtyBackgroundStrips->numCoords;
 }
 
-unsigned short int *getDirtyBackgroundStripsIndices (DirtyBackgroundStrips dirtyBackgroundStrips) {
-	return dirtyBackgroundStrips->indices;
+StripCoord *getDirtyBackgroundStripsCoords (DirtyBackgroundStrips dirtyBackgroundStrips) {
+	return dirtyBackgroundStrips->coords;
 }
 
 void dirtyBackgroundStripsClear (DirtyBackgroundStrips dirtyBackgroundStrips) {
-	dirtyBackgroundStrips->numIndices = 0;
+	dirtyBackgroundStrips->numCoords = 0;
 }
 
-void dirtyBackgroundStripsMark (DirtyBackgroundStrips dirtyBackgroundStrips, unsigned short int index) {
-	dirtyBackgroundStrips->indices[dirtyBackgroundStrips->numIndices++] = index;
+void dirtyBackgroundStripsMark (DirtyBackgroundStrips dirtyBackgroundStrips, StripCoord coord) {
+	dirtyBackgroundStrips->coords[dirtyBackgroundStrips->numCoords++] = coord;
 }

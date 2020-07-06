@@ -12,6 +12,7 @@
 
 #define EGA_BUFFER_NUM_COLUMNS 88
 #define EGA_BUFFER_NUM_COLUMNS_DEFAULT 80
+#define EGA_BUFFER_NUM_ROWS_DEFAULT 350
 // Bytes per plane, or number of pixels/8.
 #define EGA_PLANE_SIZE 65536
 // Half of the 64 kB plane for each of the 2 buffers.
@@ -34,9 +35,9 @@ StripCoord bufferMapBufferIndexToWorldCoord (Buffer buffer, unsigned short int b
 StripCoord bufferStaticMapBufferIndexToBufferCoord (EgaScrollCoord bufferScroll, bool alternateBuffer, unsigned short int bufferIndex);
 StripCoord bufferStaticMapBufferCoordToWorldCoord (EgaScrollCoord bufferScroll, StripCoord bufferCoord);
 
-unsigned long int bufferGetDirtyBackgroundStripsNumIndices (Buffer buffer);
-unsigned short int *bufferGetDirtyBackgroundStripsIndices (Buffer buffer);
+unsigned long int bufferGetDirtyBackgroundStripsNumCoords (Buffer buffer);
+StripCoord *bufferGetDirtyBackgroundStripsCoords (Buffer buffer);
 void bufferClearDirtyBackgroundStrips (Buffer buffer);
-void bufferMarkDirtyBackgroundStrips(Buffer buffer, unsigned short int bufferIndex);
+void bufferMarkDirtyBackgroundStrips(Buffer buffer, StripCoord coord);
 
 #endif

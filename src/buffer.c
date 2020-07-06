@@ -67,10 +67,7 @@ void setBufferScroll (Buffer buffer, PixelCoord scroll) {
 				dirtyCoord.y = dirtyY + scroll.y;
 				dirtyBackgroundStripsMark(
 					buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0],
-					bufferMapWorldCoordToBufferIndex(
-						buffer,
-						dirtyCoord
-					)
+					dirtyCoord
 				);
 			}
 		}
@@ -100,10 +97,7 @@ void setBufferScroll (Buffer buffer, PixelCoord scroll) {
 				dirtyCoord.y = dirtyY + scroll.y;
 				dirtyBackgroundStripsMark(
 					buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0],
-					bufferMapWorldCoordToBufferIndex(
-						buffer,
-						dirtyCoord
-					)
+					dirtyCoord
 				);
 			}
 		}
@@ -172,13 +166,13 @@ StripCoord bufferStaticMapBufferCoordToWorldCoord (EgaScrollCoord bufferScroll, 
 }
 
 
-unsigned long int bufferGetDirtyBackgroundStripsNumIndices (Buffer buffer) {
-	return getDirtyBackgroundStripsNumIndices(buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0]);
+unsigned long int bufferGetDirtyBackgroundStripsNumCoords (Buffer buffer) {
+	return getDirtyBackgroundStripsNumCoords(buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0]);
 }
 
 
-unsigned short int *bufferGetDirtyBackgroundStripsIndices (Buffer buffer) {
-	return getDirtyBackgroundStripsIndices(buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0]);
+StripCoord *bufferGetDirtyBackgroundStripsCoords (Buffer buffer) {
+	return getDirtyBackgroundStripsCoords(buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0]);
 }
 
 
@@ -187,6 +181,6 @@ void bufferClearDirtyBackgroundStrips (Buffer buffer) {
 }
 
 
-void bufferMarkDirtyBackgroundStrips(Buffer buffer, unsigned short int bufferIndex) {
-	dirtyBackgroundStripsMark(buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0], bufferIndex);
+void bufferMarkDirtyBackgroundStrips(Buffer buffer, StripCoord coord) {
+	dirtyBackgroundStripsMark(buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0], coord);
 }

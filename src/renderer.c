@@ -111,10 +111,11 @@ void drawSprite(Renderer renderer, SpriteInstance *spriteInstance) {
 			// TODO: Combine the adjecent strips, to avoid double writes.
 			shiftMask = spriteInstance->sprite->mask[sourceStripIndex] >> posXRest;
 			drawStrip(destinationStripIndex, stripShiftedA, shiftMask);
-			bufferMarkDirtyBackgroundStrips(renderer->buffer, destinationStripIndex);
+			bufferMarkDirtyBackgroundStrips(renderer->buffer, worldCoord);
 			shiftMask = spriteInstance->sprite->mask[sourceStripIndex] << (8 - posXRest);
+			++worldCoord.column;
 			drawStrip(destinationStripIndex + 1, stripShiftedB, shiftMask);
-			bufferMarkDirtyBackgroundStrips(renderer->buffer, destinationStripIndex+1);
+			bufferMarkDirtyBackgroundStrips(renderer->buffer, worldCoord);
 		}
 	}
 }
@@ -131,14 +132,15 @@ void renderSprites (Renderer renderer, unsigned int numSpriteInstances, SpriteIn
 
 void renderBackground (Renderer renderer, Map map) {
 	unsigned long int i;
-	unsigned long int numIndices = bufferGetDirtyBackgroundStripsNumIndices(renderer->buffer);
-	unsigned short int *indices = bufferGetDirtyBackgroundStripsIndices(renderer->buffer);
+	unsigned long int numCoords = bufferGetDirtyBackgroundStripsNumCoords(renderer->buffer);
+	StripCoord *worldCoords = bufferGetDirtyBackgroundStripsCoords(renderer->buffer);
 
-	for (i=0; i<numIndices; ++i) {
-		StripCoord worldCoord = bufferMapBufferIndexToWorldCoord(renderer->buffer, indices[i]);
+	for (i=0; i<numCoords; ++i) {
+		StripCoord worldCoord = worldCoords[i];
+		unsigned short index = bufferMapWorldCoordToBufferIndex(renderer->buffer, worldCoord);
 
 		drawStrip(
-			indices[i],
+			index,
 			getMapStripAtWorldCoord(map, worldCoord),
 			0xFF
 		);
