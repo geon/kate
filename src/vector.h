@@ -19,12 +19,15 @@ ValueTypeName* methodPrefix##Begin(VectorTypeName vector); \
 ValueTypeName* methodPrefix##End(VectorTypeName vector); \
 
 
-#define defineVector(VectorTypeName, ValueTypeName, methodPrefix) \
+#define defineVectorStruct(VectorTypeName, ValueTypeName, methodPrefix) \
 typedef struct VectorTypeName##Struct { \
 	ValueTypeName *values; \
 	int size; \
 	int	capacity; \
 } VectorTypeName##Struct; \
+
+
+#define defineVector(VectorTypeName, ValueTypeName, methodPrefix) \
 VectorTypeName make##VectorTypeName(const int capacity) { \
     VectorTypeName vector = malloc(sizeof(VectorTypeName)); \
     initialize##VectorTypeName(vector, capacity); \

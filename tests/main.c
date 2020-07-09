@@ -2,6 +2,7 @@
 
 #include "../src/vector.h"
 declareVector(IntVector, int, intVector)
+defineVectorStruct(IntVector, int, intVector)
 defineVector(IntVector, int, intVector)
 
 
