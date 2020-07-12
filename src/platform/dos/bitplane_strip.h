@@ -6,5 +6,6 @@ typedef struct BitplaneStrip {
 } BitplaneStrip;
 
 BitplaneStrip makeBitplaneStrip (unsigned long int nibbleStrip);
+unsigned long int bitplaneStripAsInt (BitplaneStrip);
 
 #endif

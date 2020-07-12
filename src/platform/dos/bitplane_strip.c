@@ -39,3 +39,6 @@ BitplaneStrip makeBitplaneStrip (unsigned long int nibbleStrip) {
 	return bitplaneStrip;
 }
 
+unsigned long int bitplaneStripAsInt (BitplaneStrip bitplaneStrip) {
+	return *((unsigned long int*) ((void*) &bitplaneStrip));
+}
