@@ -17,6 +17,7 @@ void methodPrefix##Push(VectorTypeName vector, const TValue value); \
 void methodPrefix##Clear(VectorTypeName vector); \
 TValue* methodPrefix##Begin(VectorTypeName vector); \
 TValue* methodPrefix##End(VectorTypeName vector); \
+int methodPrefix##Size(VectorTypeName vector); \
 
 
 #define defineVectorStruct(VectorTypeName, TValue, methodPrefix) \
@@ -64,6 +65,9 @@ TValue* methodPrefix##Begin(VectorTypeName vector) { \
 } \
 TValue* methodPrefix##End(VectorTypeName vector) { \
     return vector->values + vector->size; \
+} \
+int methodPrefix##Size(VectorTypeName vector) { \
+	return vector->size; \
 } \
 
 
