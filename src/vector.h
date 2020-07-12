@@ -3,7 +3,7 @@
 
 #include <assert.h>
 
-#define vectorForeach(TValue, methodPrefix, iterator, vector) for (iterator=methodPrefix##Beginvector(); iterator!=methodPrefix##End(vector); ++iterator)
+#define vectorForeach(TValue, methodPrefix, iterator, vector) for (iterator=methodPrefix##Begin(vector); iterator!=methodPrefix##End(vector); ++iterator)
 #define vectorForeachIndex(TValue, methodPrefix, iterator, index, vector) for (iterator=methodPrefix##Begin(vector),index=0; iterator!=methodPrefix##End(vector); ++iterator,++index)
 
 
