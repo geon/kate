@@ -1,13 +1,20 @@
 #include "minunit.h"
 
 #include "../src/vector.h"
-#include "../src/coords_grouped_by_strip.h"
-#include "../src/platform/dos/bitplane_strip.h"
+#include "../src/grouped_table.h"
 
 
 declareVector(IntVector, int, intVector)
 defineVectorStruct(IntVector, int, intVector)
 defineVector(IntVector, int, intVector)
+
+
+declareGroupedTable(IntByIntTable, int, int, IntVector, intByIntTable)
+declareVector(IntByIntTableRowsVector, IntByIntTableRow, intByIntTableRowsVector)
+defineVectorStruct(IntByIntTableRowsVector, IntByIntTableRow, intByIntTableRowsVector)
+defineVector(IntByIntTableRowsVector, IntByIntTableRow, intByIntTableRowsVector)
+#define intsEqual(a, b) a == b
+defineGroupedTable(IntByIntTable, int, int, IntVector, intVector, intByIntTable, intsEqual)
 
 
 void test_setup(void) {
@@ -44,28 +51,28 @@ MU_TEST(test_vector) {
 
 MU_TEST(test_coods_grouped_by_strip) {
 	int capacity = 10;
-	CoordsByStripTable table = makeCoordsByStripTable(capacity);
+	IntByIntTable table = makeIntByIntTable(capacity);
 
-	coordsByStripTableAdd(table, makeBitplaneStrip(1), (StripCoord) {.column=1, .y=0});
-	coordsByStripTableAdd(table, makeBitplaneStrip(1), (StripCoord) {.column=2, .y=0});
-	coordsByStripTableAdd(table, makeBitplaneStrip(1), (StripCoord) {.column=3, .y=0});
-	coordsByStripTableAdd(table, makeBitplaneStrip(2), (StripCoord) {.column=1, .y=0});
-	coordsByStripTableAdd(table, makeBitplaneStrip(2), (StripCoord) {.column=2, .y=0});
-	coordsByStripTableAdd(table, makeBitplaneStrip(2), (StripCoord) {.column=3, .y=0});
-	coordsByStripTableAdd(table, makeBitplaneStrip(2), (StripCoord) {.column=4, .y=0});
-	coordsByStripTableAdd(table, makeBitplaneStrip(2), (StripCoord) {.column=5, .y=0});
-	coordsByStripTableAdd(table, makeBitplaneStrip(3), (StripCoord) {.column=1, .y=0});
-	coordsByStripTableAdd(table, makeBitplaneStrip(4), (StripCoord) {.column=1, .y=0});
-	coordsByStripTableAdd(table, makeBitplaneStrip(5), (StripCoord) {.column=1, .y=0});
+	intByIntTableAdd(table, 1, 1);
+	intByIntTableAdd(table, 1, 2);
+	intByIntTableAdd(table, 1, 3);
+	intByIntTableAdd(table, 2, 1);
+	intByIntTableAdd(table, 2, 2);
+	intByIntTableAdd(table, 2, 3);
+	intByIntTableAdd(table, 2, 4);
+	intByIntTableAdd(table, 2, 5);
+	intByIntTableAdd(table, 3, 1);
+	intByIntTableAdd(table, 4, 1);
+	intByIntTableAdd(table, 5, 1);
 
 	{
-		CoordsByStripTableRow *row;
-		vectorForeach(BitplaneStrip, coordsByStripTable, row, table) {
-			printf("%i => %i\n", bitplaneStripAsInt(row->key), stripCoordVectorSize(row->values));
+		IntByIntTableRow *row;
+		vectorForeach(int, intByIntTable, row, table) {
+			printf("%i => %i\n", row->key, intVectorSize(row->values));
 		}
 	}
 
-	freeCoordsByStripTable(table);
+	freeIntByIntTable(table);
 }
 
 
