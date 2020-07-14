@@ -67,8 +67,16 @@ MU_TEST(test_coods_grouped_by_strip) {
 
 	{
 		IntByIntTableRow *row;
-		vectorForeach(intByIntTable, row, table) {
-			printf("%i => %i\n", row->key, intVectorSize(row->values));
+		int i;
+		vectorForeachIndex(intByIntTable, row, i, table) {
+			// printf("%i => %i\n", row->key, intVectorSize(row->values));
+			if (i == 0) {
+				mu_assert_int_eq(5, intVectorSize(row->values));
+			} else if (i == 1) {
+				mu_assert_int_eq(3, intVectorSize(row->values));
+			} else {
+				mu_assert_int_eq(1, intVectorSize(row->values));
+			}
 		}
 	}
 
