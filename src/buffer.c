@@ -48,18 +48,17 @@ void switchBuffer (Buffer buffer, PixelCoord scroll) {
 
 	// Update internally.
 	buffer->alternateBuffer = !buffer->alternateBuffer;
-	setBufferScroll(buffer, scroll);
+	buffer->scroll = makeEgaScrollCoordFromPixelCoord(scroll);
+
+	markBordersAsDirty(buffer, scroll);
 }
 
 
 #define EGA_SCREEN_NUM_COLUMNS 80
 #define EGA_SCREEN_HEIGHT 350
-void setBufferScroll (Buffer buffer, PixelCoord scroll) {
+void markBordersAsDirty (Buffer buffer, PixelCoord scroll) {
 	int xChange = scroll.x/8 - buffer->scroll.column;
 	int yChange = scroll.y - buffer->scroll.y;
-
-	// Actually scroll.
-	buffer->scroll = makeEgaScrollCoordFromPixelCoord(scroll);
 
 	// Mark the new edge strips as dirty.
 
