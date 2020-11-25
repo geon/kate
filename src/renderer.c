@@ -162,7 +162,7 @@ void rendererSetBufferOffset (Renderer renderer, PixelCoord scroll) {
 
 
 void rendererRender(Renderer renderer, unsigned int numSpriteInstances, SpriteInstance *spriteInstances, Map map, PixelCoord scroll) {
-	updateBuffer(renderer->buffer);
+	switchBuffer(renderer->buffer);
 	setBufferScroll(renderer->buffer, scroll);
 
 	renderBackground(renderer, map);

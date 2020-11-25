@@ -24,7 +24,7 @@ typedef struct BufferStruct *Buffer;
 Buffer makeBuffer ();
 void freeBuffer (Buffer buffer);
 
-void updateBuffer (Buffer buffer);
+void switchBuffer (Buffer buffer);
 void setBufferScroll (Buffer buffer, PixelCoord scroll);
 
 unsigned short int bufferMapWorldCoordToBufferIndex (Buffer buffer, StripCoord worldCoord);
