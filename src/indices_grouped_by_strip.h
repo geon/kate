@@ -8,8 +8,8 @@
 
 
 declareVector(StripCoordVector, StripCoord, stripCoordVector)
-declareGroupedTable(CoordsByStripTable, BitplaneStrip, StripCoord, StripCoordVector, coordsByStripTable)
-declareVector(CoordsByStripTableRowsVector, CoordsByStripTableRow, coordsByStripTableRowsVector)
+declareGroupedTable(IndicesByStripTable, BitplaneStrip, StripCoord, StripCoordVector, indicesByStripTable)
+declareVector(IndicesByStripTableRowsVector, IndicesByStripTableRow, indicesByStripTableRowsVector)
 
 
 #endif

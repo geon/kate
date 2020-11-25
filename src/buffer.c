@@ -49,7 +49,8 @@ void switchBuffer (Buffer buffer, PixelCoord scroll) {
 	buffer->alternateBuffer = !buffer->alternateBuffer;
 	buffer->scroll = makeEgaScrollCoordFromPixelCoord(scroll);
 
-	markBordersAsDirty(buffer, scroll);
+	// TODO: Crashes at the end.
+	// markBordersAsDirty(buffer, scroll);
 }
 
 
@@ -77,11 +78,15 @@ void markBordersAsDirty (Buffer buffer, PixelCoord scroll) {
 				dirtyCoord.y = dirtyY + scroll.y;
 				dirtyBackgroundStripsMark(
 					buffer->dirtyBackgroundStrips[0],
-					dirtyCoord
+					dirtyCoord,
+					// TODO: getMapStripAtWorldCoord(map, worldCoord)
+					makeBitplaneStrip(0x36363636)
 				);
 				dirtyBackgroundStripsMark(
 					buffer->dirtyBackgroundStrips[1],
-					dirtyCoord
+					dirtyCoord,
+					// TODO: getMapStripAtWorldCoord(map, worldCoord)
+					makeBitplaneStrip(0x47474747)
 				);
 			}
 		}
@@ -111,11 +116,15 @@ void markBordersAsDirty (Buffer buffer, PixelCoord scroll) {
 				dirtyCoord.y = dirtyY + scroll.y;
 				dirtyBackgroundStripsMark(
 					buffer->dirtyBackgroundStrips[0],
-					dirtyCoord
+					dirtyCoord,
+					// TODO: getMapStripAtWorldCoord(map, worldCoord)
+					makeBitplaneStrip(0x12121212)
 				);
 				dirtyBackgroundStripsMark(
 					buffer->dirtyBackgroundStrips[1],
-					dirtyCoord
+					dirtyCoord,
+					// TODO: getMapStripAtWorldCoord(map, worldCoord)
+					makeBitplaneStrip(0x34343434)
 				);
 			}
 		}
@@ -184,13 +193,13 @@ StripCoord bufferStaticMapBufferCoordToWorldCoord (EgaScrollCoord bufferScroll, 
 }
 
 
-unsigned long int bufferGetDirtyBackgroundStripsNumCoords (Buffer buffer) {
-	return getDirtyBackgroundStripsNumCoords(buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0]);
+IndicesByStripTableRow * bufferDirtyBackgroundStripsBegin(Buffer buffer) {
+    return  dirtyBackgroundStripsBegin(buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0]);
 }
 
 
-StripCoord *bufferGetDirtyBackgroundStripsCoords (Buffer buffer) {
-	return getDirtyBackgroundStripsCoords(buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0]);
+IndicesByStripTableRow * bufferDirtyBackgroundStripsEnd(Buffer buffer) {
+    return  dirtyBackgroundStripsEnd(buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0]);
 }
 
 
@@ -199,6 +208,6 @@ void bufferClearDirtyBackgroundStrips (Buffer buffer) {
 }
 
 
-void bufferMarkDirtyBackgroundStrips(Buffer buffer, StripCoord coord) {
-	dirtyBackgroundStripsMark(buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0], coord);
+void bufferMarkDirtyBackgroundStrips(Buffer buffer, StripCoord coord, BitplaneStrip cleanStrip) {
+	dirtyBackgroundStripsMark(buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0], coord, cleanStrip);
 }

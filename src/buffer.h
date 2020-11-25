@@ -34,9 +34,9 @@ StripCoord bufferMapBufferIndexToWorldCoord (Buffer buffer, unsigned short int b
 StripCoord bufferStaticMapBufferIndexToBufferCoord (EgaScrollCoord bufferScroll, bool alternateBuffer, unsigned short int bufferIndex);
 StripCoord bufferStaticMapBufferCoordToWorldCoord (EgaScrollCoord bufferScroll, StripCoord bufferCoord);
 
-unsigned long int bufferGetDirtyBackgroundStripsNumCoords (Buffer buffer);
-StripCoord *bufferGetDirtyBackgroundStripsCoords (Buffer buffer);
+IndicesByStripTableRow * bufferDirtyBackgroundStripsBegin(Buffer buffer);
+IndicesByStripTableRow * bufferDirtyBackgroundStripsEnd(Buffer buffer);
 void bufferClearDirtyBackgroundStrips (Buffer buffer);
-void bufferMarkDirtyBackgroundStrips(Buffer buffer, StripCoord coord);
+void bufferMarkDirtyBackgroundStrips(Buffer buffer, StripCoord coord, BitplaneStrip cleanStrip);
 
 #endif

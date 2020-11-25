@@ -7,11 +7,12 @@ typedef struct TableTypeName##Row { \
 	TValueVector values; \
 } TableTypeName##Row; \
 typedef struct TableTypeName##Struct *TableTypeName; \
-TableTypeName make##TableTypeName(const int capacity); \
-void initialize##TableTypeName(TableTypeName table, const int capacity); \
+TableTypeName make##TableTypeName(const long int capacity); \
+void initialize##TableTypeName(TableTypeName table, const long int capacity); \
 void destroy##TableTypeName(TableTypeName table); \
 void free##TableTypeName(TableTypeName table); \
 void methodPrefix##Add(TableTypeName table, const TKey key, const TValue value); \
+void methodPrefix##Clear(TableTypeName table); \
 TableTypeName##Row* methodPrefix##Begin(TableTypeName table); \
 TableTypeName##Row* methodPrefix##End(TableTypeName table); \
 
@@ -22,14 +23,14 @@ typedef struct TableTypeName##Struct { \
 } TableTypeName##Struct; \
  \
  \
-TableTypeName make##TableTypeName(const int capacity) { \
+TableTypeName make##TableTypeName(const long int capacity) { \
 	##TableTypeName table = malloc(sizeof(TableTypeName)); \
 	initialize##TableTypeName(table, capacity); \
 	return table; \
 } \
  \
  \
-void initialize##TableTypeName(TableTypeName table, const int capacity) { \
+void initialize##TableTypeName(TableTypeName table, const long int capacity) { \
 	table->rows = make##TableTypeName##RowsVector(capacity); \
 } \
  \
@@ -46,7 +47,7 @@ void free##TableTypeName(TableTypeName table) { \
  \
  \
 void methodPrefix##Add(TableTypeName table, const TKey key, const TValue value) { \
-	int rowIndex; \
+	long int rowIndex; \
  \
 	/* Scan for an existing key. */ \
 	for (rowIndex = 0; rowIndex < methodPrefix##RowsVectorSize(table->rows); ++rowIndex) { \
@@ -74,11 +75,16 @@ void methodPrefix##Add(TableTypeName table, const TKey key, const TValue value) 
 		/* Add a row for the missing key. */ \
 		##TableTypeName##Row row; \
 		row.key = key; \
-		row.values = make##TValueVector(100); \
+		row.values = make##TValueVector(30000); \
 		valueVectorPrefix##Push(row.values, value); \
 		methodPrefix##RowsVectorPush(table->rows, row); \
 	} \
  \
+} \
+ \
+ \
+void methodPrefix##Clear(TableTypeName table) { \
+	methodPrefix##RowsVectorClear(table->rows); \
 } \
  \
  \

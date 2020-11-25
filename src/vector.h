@@ -9,32 +9,32 @@
 
 #define declareVector(VectorTypeName, TValue, methodPrefix) \
 typedef struct VectorTypeName##Struct *VectorTypeName; \
-VectorTypeName make##VectorTypeName(const int capacity); \
-void initialize##VectorTypeName(VectorTypeName vector, const int capacity); \
+VectorTypeName make##VectorTypeName(const long int capacity); \
+void initialize##VectorTypeName(VectorTypeName vector, const long int capacity); \
 void destroy##VectorTypeName(VectorTypeName vector); \
 void free##VectorTypeName(VectorTypeName vector); \
 void methodPrefix##Push(VectorTypeName vector, const TValue value); \
 void methodPrefix##Clear(VectorTypeName vector); \
 TValue* methodPrefix##Begin(VectorTypeName vector); \
 TValue* methodPrefix##End(VectorTypeName vector); \
-int methodPrefix##Size(VectorTypeName vector); \
+long int methodPrefix##Size(VectorTypeName vector); \
 
 
 #define defineVectorStruct(VectorTypeName, TValue, methodPrefix) \
 typedef struct VectorTypeName##Struct { \
 	TValue *values; \
-	int size; \
-	int	capacity; \
+	long int size; \
+	long int capacity; \
 } VectorTypeName##Struct; \
 
 
 #define defineVector(VectorTypeName, TValue, methodPrefix) \
-VectorTypeName make##VectorTypeName(const int capacity) { \
+VectorTypeName make##VectorTypeName(const long int capacity) { \
     VectorTypeName vector = malloc(sizeof(VectorTypeName)); \
     initialize##VectorTypeName(vector, capacity); \
 	return vector; \
 } \
-void initialize##VectorTypeName(VectorTypeName vector, const int capacity) { \
+void initialize##VectorTypeName(VectorTypeName vector, const long int capacity) { \
 	vector->values = malloc(sizeof(TValue) * capacity); \
     vector->size = 0; \
     vector->capacity = capacity; \
@@ -66,7 +66,7 @@ TValue* methodPrefix##Begin(VectorTypeName vector) { \
 TValue* methodPrefix##End(VectorTypeName vector) { \
     return vector->values + vector->size; \
 } \
-int methodPrefix##Size(VectorTypeName vector) { \
+long int methodPrefix##Size(VectorTypeName vector) { \
 	return vector->size; \
 } \
 

@@ -11,6 +11,7 @@
 #include "pixel_coord.h"
 #include "ega_scroll_coord.h"
 #include "coord_conversion.h"
+#include "vector.h"
 
 #include <stdlib.h>
 #include <math.h>
@@ -80,7 +81,7 @@ Sprite rendererLoadSprite (Renderer renderer, char *imagePath, char **errorMessa
 }
 
 
-void drawSprite(Renderer renderer, SpriteInstance *spriteInstance) {
+void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, Map map) {
 	unsigned int y, column;
 	for (y = 0; y < spriteInstance->sprite->height; ++y) {
 		for (column=0; column<spriteInstance->sprite->numColumns; ++column) {
@@ -112,42 +113,46 @@ void drawSprite(Renderer renderer, SpriteInstance *spriteInstance) {
 			shiftMask = spriteInstance->sprite->mask[sourceStripIndex] >> posXRest;
 			if (shiftMask) {
 				drawStrip(destinationStripIndex, stripShiftedA, shiftMask);
-				bufferMarkDirtyBackgroundStrips(renderer->buffer, worldCoord);
+				// TODO: getMapStripAtWorldCoord(map, worldCoord)
+				bufferMarkDirtyBackgroundStrips(renderer->buffer, worldCoord, makeBitplaneStrip(0x56565656));
 			}
 			shiftMask = spriteInstance->sprite->mask[sourceStripIndex] << (8 - posXRest);
 			++worldCoord.column;
 			if (shiftMask) {
 				drawStrip(destinationStripIndex + 1, stripShiftedB, shiftMask);
-				bufferMarkDirtyBackgroundStrips(renderer->buffer, worldCoord);
+				// TODO: getMapStripAtWorldCoord(map, worldCoord)
+				bufferMarkDirtyBackgroundStrips(renderer->buffer, worldCoord,  makeBitplaneStrip(0x78787878));
 			}
 		}
 	}
 }
 
 
-void renderSprites (Renderer renderer, unsigned int numSpriteInstances, SpriteInstance *spriteInstances) {
+void renderSprites (Renderer renderer, unsigned int numSpriteInstances, SpriteInstance *spriteInstances, Map map) {
 	unsigned int i;
 
 	for (i=0; i<numSpriteInstances; ++i) {
-		drawSprite(renderer, &spriteInstances[i]);
+		drawSprite(renderer, &spriteInstances[i], map);
 	}
 }
 
 
-void renderBackground (Renderer renderer, Map map) {
-	unsigned long int i;
-	unsigned long int numCoords = bufferGetDirtyBackgroundStripsNumCoords(renderer->buffer);
-	StripCoord *worldCoords = bufferGetDirtyBackgroundStripsCoords(renderer->buffer);
-
-	for (i=0; i<numCoords; ++i) {
-		StripCoord worldCoord = worldCoords[i];
-		unsigned short index = bufferMapWorldCoordToBufferIndex(renderer->buffer, worldCoord);
-
-		drawStrip(
-			index,
-			getMapStripAtWorldCoord(map, worldCoord),
-			0xFF
-		);
+void renderBackground (Renderer renderer) {
+	IndicesByStripTableRow *row;
+	vectorForeach (bufferDirtyBackgroundStrips, row, renderer->buffer) {
+		// TODO: Replace with single draw call.
+		StripCoord *stripCoord;
+		vectorForeach (stripCoordVector, stripCoord, row->values) {
+			unsigned short bufferIndex = bufferMapWorldCoordToBufferIndex(
+				renderer->buffer,
+				*stripCoord
+			);
+			drawStrip(
+				bufferIndex,
+				row->key,
+				0xFF
+			);
+		}
 	}
 
 	bufferClearDirtyBackgroundStrips(renderer->buffer);
@@ -161,8 +166,8 @@ void rendererRender(Renderer renderer, unsigned int numSpriteInstances, SpriteIn
 	// It is not possible to change the actual used address during a frame.
 	switchBuffer(renderer->buffer, scroll);
 
-	renderBackground(renderer, map);
-	renderSprites(renderer, numSpriteInstances, spriteInstances);
+	renderBackground(renderer);
+	renderSprites(renderer, numSpriteInstances, spriteInstances, map);
 
 	// V-sync.
 	waitForFrame();

@@ -8,26 +8,31 @@
 
 
 typedef struct DirtyBackgroundStripsStruct {
-	unsigned long int numCoords;
-	StripCoord coords[EGA_PLANE_SIZE];
+	IndicesByStripTable coordsByStrip;
 } DirtyBackgroundStripsStruct;
 
 
 DirtyBackgroundStrips makeDirtyBackgroundStrips (bool alternateBuffer) {
-	unsigned long int column;
-	unsigned long int y;
-
 	DirtyBackgroundStrips dirtyBackgroundStrips;
 	dirtyBackgroundStrips = malloc(sizeof(DirtyBackgroundStripsStruct));
-	dirtyBackgroundStrips->numCoords = 0;
+	dirtyBackgroundStrips->coordsByStrip = makeIndicesByStripTable(100);
 
-	// The background has not been rendered yet, so it is by definition completely dirty.
-	for (column=0; column<EGA_BUFFER_NUM_COLUMNS_DEFAULT; ++column) {
-		for (y=0; y<EGA_BUFFER_NUM_ROWS_DEFAULT; ++y) {
-			StripCoord coord;
-			coord.column = column;
-			coord.y = y;
-			dirtyBackgroundStripsMark(dirtyBackgroundStrips, coord);
+	{
+		// The background has not been rendered yet, so it is by definition completely dirty.
+		unsigned long int column;
+		unsigned long int y;
+		for (column=0; column<EGA_BUFFER_NUM_COLUMNS_DEFAULT; ++column) {
+			for (y=0; y<EGA_BUFFER_NUM_ROWS_DEFAULT; ++y) {
+				BitplaneStrip strip;
+				StripCoord coord;
+
+				coord.column = column;
+				coord.y = y;
+				// TODO: getMapStripAtWorldCoord(map, worldCoord)
+				strip = makeBitplaneStrip(0x18181818);
+
+				dirtyBackgroundStripsMark(dirtyBackgroundStrips, coord, strip);
+			}
 		}
 	}
 
@@ -39,18 +44,22 @@ void freeDirtyBackgroundStrips (DirtyBackgroundStrips dirtyBackgroundStrips) {
 	free(dirtyBackgroundStrips);
 }
 
-unsigned long int getDirtyBackgroundStripsNumCoords (DirtyBackgroundStrips dirtyBackgroundStrips) {
-	return dirtyBackgroundStrips->numCoords;
+
+IndicesByStripTableRow* dirtyBackgroundStripsBegin (DirtyBackgroundStrips dirtyBackgroundStrips) {
+	return indicesByStripTableBegin(dirtyBackgroundStrips->coordsByStrip);
 }
 
-StripCoord *getDirtyBackgroundStripsCoords (DirtyBackgroundStrips dirtyBackgroundStrips) {
-	return dirtyBackgroundStrips->coords;
+
+IndicesByStripTableRow* dirtyBackgroundStripsEnd (DirtyBackgroundStrips dirtyBackgroundStrips) {
+	return indicesByStripTableEnd(dirtyBackgroundStrips->coordsByStrip);
 }
+
 
 void dirtyBackgroundStripsClear (DirtyBackgroundStrips dirtyBackgroundStrips) {
-	dirtyBackgroundStrips->numCoords = 0;
+	indicesByStripTableClear(dirtyBackgroundStrips->coordsByStrip);
 }
 
-void dirtyBackgroundStripsMark (DirtyBackgroundStrips dirtyBackgroundStrips, StripCoord coord) {
-	dirtyBackgroundStrips->coords[dirtyBackgroundStrips->numCoords++] = coord;
+
+void dirtyBackgroundStripsMark (DirtyBackgroundStrips dirtyBackgroundStrips, StripCoord coord, BitplaneStrip cleanStrip) {
+	indicesByStripTableAdd(dirtyBackgroundStrips->coordsByStrip, cleanStrip, coord);
 }
