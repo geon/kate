@@ -67,8 +67,8 @@ void worldUpdate (World world) {
 
 	world->frame++;
 
-	world->scroll.x = world->frame * 5;
-	world->scroll.y = world->frame * 5;
+	world->scroll.x = world->frame * 12;
+	world->scroll.y = world->frame * 12;
 
 	for (i=0; i<world->numSpriteInstances; ++i) {
 		world->spriteInstances[i].posX = world->scroll.x + 150 + i*64;

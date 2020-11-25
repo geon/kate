@@ -30,7 +30,7 @@ int main (int argc, char* argv[]) {
 	setPalette(getRendererPalette(renderer));
 	setVirtualScreenWidth(EGA_BUFFER_NUM_COLUMNS);
 
-	for (frame=0; frame < 100; ++frame) {
+	for (frame=0; frame < 40; ++frame) {
 		worldUpdate(world);
 		worldRender(world);
 	}
