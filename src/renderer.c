@@ -150,28 +150,15 @@ void renderBackground (Renderer renderer, Map map) {
 }
 
 
-void rendererSetBufferOffset (Renderer renderer, PixelCoord scroll) {
-	EgaScrollCoord bufferScroll = makeEgaScrollCoordFromPixelCoord(scroll);
-	StripCoord stripScroll = makeStripCoordFromEgaScrollCoord(bufferScroll);
-	unsigned short bufferIndex = bufferMapWorldCoordToBufferIndex(
-		renderer->buffer,
-		stripScroll
-	);
-	setBufferOffset(bufferIndex, bufferScroll.restX);
-}
-
 
 void rendererRender(Renderer renderer, unsigned int numSpriteInstances, SpriteInstance *spriteInstances, Map map, PixelCoord scroll) {
-	switchBuffer(renderer->buffer);
-	setBufferScroll(renderer->buffer, scroll);
+	// Sets the start-address of the buffer.
+	// The value won't be latched by the EGA card until the vertical retrace.
+	// It is not possible to change the actual used address during a frame.
+	switchBuffer(renderer->buffer, scroll);
 
 	renderBackground(renderer, map);
 	renderSprites(renderer, numSpriteInstances, spriteInstances);
-
-	// Sets the start-address of the next frame.
-	// The value won't be latched by the EGA card until the vertical retrace.
-	// It is not possible to change the actual used address during a frame.
-	rendererSetBufferOffset (renderer, scroll);
 
 	// V-sync.
 	waitForFrame();
