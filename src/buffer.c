@@ -35,16 +35,15 @@ void freeBuffer (Buffer buffer) {
 
 
 void switchBuffer (Buffer buffer, PixelCoord scroll) {
-	// Calculate the new buffer offset and fractional strip panning.
-	EgaScrollCoord bufferScroll = makeEgaScrollCoordFromPixelCoord(scroll);
-	StripCoord stripScroll = makeStripCoordFromEgaScrollCoord(bufferScroll);
+	// Calculate the current buffer offset and fractional strip panning.
+	StripCoord stripScroll = makeStripCoordFromEgaScrollCoord(buffer->scroll);
 	unsigned short bufferIndex = bufferMapWorldCoordToBufferIndex(
 		buffer,
 		stripScroll
 	);
 
 	// Send the EGA command.
-	setBufferOffset(bufferIndex, bufferScroll.restX);
+	setBufferOffset(bufferIndex, buffer->scroll.restX);
 
 	// Update internally.
 	buffer->alternateBuffer = !buffer->alternateBuffer;
