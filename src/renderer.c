@@ -110,12 +110,16 @@ void drawSprite(Renderer renderer, SpriteInstance *spriteInstance) {
 			stripShiftedB.planes[3] = strip.planes[3] << (8 - posXRest);
 			// TODO: Combine the adjecent strips, to avoid double writes.
 			shiftMask = spriteInstance->sprite->mask[sourceStripIndex] >> posXRest;
-			drawStrip(destinationStripIndex, stripShiftedA, shiftMask);
-			bufferMarkDirtyBackgroundStrips(renderer->buffer, worldCoord);
+			if (shiftMask) {
+				drawStrip(destinationStripIndex, stripShiftedA, shiftMask);
+				bufferMarkDirtyBackgroundStrips(renderer->buffer, worldCoord);
+			}
 			shiftMask = spriteInstance->sprite->mask[sourceStripIndex] << (8 - posXRest);
 			++worldCoord.column;
-			drawStrip(destinationStripIndex + 1, stripShiftedB, shiftMask);
-			bufferMarkDirtyBackgroundStrips(renderer->buffer, worldCoord);
+			if (shiftMask) {
+				drawStrip(destinationStripIndex + 1, stripShiftedB, shiftMask);
+				bufferMarkDirtyBackgroundStrips(renderer->buffer, worldCoord);
+			}
 		}
 	}
 }
