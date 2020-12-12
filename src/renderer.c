@@ -113,15 +113,13 @@ void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, Map map) {
 			shiftMask = spriteInstance->sprite->mask[sourceStripIndex] >> posXRest;
 			if (shiftMask) {
 				drawStrip(destinationStripIndex, stripShiftedA, shiftMask);
-				// TODO: getMapStripAtWorldCoord(map, worldCoord)
-				bufferMarkDirtyBackgroundStrips(renderer->buffer, worldCoord, makeBitplaneStrip(0x56565656));
+				bufferMarkDirtyBackgroundStrips(renderer->buffer, worldCoord, getMapStripAtWorldCoord(map, worldCoord));
 			}
 			shiftMask = spriteInstance->sprite->mask[sourceStripIndex] << (8 - posXRest);
 			++worldCoord.column;
 			if (shiftMask) {
 				drawStrip(destinationStripIndex + 1, stripShiftedB, shiftMask);
-				// TODO: getMapStripAtWorldCoord(map, worldCoord)
-				bufferMarkDirtyBackgroundStrips(renderer->buffer, worldCoord,  makeBitplaneStrip(0x78787878));
+				bufferMarkDirtyBackgroundStrips(renderer->buffer, worldCoord,  getMapStripAtWorldCoord(map, worldCoord));
 			}
 		}
 	}
@@ -164,7 +162,7 @@ void rendererRender(Renderer renderer, unsigned int numSpriteInstances, SpriteIn
 	// Sets the start-address of the buffer.
 	// The value won't be latched by the EGA card until the vertical retrace.
 	// It is not possible to change the actual used address during a frame.
-	switchBuffer(renderer->buffer, scroll);
+	switchBuffer(renderer->buffer, scroll, map);
 
 	renderBackground(renderer);
 	renderSprites(renderer, numSpriteInstances, spriteInstances, map);

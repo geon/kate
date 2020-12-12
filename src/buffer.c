@@ -34,7 +34,7 @@ void freeBuffer (Buffer buffer) {
 }
 
 
-void switchBuffer (Buffer buffer, PixelCoord scroll) {
+void switchBuffer (Buffer buffer, PixelCoord scroll, Map map) {
 	// Calculate the current buffer offset and fractional strip panning.
 	StripCoord stripScroll = makeStripCoordFromEgaScrollCoord(buffer->scroll);
 	unsigned short bufferIndex = bufferMapWorldCoordToBufferIndex(
@@ -49,14 +49,13 @@ void switchBuffer (Buffer buffer, PixelCoord scroll) {
 	buffer->alternateBuffer = !buffer->alternateBuffer;
 	buffer->scroll = makeEgaScrollCoordFromPixelCoord(scroll);
 
-	// TODO: Crashes at the end.
-	// markBordersAsDirty(buffer, scroll);
+	markBordersAsDirty(buffer, scroll, map);
 }
 
 
 #define EGA_SCREEN_NUM_COLUMNS 80
 #define EGA_SCREEN_HEIGHT 350
-void markBordersAsDirty (Buffer buffer, PixelCoord scroll) {
+void markBordersAsDirty (Buffer buffer, PixelCoord scroll, Map map) {
 	int xChange = scroll.x/8 - buffer->scroll.column;
 	int yChange = scroll.y - buffer->scroll.y;
 
@@ -79,14 +78,12 @@ void markBordersAsDirty (Buffer buffer, PixelCoord scroll) {
 				dirtyBackgroundStripsMark(
 					buffer->dirtyBackgroundStrips[0],
 					dirtyCoord,
-					// TODO: getMapStripAtWorldCoord(map, worldCoord)
-					makeBitplaneStrip(0x36363636)
+					getMapStripAtWorldCoord(map, dirtyCoord)
 				);
 				dirtyBackgroundStripsMark(
 					buffer->dirtyBackgroundStrips[1],
 					dirtyCoord,
-					// TODO: getMapStripAtWorldCoord(map, worldCoord)
-					makeBitplaneStrip(0x47474747)
+					getMapStripAtWorldCoord(map, dirtyCoord)
 				);
 			}
 		}
@@ -117,14 +114,12 @@ void markBordersAsDirty (Buffer buffer, PixelCoord scroll) {
 				dirtyBackgroundStripsMark(
 					buffer->dirtyBackgroundStrips[0],
 					dirtyCoord,
-					// TODO: getMapStripAtWorldCoord(map, worldCoord)
-					makeBitplaneStrip(0x12121212)
+					getMapStripAtWorldCoord(map, dirtyCoord)
 				);
 				dirtyBackgroundStripsMark(
 					buffer->dirtyBackgroundStrips[1],
 					dirtyCoord,
-					// TODO: getMapStripAtWorldCoord(map, worldCoord)
-					makeBitplaneStrip(0x34343434)
+					getMapStripAtWorldCoord(map, dirtyCoord)
 				);
 			}
 		}
