@@ -25,27 +25,29 @@ typedef struct WorldStruct {
 
 
 World makeWorld (Renderer renderer, char **errorMessage) {
-	char *spritePaths[] =  {
-		"../images/bunny3.bmp",
-		"../images/bunny4.bmp",
-		"../images/bunny1.bmp",
-		"../images/bunny2.bmp"
-	};
-	unsigned int spritePathArrayLength = sizeof(spritePaths) / sizeof(spritePaths[0]);
     World world = malloc(sizeof(WorldStruct));
 	world->renderer = renderer;
 	world->frame = 0;
 
-	world->numSpriteInstances = spritePathArrayLength;
-	world->spriteInstances = malloc(sizeof(SpriteInstance) * world->numSpriteInstances);
 	{
-		unsigned short int i;
-		for (i=0; i<spritePathArrayLength; ++i) {
-			Sprite sprite;
-			if (!(sprite = rendererLoadSprite(world->renderer, spritePaths[i], errorMessage))) {
-				return NULL;
+		char *spritePaths[] =  {
+			"../images/bunny3.bmp",
+			"../images/bunny4.bmp",
+			"../images/bunny1.bmp",
+			"../images/bunny2.bmp"
+		};
+		unsigned int spritePathArrayLength = sizeof(spritePaths) / sizeof(spritePaths[0]);
+		world->numSpriteInstances = spritePathArrayLength;
+		world->spriteInstances = malloc(sizeof(SpriteInstance) * world->numSpriteInstances);
+		{
+			unsigned short int i;
+			for (i=0; i<spritePathArrayLength; ++i) {
+				Sprite sprite;
+				if (!(sprite = rendererLoadSprite(world->renderer, spritePaths[i], errorMessage))) {
+					return NULL;
+				}
+				world->spriteInstances[i] = makeSpriteInstance(sprite, 0, 0);
 			}
-			world->spriteInstances[i] = makeSpriteInstance(sprite, 0, 0);
 		}
 	}
 
