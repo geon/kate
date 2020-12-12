@@ -121,7 +121,7 @@ void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, Map map) {
 			if (shiftMask) {
 				drawStrip(destinationStripIndex + 1, stripShiftedB, shiftMask);
 				// TODO: getMapStripAtWorldCoord(map, worldCoord)
-				// bufferMarkDirtyBackgroundStrips(renderer->buffer, worldCoord,  makeBitplaneStrip(0x78787878));
+				bufferMarkDirtyBackgroundStrips(renderer->buffer, worldCoord,  makeBitplaneStrip(0x78787878));
 			}
 		}
 	}
