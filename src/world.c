@@ -33,7 +33,6 @@ World makeWorld (Renderer renderer, char **errorMessage) {
 		"../images/bunny2.bmp"
 	};
 	unsigned int spritePathArrayLength = sizeof(spritePaths) / sizeof(spritePaths[0]);
-	Sprite sprite;
     World world = malloc(sizeof(WorldStruct));
 	world->renderer = renderer;
 	world->frame = 0;
@@ -41,6 +40,7 @@ World makeWorld (Renderer renderer, char **errorMessage) {
 	world->numSpriteInstances = spritePathArrayLength;
 	world->spriteInstances = malloc(sizeof(SpriteInstance) * world->numSpriteInstances);
 	for (i=0; i<spritePathArrayLength; ++i) {
+		Sprite sprite;
 		if (!(sprite = rendererLoadSprite(world->renderer, spritePaths[i], errorMessage))) {
 			return NULL;
 		}
