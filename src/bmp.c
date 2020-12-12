@@ -9,8 +9,8 @@
 #include <stdio.h>
 
 const int bytesPerPixel = 3; /// red, green, blue
-const int fileHeaderSize = 14;
-const int infoHeaderSize = 40;
+#define FILE_HEADER_SIZE 14
+#define INFO_HEADER_SIZE 40
 
 char *errorfileOpen = "Could not open the image file.";
 char *errorMessagePartialStrip = "All images should be a multiple of 8 pixels wide.";
@@ -86,9 +86,8 @@ unsigned char makeMask (unsigned long int nibbleStrip) {
 #define BYTES_PER_COLOR_ENTRY 4
 Image loadBmp(char* imageFilePath, bool firstColorIsTransparency, char** errorMessage) {
 	Image image = makeImage();
-	// TODO: Remove allocation. Just use an array on the stack.
-	unsigned char *fileHeader = malloc(fileHeaderSize);
-	unsigned char *infoHeader = malloc(infoHeaderSize);
+	unsigned char fileHeader[FILE_HEADER_SIZE];
+	unsigned char infoHeader[INFO_HEADER_SIZE];
 	unsigned long int width;
 	long int height;
 	unsigned int bitsPerPixel;
@@ -108,10 +107,9 @@ Image loadBmp(char* imageFilePath, bool firstColorIsTransparency, char** errorMe
 	}
 
 	// TODO: Replace with fseek?
-	fread(fileHeader, 1, fileHeaderSize, imageFile);
-	free(fileHeader);
+	fread(fileHeader, 1, FILE_HEADER_SIZE, imageFile);
 
-	fread(infoHeader, 1, infoHeaderSize, imageFile);
+	fread(infoHeader, 1, INFO_HEADER_SIZE, imageFile);
 
 	// static unsigned char infoHeader[] = {
 	//     0,0,0,0, /// header size
@@ -176,9 +174,6 @@ Image loadBmp(char* imageFilePath, bool firstColorIsTransparency, char** errorMe
 		}
 		return NULL;
 	}
-
-	free(infoHeader);
-	free(infoHeader);
 
 	fread(paletteData, numColors * BYTES_PER_COLOR_ENTRY, 1, imageFile);
 
