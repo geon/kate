@@ -53,8 +53,8 @@ void methodPrefix##Push(VectorTypeName vector, const TValue value) { \
 		vector->values[vector->size] = value; \
 		++vector->size; \
 	} else { \
-		/* TODO: Change this to grow the vector dynamically. */ \
-		assert(0); \
+		vector->capacity *= 2; \
+		vector->values = realloc(vector->values, sizeof(TValue) * vector->capacity); \
 	} \
 } \
 void methodPrefix##Clear(VectorTypeName vector) { \
