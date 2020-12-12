@@ -7,23 +7,26 @@
 
 
 int main (int argc, char* argv[]) {
-	char *errorMessage;
 	Renderer renderer;
 	World world;
 
 	setVideoMode();
 
-	renderer = makeRenderer(&errorMessage);
-	if (!renderer) {
-		printf(errorMessage);
-		return 1;
-	}
+	{
+		char *errorMessage;
 
-	world = makeWorld(renderer, &errorMessage);
+		renderer = makeRenderer(&errorMessage);
+		if (!renderer) {
+			printf(errorMessage);
+			return 1;
+		}
 
-	if (!world) {
-		printf(errorMessage);
-		return 1;
+		world = makeWorld(renderer, &errorMessage);
+
+		if (!world) {
+			printf(errorMessage);
+			return 1;
+		}
 	}
 
 	setPalette(getRendererPalette(renderer));
