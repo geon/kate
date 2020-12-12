@@ -75,7 +75,7 @@ void methodPrefix##Add(TableTypeName table, const TKey key, const TValue value) 
 		/* Add a row for the missing key. */ \
 		##TableTypeName##Row row; \
 		row.key = key; \
-		row.values = make##TValueVector(1000); \
+		row.values = make##TValueVector(64); \
 		valueVectorPrefix##Push(row.values, value); \
 		methodPrefix##RowsVectorPush(table->rows, row); \
 	} \

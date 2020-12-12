@@ -15,7 +15,7 @@ typedef struct DirtyBackgroundStripsStruct {
 DirtyBackgroundStrips makeDirtyBackgroundStrips (bool alternateBuffer) {
 	DirtyBackgroundStrips dirtyBackgroundStrips;
 	dirtyBackgroundStrips = malloc(sizeof(DirtyBackgroundStripsStruct));
-	dirtyBackgroundStrips->coordsByStrip = makeIndicesByStripTable(100);
+	dirtyBackgroundStrips->coordsByStrip = makeIndicesByStripTable(64);
 
 	// {
 	// 	// The background has not been rendered yet, so it is by definition completely dirty.
