@@ -17,24 +17,24 @@ DirtyBackgroundStrips makeDirtyBackgroundStrips (bool alternateBuffer) {
 	dirtyBackgroundStrips = malloc(sizeof(DirtyBackgroundStripsStruct));
 	dirtyBackgroundStrips->coordsByStrip = makeIndicesByStripTable(100);
 
-	{
-		// The background has not been rendered yet, so it is by definition completely dirty.
-		unsigned long int column;
-		unsigned long int y;
-		for (column=0; column<EGA_BUFFER_NUM_COLUMNS_DEFAULT; ++column) {
-			for (y=0; y<EGA_BUFFER_NUM_ROWS_DEFAULT; ++y) {
-				BitplaneStrip strip;
-				StripCoord coord;
+	// {
+	// 	// The background has not been rendered yet, so it is by definition completely dirty.
+	// 	unsigned long int column;
+	// 	unsigned long int y;
+	// 	for (column=0; column<EGA_BUFFER_NUM_COLUMNS_DEFAULT; ++column) {
+	// 		for (y=0; y<EGA_BUFFER_NUM_ROWS_DEFAULT; ++y) {
+	// 			BitplaneStrip strip;
+	// 			StripCoord coord;
 
-				coord.column = column;
-				coord.y = y;
-				// TODO: getMapStripAtWorldCoord(map, worldCoord)
-				strip = makeBitplaneStrip(0x18181818);
+	// 			coord.column = column;
+	// 			coord.y = y;
+	// 			// TODO: getMapStripAtWorldCoord(map, worldCoord)
+	// 			strip = makeBitplaneStrip(0x18181818);
 
-				dirtyBackgroundStripsMark(dirtyBackgroundStrips, coord, strip);
-			}
-		}
-	}
+	// 			dirtyBackgroundStripsMark(dirtyBackgroundStrips, coord, strip);
+	// 		}
+	// 	}
+	// }
 
 	return dirtyBackgroundStrips;
 }
