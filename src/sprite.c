@@ -8,7 +8,6 @@
 
 Sprite makeSprite (Image image) {
 	unsigned short int numBitplaneStrips = image->numColumns * image->height;
-	unsigned int i;
 
 	Sprite sprite = malloc(sizeof(SpriteStruct));
 
@@ -19,15 +18,18 @@ Sprite makeSprite (Image image) {
 
 	sprite->bitPlaneStrips = malloc(sizeof(BitplaneStrip) * numBitplaneStrips);
 	sprite->mask = malloc(sizeof(unsigned char) * numBitplaneStrips);
-	for (i=0; i<numBitplaneStrips; ++i) {
-		unsigned short int column, y;
-		column = i % image->numColumns;
-		y = i / image->numColumns;
-		if (image->upsideDown) {
-			y = image->height - 1 - y;
+	{
+		unsigned int i;
+		for (i=0; i<numBitplaneStrips; ++i) {
+			unsigned short int column, y;
+			column = i % image->numColumns;
+			y = i / image->numColumns;
+			if (image->upsideDown) {
+				y = image->height - 1 - y;
+			}
+			sprite->bitPlaneStrips[i] = makeBitplaneStrip(image->pixels[column + y*image->numColumns]);
+			sprite->mask[i] = image->mask[column + y*image->numColumns];
 		}
-		sprite->bitPlaneStrips[i] = makeBitplaneStrip(image->pixels[column + y*image->numColumns]);
-		sprite->mask[i] = image->mask[column + y*image->numColumns];
 	}
 
 	return sprite;
