@@ -25,7 +25,6 @@ typedef struct WorldStruct {
 
 
 World makeWorld (Renderer renderer, char **errorMessage) {
-	unsigned short int i;
 	char *spritePaths[] =  {
 		"../images/bunny3.bmp",
 		"../images/bunny4.bmp",
@@ -39,12 +38,15 @@ World makeWorld (Renderer renderer, char **errorMessage) {
 
 	world->numSpriteInstances = spritePathArrayLength;
 	world->spriteInstances = malloc(sizeof(SpriteInstance) * world->numSpriteInstances);
-	for (i=0; i<spritePathArrayLength; ++i) {
-		Sprite sprite;
-		if (!(sprite = rendererLoadSprite(world->renderer, spritePaths[i], errorMessage))) {
-			return NULL;
+	{
+		unsigned short int i;
+		for (i=0; i<spritePathArrayLength; ++i) {
+			Sprite sprite;
+			if (!(sprite = rendererLoadSprite(world->renderer, spritePaths[i], errorMessage))) {
+				return NULL;
+			}
+			world->spriteInstances[i] = makeSpriteInstance(sprite, 0, 0);
 		}
-		world->spriteInstances[i] = makeSpriteInstance(sprite, 0, 0);
 	}
 
 	if (!(world->map = makeMap(errorMessage))) {
