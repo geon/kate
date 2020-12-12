@@ -30,8 +30,8 @@ typedef struct VectorTypeName##Struct { \
 
 #define defineVector(VectorTypeName, TValue, methodPrefix) \
 VectorTypeName make##VectorTypeName(const long int capacity) { \
-    VectorTypeName vector = malloc(sizeof(VectorTypeName)); \
-    initialize##VectorTypeName(vector, capacity); \
+	VectorTypeName vector = malloc(sizeof(VectorTypeName)); \
+	initialize##VectorTypeName(vector, capacity); \
 	return vector; \
 } \
 void initialize##VectorTypeName(VectorTypeName vector, const long int capacity) { \
