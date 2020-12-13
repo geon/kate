@@ -1,7 +1,8 @@
 #include "map.h"
 #include "sprite_struct.h"
-#include <stdlib.h>
 #include "bmp.h"
+
+#include <stdlib.h>
 
 
 typedef struct MapStruct {
