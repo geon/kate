@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <assert.h>
 
 #define NUM_BUNNY_IMAGES 4
 
@@ -31,11 +32,13 @@ typedef struct RendererStruct {
 
 Renderer makeRenderer (char **errorMessage) {
 	Renderer renderer = malloc(sizeof(RendererStruct));
+	assert(renderer);
 	renderer->buffer = makeBuffer();
 
 	renderer->numSprites = 0;
 	// TODO: Make it dynamic.
 	renderer->sprites = malloc(sizeof(Sprite) * 100);
+	assert(renderer->sprites);
 
 	return renderer;
 }

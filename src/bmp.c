@@ -7,6 +7,7 @@
 #include <stdbool.h>
 
 #include <stdio.h>
+#include <assert.h>
 
 const int bytesPerPixel = 3; /// red, green, blue
 #define FILE_HEADER_SIZE 14
@@ -192,6 +193,7 @@ Image loadBmp(char* imageFilePath, bool firstColorIsTransparency, char** errorMe
 	dataSize = width * image->height / 2;
 
 	image->pixels = malloc(dataSize);
+	assert(image->pixels);
 	fread(image->pixels, dataSize, 1, imageFile);
 	fclose(imageFile);
 
@@ -202,6 +204,7 @@ Image loadBmp(char* imageFilePath, bool firstColorIsTransparency, char** errorMe
 
 	maskSize = image->numColumns * image->height;
 	image->mask = malloc(maskSize);
+	assert(image->mask);
 
 	for (i=0; i<maskSize; ++i) {
 		image->mask[i] = firstColorIsTransparency

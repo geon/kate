@@ -4,6 +4,7 @@
 #include "coord_conversion.h"
 
 #include <stdlib.h>
+#include <assert.h>
 
 
 typedef struct BufferStruct {
@@ -15,6 +16,7 @@ typedef struct BufferStruct {
 
 Buffer makeBuffer () {
 	Buffer buffer = malloc(sizeof(BufferStruct));
+	assert(buffer);
 
 	buffer->alternateBuffer = false;
 	buffer->scroll.column = 0;

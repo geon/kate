@@ -4,10 +4,12 @@
 #include "image_struct.h"
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 
 Sprite makeSprite (Image image) {
 	Sprite sprite = malloc(sizeof(SpriteStruct));
+	assert(sprite);
 
 	sprite->numColumns = image->numColumns;
 	sprite->height = image->height;
@@ -17,7 +19,9 @@ Sprite makeSprite (Image image) {
 	{
 		unsigned short int numBitplaneStrips = image->numColumns * image->height;
 		sprite->bitPlaneStrips = malloc(sizeof(BitplaneStrip) * numBitplaneStrips);
+		assert(sprite->bitPlaneStrips);
 		sprite->mask = malloc(sizeof(unsigned char) * numBitplaneStrips);
+		assert(sprite->mask);
 
 		{
 			unsigned int i;

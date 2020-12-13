@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <assert.h>
 
 
 typedef struct WorldStruct {
@@ -26,6 +27,7 @@ typedef struct WorldStruct {
 
 World makeWorld (Renderer renderer, char **errorMessage) {
     World world = malloc(sizeof(WorldStruct));
+	assert(world);
 	world->renderer = renderer;
 	world->frame = 0;
 
@@ -39,6 +41,7 @@ World makeWorld (Renderer renderer, char **errorMessage) {
 		unsigned int spritePathArrayLength = sizeof(spritePaths) / sizeof(spritePaths[0]);
 		world->numSpriteInstances = spritePathArrayLength;
 		world->spriteInstances = malloc(sizeof(SpriteInstance) * world->numSpriteInstances);
+		assert(world->spriteInstances);
 		{
 			unsigned short int i;
 			for (i=0; i<spritePathArrayLength; ++i) {

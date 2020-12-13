@@ -3,6 +3,7 @@
 #include "bmp.h"
 
 #include <stdlib.h>
+#include <assert.h>
 
 
 typedef struct MapStruct {
@@ -28,6 +29,7 @@ Sprite mapLoadSprite (Map map, char *imagePath, char **errorMessage) {
 
 Map makeMap (char **errorMessage) {
     Map map = malloc(sizeof(MapStruct));
+	assert(map);
 
     map->sprite = mapLoadSprite(map, "../images/backgr.bmp", errorMessage);
 	if (!map->sprite) {

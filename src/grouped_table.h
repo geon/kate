@@ -2,6 +2,7 @@
 #define grouped_table_h
 
 #include <stdlib.h>
+#include <assert.h>
 
 
 #define declareGroupedTable(TableTypeName, TKey, TValue, TValueVector, methodPrefix) \
@@ -28,6 +29,7 @@ typedef struct TableTypeName##Struct { \
  \
 TableTypeName make##TableTypeName(const long int capacity) { \
 	##TableTypeName table = malloc(sizeof(TableTypeName)); \
+	assert(table); \
 	initialize##TableTypeName(table, capacity); \
 	return table; \
 } \

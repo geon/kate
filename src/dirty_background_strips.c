@@ -5,6 +5,7 @@
 
 #include <stdbool.h>
 #include <stdlib.h>
+#include <assert.h>
 
 
 typedef struct DirtyBackgroundStripsStruct {
@@ -15,6 +16,7 @@ typedef struct DirtyBackgroundStripsStruct {
 DirtyBackgroundStrips makeDirtyBackgroundStrips (bool alternateBuffer) {
 	DirtyBackgroundStrips dirtyBackgroundStrips;
 	dirtyBackgroundStrips = malloc(sizeof(DirtyBackgroundStripsStruct));
+	assert(dirtyBackgroundStrips);
 	dirtyBackgroundStrips->coordsByStrip = makeIndicesByStripTable(64);
 
 	{

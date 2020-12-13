@@ -3,10 +3,12 @@
 #include "platform/dos/ega.h"
 #include "platform/dos/bitplane_strip.h"
 #include <stdlib.h>
+#include <assert.h>
 
 
 Image makeImage () {
 	Image image = malloc(sizeof(ImageStruct));
+	assert(image);
 
 	// Empty image.
 	image->numColumns = 0;
