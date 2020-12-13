@@ -51,13 +51,12 @@ void free##VectorTypeName(VectorTypeName vector) { \
 	free(vector); \
 } \
 void methodPrefix##Push(VectorTypeName vector, const TValue value) { \
-	if (vector->capacity > vector->size) { \
-		vector->values[vector->size] = value; \
-		++vector->size; \
-	} else { \
+	if (vector->capacity <= vector->size) { \
 		vector->capacity *= 2; \
 		vector->values = realloc(vector->values, sizeof(TValue) * vector->capacity); \
 	} \
+	vector->values[vector->size] = value; \
+	++vector->size; \
 } \
 void methodPrefix##Clear(VectorTypeName vector) { \
 	vector->size = 0; \
