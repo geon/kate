@@ -1,6 +1,9 @@
 #ifndef grouped_table_h
 #define grouped_table_h
 
+#include <stdlib.h>
+
+
 #define declareGroupedTable(TableTypeName, TKey, TValue, TValueVector, methodPrefix) \
 typedef struct TableTypeName##Row { \
 	TKey key; \
