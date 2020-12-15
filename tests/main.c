@@ -39,7 +39,7 @@ MU_TEST(test_vector) {
 	{
 		int *element;
 		int i;
-		vectorForeachIndex(intVector, element, i, vector) {
+		vectorForeachIndex(intVectorBegin(vector), intVectorEnd(vector), element, i) {
 			// printf("%i => %i\n", i, *element);
 			mu_assert_int_eq(i, *element);
 		}
@@ -68,7 +68,7 @@ MU_TEST(test_coods_grouped_by_strip) {
 	{
 		IntByIntTableRow *row;
 		int i;
-		vectorForeachIndex(intByIntTable, row, i, table) {
+		vectorForeachIndex(intByIntTableBegin(table), intByIntTableEnd(table), row, i) {
 			// printf("%i => %i\n", row->key, intVectorSize(row->values));
 			if (i == 0) {
 				mu_assert_int_eq(5, intVectorSize(row->values));

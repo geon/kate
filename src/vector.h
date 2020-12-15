@@ -3,8 +3,8 @@
 
 #include <assert.h>
 
-#define vectorForeach(methodPrefix, iterator, vector) for (iterator=methodPrefix##Begin(vector); iterator!=methodPrefix##End(vector); ++iterator)
-#define vectorForeachIndex(methodPrefix, iterator, index, vector) for (iterator=methodPrefix##Begin(vector),index=0; iterator!=methodPrefix##End(vector); ++iterator,++index)
+#define vectorForeach(begin, end, iterator) for (iterator=begin; iterator!=end; ++iterator)
+#define vectorForeachIndex(begin, end, iterator, index) for (iterator=begin,index=0; iterator!=end; ++iterator,++index)
 
 
 #define declareVector(VectorTypeName, TValue, methodPrefix) \

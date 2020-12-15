@@ -140,10 +140,10 @@ void renderSprites (Renderer renderer, unsigned int numSpriteInstances, SpriteIn
 
 void renderBackground (Renderer renderer) {
 	IndicesByStripTableRow *row;
-	vectorForeach (bufferDirtyBackgroundStrips, row, renderer->buffer) {
+	vectorForeach (bufferDirtyBackgroundStripsBegin(renderer->buffer), bufferDirtyBackgroundStripsEnd(renderer->buffer), row) {
 		// TODO: Replace with single draw call.
 		StripCoord *stripCoord;
-		vectorForeach (stripCoordVector, stripCoord, row->values) {
+		vectorForeach (stripCoordVectorBegin(row->values), stripCoordVectorEnd(row->values), stripCoord) {
 			unsigned short bufferIndex = bufferMapWorldCoordToBufferIndex(
 				renderer->buffer,
 				*stripCoord
