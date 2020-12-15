@@ -89,7 +89,7 @@ void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, Map map) {
 	for (y = 0; y < spriteInstance->sprite->height; ++y) {
 		for (column=0; column<spriteInstance->sprite->numColumns; ++column) {
 			unsigned int sourceStripIndex = column + y*spriteInstance->sprite->numColumns;
-			BitplaneStrip strip = spriteInstance->sprite->bitPlaneStrips[sourceStripIndex];
+			BitplaneStrip strip = spriteInstance->sprite->bitPlaneStrips->values[sourceStripIndex];
 			unsigned int posXColumn = spriteInstance->posX/8;
 			unsigned int posXRest = spriteInstance->posX%8;
 			unsigned char shiftMask;
@@ -113,12 +113,12 @@ void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, Map map) {
 			stripShiftedB.planes[2] = strip.planes[2] << (8 - posXRest);
 			stripShiftedB.planes[3] = strip.planes[3] << (8 - posXRest);
 			// TODO: Combine the adjecent strips, to avoid double writes.
-			shiftMask = spriteInstance->sprite->mask[sourceStripIndex] >> posXRest;
+			shiftMask = spriteInstance->sprite->mask->values[sourceStripIndex] >> posXRest;
 			if (shiftMask) {
 				drawStrip(destinationStripIndex, stripShiftedA, shiftMask);
 				bufferMarkDirtyBackgroundStrips(renderer->buffer, worldCoord, getMapStripAtWorldCoord(map, worldCoord));
 			}
-			shiftMask = spriteInstance->sprite->mask[sourceStripIndex] << (8 - posXRest);
+			shiftMask = spriteInstance->sprite->mask->values[sourceStripIndex] << (8 - posXRest);
 			++worldCoord.column;
 			if (shiftMask) {
 				drawStrip(destinationStripIndex + 1, stripShiftedB, shiftMask);
