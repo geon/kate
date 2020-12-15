@@ -89,7 +89,10 @@ void methodPrefix##Add(TableTypeName table, const TKey key, const TValue value) 
  \
  \
 void methodPrefix##Clear(TableTypeName table) { \
-	methodPrefix##RowsVectorClear(table->rows); \
+	long int rowIndex; \
+	for (rowIndex = 0; rowIndex < methodPrefix##RowsVectorSize(table->rows); ++rowIndex) { \
+		valueVectorPrefix##Clear(table->rows->values[rowIndex].values); \
+	} \
 } \
  \
  \
