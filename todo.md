@@ -1,5 +1,5 @@
 - [x] Make vector foreach use a begin and end expression, instead of constructing it from methodPrefix and vector.
-- [ ] Make vector work with the struct on the stack.
+- [x] Make vector work with the struct on the stack.
 - [ ] Use the vector in image.
 - [x] Use the vector in sprite.
 - [ ] Make the background use a separate datastructure from sprite. It has no mask and must be aligned to strips.

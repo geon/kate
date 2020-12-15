@@ -56,5 +56,5 @@ BitplaneStrip getMapStripAtWorldCoord(Map map, StripCoord worldCoord) {
 
 	sourceStripIndex = sourceStripColumn + sourceStripY * backgroundImage->numColumns;
 
-	return backgroundImage->bitPlaneStrips->values[sourceStripIndex];
+	return backgroundImage->bitPlaneStrips.values[sourceStripIndex];
 }

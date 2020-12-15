@@ -20,8 +20,8 @@ typedef struct SpriteStruct {
 	unsigned int numColumns;
 	unsigned int height;
 	unsigned char palette[16];
-	BitplaneStripVector bitPlaneStrips;
-	StripMaskVector mask;
+	BitplaneStripVectorStruct bitPlaneStrips;
+	StripMaskVectorStruct mask;
 } SpriteStruct;
 
 #endif
