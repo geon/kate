@@ -1,0 +1,7 @@
+- [ ] Make vector foreach use a begin and end expression, instead of constructing it from methodPrefix and vector.
+- [ ] Make vector work with the struct on the stack.
+- [ ] Use the vector in image and sprite.
+- [ ] Make the background use a separate datastructure from sprite. It has no mask and must be aligned to strips.
+- [ ] Use tiles for the background. Fewer objects in the background dirty-buffer should be faster.
+- [ ] Use fixed length vallue arrays in the dirty-buffer. More easily reusable like a slab allocator. Should be faster.
+- [ ] Use a heap (?) datastructure to store the dirty-buffer. Should be faster than scanning it linearly.
