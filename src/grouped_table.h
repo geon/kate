@@ -11,8 +11,8 @@ typedef struct TableTypeName##Row { \
 	TValueVector values; \
 } TableTypeName##Row; \
 typedef struct TableTypeName##Struct *TableTypeName; \
-TableTypeName make##TableTypeName(const long int capacity); \
-void initialize##TableTypeName(TableTypeName table, const long int capacity); \
+TableTypeName make##TableTypeName(const int32_t capacity); \
+void initialize##TableTypeName(TableTypeName table, const int32_t capacity); \
 void destroy##TableTypeName(TableTypeName table); \
 void free##TableTypeName(TableTypeName table); \
 void methodPrefix##Add(TableTypeName table, const TKey key, const TValue value); \
@@ -27,7 +27,7 @@ typedef struct TableTypeName##Struct { \
 } TableTypeName##Struct; \
  \
  \
-TableTypeName make##TableTypeName(const long int capacity) { \
+TableTypeName make##TableTypeName(const int32_t capacity) { \
 	##TableTypeName table = malloc(sizeof(TableTypeName)); \
 	assert(table); \
 	initialize##TableTypeName(table, capacity); \
@@ -35,7 +35,7 @@ TableTypeName make##TableTypeName(const long int capacity) { \
 } \
  \
  \
-void initialize##TableTypeName(TableTypeName table, const long int capacity) { \
+void initialize##TableTypeName(TableTypeName table, const int32_t capacity) { \
 	table->rows = make##TableTypeName##RowsVector(capacity); \
 } \
  \
@@ -52,7 +52,7 @@ void free##TableTypeName(TableTypeName table) { \
  \
  \
 void methodPrefix##Add(TableTypeName table, const TKey key, const TValue value) { \
-	long int rowIndex; \
+	int32_t rowIndex; \
  \
 	/* Scan for an existing key. */ \
 	for (rowIndex = 0; rowIndex < methodPrefix##RowsVectorSize(table->rows); ++rowIndex) { \
@@ -89,7 +89,7 @@ void methodPrefix##Add(TableTypeName table, const TKey key, const TValue value) 
  \
  \
 void methodPrefix##Clear(TableTypeName table) { \
-	long int rowIndex; \
+	int32_t rowIndex; \
 	for (rowIndex = 0; rowIndex < methodPrefix##RowsVectorSize(table->rows); ++rowIndex) { \
 		valueVectorPrefix##Clear(table->rows->values[rowIndex].values); \
 	} \

@@ -35,7 +35,7 @@ uint32_t parseLongInt (unsigned char *data) {
 		((uint32_t) data[2]) << 16 |
 		((uint32_t) data[3]) << 24;
 
-	return *(long int*) &bits;
+	return *(int32_t*) &bits;
 }
 
 uint16_t parseUnsignedInt (unsigned char *data) {
@@ -91,7 +91,7 @@ Image loadBmp(char* imageFilePath, bool firstColorIsTransparency, char** errorMe
 	unsigned char fileHeader[FILE_HEADER_SIZE];
 	unsigned char infoHeader[INFO_HEADER_SIZE];
 	uint32_t width;
-	long int height;
+	int32_t height;
 	uint16_t bitsPerPixel;
 	uint32_t compression;
 	uint32_t numColors;
