@@ -3,6 +3,6 @@
 - [ ] Use the vector in image.
 - [x] Use the vector in sprite.
 - [x] Make the background use a separate datastructure from sprite. It has no mask and must be aligned to strips.
-- [ ] Use tiles for the background. Fewer objects in the background dirty-buffer should be faster.
-- [ ] Use fixed length vallue arrays in the dirty-buffer. More easily reusable like a slab allocator. Should be faster.
-- [ ] Use a heap (?) datastructure to store the dirty-buffer. Should be faster than scanning it linearly.
+- [ ] Use tiles for the DirtyBackgroundStrips. Fewer objects should be faster.
+- [ ] Use fixed length value arrays in the DirtyBackgroundStrips. More easily reusable like a slab allocator. Should be faster.
+- [ ] Use a heap (?) datastructure to store the DirtyBackgroundStrips. Should be faster than scanning it linearly.
