@@ -1,60 +1,85 @@
 #include "map.h"
-#include "sprite_struct.h"
+#include "image_struct.h"
 #include "bmp.h"
+#include "strip_tile.h"
+#include "vector.h"
 
 #include <stdlib.h>
 #include <assert.h>
+#include <string.h>
 
+
+declareVector(StripTileVector, StripTile, stripTileVector)
+defineVectorStruct(StripTileVector, StripTile, stripTileVector)
+defineVector(StripTileVector, StripTile, stripTileVector)
 
 typedef struct MapStruct {
-	Sprite sprite;
+	unsigned int width;
+	unsigned int height;
+	unsigned char palette[16];
+	StripTileVectorStruct stripTiles;
 } MapStruct;
 
 
-Sprite mapLoadSprite (Map map, char *imagePath, char **errorMessage) {
+Map makeMap (char **errorMessage) {
 	Image image;
-	Sprite sprite;
+	Map map = malloc(sizeof(MapStruct));
+	assert(map);
 
-	image = loadBmp(imagePath, true, errorMessage);
+	image = loadBmp("../images/backgr.bmp", true, errorMessage);
 	if (!image) {
 		return false;
 	}
 
-	sprite = makeSprite(image);
-	freeImage(image);
+	map->width = image->numColumns;
+	map->height = image->height / 8;
 
-	return sprite;
-}
+	memcpy(map->palette, image->palette, sizeof(map->palette));
 
+	{
+		unsigned short int numStripTiles = map->width * map->height;
+		initializeStripTileVector(&map->stripTiles, numStripTiles);
 
-Map makeMap (char **errorMessage) {
-    Map map = malloc(sizeof(MapStruct));
-	assert(map);
-
-    map->sprite = mapLoadSprite(map, "../images/backgr.bmp", errorMessage);
-	if (!map->sprite) {
-		return NULL;
+		{
+			unsigned int i;
+			int strip;
+			for (i=0; i<numStripTiles; ++i) {
+				StripTile tile;
+				unsigned short int tileX, tileY;
+				tileX = i % image->numColumns;
+				tileY = i / image->numColumns;
+				for (strip=0; strip<8; ++strip) {
+					unsigned short int imageY = tileY * 8 + strip;
+					if (image->upsideDown) {
+						imageY = image->height - 1 - imageY;
+					}
+					tile.bitPlaneStrips[strip] = makeBitplaneStrip(image->pixels[tileX + imageY*image->numColumns]);
+				}
+				stripTileVectorPush(&map->stripTiles, tile);
+			}
+		}
 	}
+
+	freeImage(image);
 
 	return map;
 }
 
 
 void freeMap (Map map) {
-    freeSprite(map->sprite);
+    destroyStripTileVector(&map->stripTiles);
 }
 
 
 BitplaneStrip getMapStripAtWorldCoord(Map map, StripCoord worldCoord) {
-    Sprite backgroundImage = map->sprite;
-	unsigned short int sourceStripColumn;
-	unsigned short int sourceStripY;
-	unsigned short int sourceStripIndex;
+	unsigned short int sourceTileX;
+	unsigned short int sourceTileY;
+	unsigned short int sourceTileIndex;
 
-	sourceStripColumn = worldCoord.column % backgroundImage->numColumns;
-	sourceStripY = worldCoord.y % backgroundImage->height;
+	sourceTileX = worldCoord.column % map->width;
+	sourceTileY = (worldCoord.y/8) % map->height;
 
-	sourceStripIndex = sourceStripColumn + sourceStripY * backgroundImage->numColumns;
+	sourceTileIndex = sourceTileX + sourceTileY * map->width;
 
-	return backgroundImage->bitPlaneStrips.values[sourceStripIndex];
+	return map->stripTiles.values[sourceTileIndex].bitPlaneStrips[worldCoord.y%8];
 }
