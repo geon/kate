@@ -58,8 +58,8 @@ void switchBuffer (Buffer buffer, PixelCoord scroll, Map map) {
 #define EGA_SCREEN_NUM_COLUMNS 80
 #define EGA_SCREEN_HEIGHT 350
 void markBordersAsDirty (Buffer buffer, PixelCoord scroll, Map map) {
-	int xChange = scroll.x/8 - buffer->scroll.column;
-	int yChange = scroll.y - buffer->scroll.y;
+	int16_t xChange = scroll.x/8 - buffer->scroll.column;
+	int16_t yChange = scroll.y - buffer->scroll.y;
 
 	// Mark the new edge strips as dirty.
 

@@ -71,10 +71,10 @@
 #define MINUNIT_EPSILON 1E-12
 
 /*  Misc. counters */
-static int minunit_run = 0;
-static int minunit_assert = 0;
-static int minunit_fail = 0;
-static int minunit_status = 0;
+static int16_t minunit_run = 0;
+static int16_t minunit_assert = 0;
+static int16_t minunit_fail = 0;
+static int16_t minunit_status = 0;
 
 /*  Timers */
 static double minunit_real_timer = 0;
@@ -171,8 +171,8 @@ static void (*minunit_teardown)(void) = NULL;
 )
 
 #define mu_assert_int_eq(expected, result) MU__SAFE_BLOCK(\
-	int minunit_tmp_e;\
-	int minunit_tmp_r;\
+	int16_t minunit_tmp_e;\
+	int16_t minunit_tmp_r;\
 	minunit_assert++;\
 	minunit_tmp_e = (expected);\
 	minunit_tmp_r = (result);\
@@ -192,7 +192,7 @@ static void (*minunit_teardown)(void) = NULL;
 	minunit_tmp_e = (expected);\
 	minunit_tmp_r = (result);\
 	if (fabs(minunit_tmp_e-minunit_tmp_r) > MINUNIT_EPSILON) {\
-		int minunit_significant_figures = 1 - log10(MINUNIT_EPSILON);\
+		int16_t minunit_significant_figures = 1 - log10(MINUNIT_EPSILON);\
 		snprintf(minunit_last_message, MINUNIT_MESSAGE_LEN, "%s failed:\n\t%s:%d: %.*g expected but was %.*g", __func__, __FILE__, __LINE__, minunit_significant_figures, minunit_tmp_e, minunit_significant_figures, minunit_tmp_r);\
 		minunit_status = 1;\
 		return;\

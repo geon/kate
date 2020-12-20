@@ -10,7 +10,7 @@
 #include <assert.h>
 #include <stdint.h>
 
-const int bytesPerPixel = 3; /// red, green, blue
+const int16_t bytesPerPixel = 3; /// red, green, blue
 #define FILE_HEADER_SIZE 14
 #define INFO_HEADER_SIZE 40
 

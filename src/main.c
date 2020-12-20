@@ -7,7 +7,7 @@
 #include <stdint.h>
 
 
-int main (int argc, char* argv[]) {
+int16_t main (int16_t argc, char* argv[]) {
 	Renderer renderer;
 	World world;
 

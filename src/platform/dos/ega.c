@@ -225,7 +225,7 @@ void pasteStrip (uint16_t index, unsigned char mask) {
 
 void setPalette (unsigned char palette[16]) {
 	union REGS regs;
-	int i;
+	int16_t i;
 
 	// Service 0. Set an individual palette register.
 	regs.w.ax = 0x1000;

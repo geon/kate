@@ -43,7 +43,7 @@ Map makeMap (char **errorMessage) {
 
 		{
 			uint16_t i;
-			int strip;
+			int16_t strip;
 			for (i=0; i<numStripTiles; ++i) {
 				StripTile tile;
 				uint16_t tileX, tileY;
