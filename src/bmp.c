@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <assert.h>
+#include <stdint.h>
 
 const int bytesPerPixel = 3; /// red, green, blue
 #define FILE_HEADER_SIZE 14
@@ -19,38 +20,38 @@ char *errorMessageNumBits = "Only 4-bits-per-pixel images are supported.";
 char *errorMessageCompression = "Compressed images are not supported.";
 char *errorMessagePalette = "Max supported palette length is 16 colors.";
 
-unsigned long int parseUnsignedLongInt (unsigned char *data) {
-	return 
-		((unsigned long int) data[0]) |
-		((unsigned long int) data[1]) << 8 |
-		((unsigned long int) data[2]) << 16 |
-		((unsigned long int) data[3]) << 24;
+uint32_t parseUnsignedLongInt (unsigned char *data) {
+	return
+		((uint32_t) data[0]) |
+		((uint32_t) data[1]) << 8 |
+		((uint32_t) data[2]) << 16 |
+		((uint32_t) data[3]) << 24;
 }
 
-unsigned long int parseLongInt (unsigned char *data) {
-	unsigned long int bits = 
-		((unsigned long int) data[0]) |
-		((unsigned long int) data[1]) << 8 |
-		((unsigned long int) data[2]) << 16 |
-		((unsigned long int) data[3]) << 24;
+uint32_t parseLongInt (unsigned char *data) {
+	uint32_t bits =
+		((uint32_t) data[0]) |
+		((uint32_t) data[1]) << 8 |
+		((uint32_t) data[2]) << 16 |
+		((uint32_t) data[3]) << 24;
 
 	return *(long int*) &bits;
 }
 
 unsigned int parseUnsignedInt (unsigned char *data) {
 	return 
-		((unsigned long int) data[0]) |
-		((unsigned long int) data[1]) << 8;
+		((uint32_t) data[0]) |
+		((uint32_t) data[1]) << 8;
 }
 
-unsigned long int reverseBytes (unsigned long int bits) {
+uint32_t reverseBytes (uint32_t bits) {
 	unsigned char *data = (unsigned char *) &bits;
 
 	return 
-		((unsigned long int) data[3]) |
-		((unsigned long int) data[2]) << 8 |
-		((unsigned long int) data[1]) << 16 |
-		((unsigned long int) data[0]) << 24;
+		((uint32_t) data[3]) |
+		((uint32_t) data[2]) << 8 |
+		((uint32_t) data[1]) << 16 |
+		((uint32_t) data[0]) << 24;
 }
 
 unsigned char rgbToEga (unsigned char red, unsigned char green, unsigned char blue) {
@@ -67,13 +68,13 @@ unsigned char rgbToEga (unsigned char red, unsigned char green, unsigned char bl
 		(((blue2Bit >> 1) & 1) << 0);
 }
 
-unsigned char makeMask (unsigned long int nibbleStrip) {
+unsigned char makeMask (uint32_t nibbleStrip) {
 	unsigned char i;
 	unsigned char mask;
 
 	mask = 0;
 	for (i=0; i<8; ++i) {
-		mask |= (nibbleStrip & (((unsigned long int) 0xf) << (i*4))) ? (1 << i) : 0;
+		mask |= (nibbleStrip & (((uint32_t) 0xf) << (i*4))) ? (1 << i) : 0;
 	}
 
 	return mask;
@@ -89,15 +90,15 @@ Image loadBmp(char* imageFilePath, bool firstColorIsTransparency, char** errorMe
 	Image image = makeImage();
 	unsigned char fileHeader[FILE_HEADER_SIZE];
 	unsigned char infoHeader[INFO_HEADER_SIZE];
-	unsigned long int width;
+	uint32_t width;
 	long int height;
 	unsigned int bitsPerPixel;
-	unsigned long int compression;
-	unsigned long int numColors;
+	uint32_t compression;
+	uint32_t numColors;
 	unsigned int i;
 	unsigned char paletteData[16 * BYTES_PER_COLOR_ENTRY];
-	unsigned long int  dataSize;
-	unsigned long int  maskSize;
+	uint32_t  dataSize;
+	uint32_t  maskSize;
 
 	FILE* imageFile = fopen(imageFilePath, "rb");
 	if (!imageFile) {

@@ -1,5 +1,8 @@
 #include "bitplane_strip.h"
 
+#include <stdint.h>
+
+
 #define BIT_0 1
 #define BIT_1 2
 #define BIT_2 4
@@ -8,9 +11,9 @@
 /**
 	Turn an array of 8 4-bit colors into 4 bit-planes, each with an 8-bit wide strip of pixels.
 */
-BitplaneStrip makeBitplaneStrip (unsigned long int nibbleStrip) {
+BitplaneStrip makeBitplaneStrip (uint32_t nibbleStrip) {
 
-	unsigned long int
+	uint32_t
 		pixel0,
 		pixel1,
 		pixel2,
@@ -39,6 +42,6 @@ BitplaneStrip makeBitplaneStrip (unsigned long int nibbleStrip) {
 	return bitplaneStrip;
 }
 
-unsigned long int bitplaneStripAsInt (BitplaneStrip bitplaneStrip) {
-	return *((unsigned long int*) ((void*) &bitplaneStrip));
+uint32_t bitplaneStripAsInt (BitplaneStrip bitplaneStrip) {
+	return *((uint32_t*) ((void*) &bitplaneStrip));
 }

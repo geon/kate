@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <stdint.h>
 
 
 typedef struct DirtyBackgroundStripsStruct {
@@ -21,8 +22,8 @@ DirtyBackgroundStrips makeDirtyBackgroundStrips (bool alternateBuffer) {
 
 	{
 		// The background has not been rendered yet, so it is by definition completely dirty.
-		unsigned long int column;
-		unsigned long int y;
+		uint32_t column;
+		uint32_t y;
 		for (column=0; column<EGA_BUFFER_NUM_COLUMNS_DEFAULT; ++column) {
 			for (y=0; y<EGA_BUFFER_NUM_ROWS_DEFAULT; ++y) {
 				BitplaneStrip strip;
