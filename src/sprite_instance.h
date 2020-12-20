@@ -3,12 +3,15 @@
 
 #include "sprite.h"
 
+#include <stdint.h>
+
+
 typedef struct SpriteInstance {
     Sprite sprite;
-	short int posX;
-	short int posY;
+	int16_t posX;
+	int16_t posY;
 } SpriteInstance;
 
-SpriteInstance makeSpriteInstance (Sprite sprite, short int posX, short int posY);
+SpriteInstance makeSpriteInstance (Sprite sprite, int16_t posX, int16_t posY);
 
 #endif
