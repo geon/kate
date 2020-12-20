@@ -25,7 +25,7 @@ typedef struct RendererStruct {
 	unsigned char palette[16];
 	Buffer buffer;
 
-	unsigned short int numSprites;
+	uint16_t numSprites;
 	Sprite *sprites;
 } RendererStruct;
 
@@ -45,7 +45,7 @@ Renderer makeRenderer (char **errorMessage) {
 
 
 void freeRenderer (Renderer renderer) {
-	unsigned int i;
+	uint16_t i;
 
 	for (i=0; i<renderer->numSprites; ++i) {
 		freeSprite(renderer->sprites[i]);
@@ -85,16 +85,16 @@ Sprite rendererLoadSprite (Renderer renderer, char *imagePath, char **errorMessa
 
 
 void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, Map map) {
-	unsigned int y, column;
+	uint16_t y, column;
 	for (y = 0; y < spriteInstance->sprite->height; ++y) {
 		for (column=0; column<spriteInstance->sprite->numColumns; ++column) {
-			unsigned int sourceStripIndex = column + y*spriteInstance->sprite->numColumns;
+			uint16_t sourceStripIndex = column + y*spriteInstance->sprite->numColumns;
 			BitplaneStrip strip = spriteInstance->sprite->bitPlaneStrips.values[sourceStripIndex];
-			unsigned int posXColumn = spriteInstance->posX/8;
-			unsigned int posXRest = spriteInstance->posX%8;
+			uint16_t posXColumn = spriteInstance->posX/8;
+			uint16_t posXRest = spriteInstance->posX%8;
 			unsigned char shiftMask;
 			BitplaneStrip stripShiftedA, stripShiftedB;
-			unsigned int destinationStripIndex;
+			uint16_t destinationStripIndex;
 			StripCoord worldCoord;
 
 			worldCoord.column = posXColumn + column;
@@ -129,8 +129,8 @@ void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, Map map) {
 }
 
 
-void renderSprites (Renderer renderer, unsigned int numSpriteInstances, SpriteInstance *spriteInstances, Map map) {
-	unsigned int i;
+void renderSprites (Renderer renderer, uint16_t numSpriteInstances, SpriteInstance *spriteInstances, Map map) {
+	uint16_t i;
 
 	for (i=0; i<numSpriteInstances; ++i) {
 		drawSprite(renderer, &spriteInstances[i], map);
@@ -161,7 +161,7 @@ void renderBackground (Renderer renderer) {
 
 
 
-void rendererRender(Renderer renderer, unsigned int numSpriteInstances, SpriteInstance *spriteInstances, Map map, PixelCoord scroll) {
+void rendererRender(Renderer renderer, uint16_t numSpriteInstances, SpriteInstance *spriteInstances, Map map, PixelCoord scroll) {
 	// Sets the start-address of the buffer.
 	// The value won't be latched by the EGA card until the vertical retrace.
 	// It is not possible to change the actual used address during a frame.

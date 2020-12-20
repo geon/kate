@@ -2,6 +2,7 @@
 #define sprite_struct_h
 
 #include <stdlib.h>
+#include <stdint.h>
 
 #include "platform/dos/bitplane_strip.h"
 #include "vector.h"
@@ -17,8 +18,8 @@ defineVectorStruct(StripMaskVector, StripMask, stripMaskVector)
 defineVector(StripMaskVector, StripMask, stripMaskVector)
 
 typedef struct SpriteStruct {
-	unsigned int numColumns;
-	unsigned int height;
+	uint16_t numColumns;
+	uint16_t height;
 	unsigned char palette[16];
 	BitplaneStripVectorStruct bitPlaneStrips;
 	StripMaskVectorStruct mask;

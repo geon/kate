@@ -8,6 +8,7 @@
 #include "dirty_background_strips.h"
 
 #include <stdlib.h>
+#include <stdint.h>
 
 
 #define EGA_BUFFER_NUM_COLUMNS 88
@@ -26,12 +27,12 @@ void freeBuffer (Buffer buffer);
 
 void switchBuffer (Buffer buffer, PixelCoord scroll, Map map);
 
-unsigned short int bufferMapWorldCoordToBufferIndex (Buffer buffer, StripCoord worldCoord);
+uint16_t bufferMapWorldCoordToBufferIndex (Buffer buffer, StripCoord worldCoord);
 StripCoord bufferStaticMapWorldCoordToBufferCoord (EgaScrollCoord bufferScroll, StripCoord worldCoord);
-unsigned short int bufferStaticMapBufferCoordToBufferIndex (EgaScrollCoord bufferScroll, bool alternateBuffer, StripCoord bufferCoord);
+uint16_t bufferStaticMapBufferCoordToBufferIndex (EgaScrollCoord bufferScroll, bool alternateBuffer, StripCoord bufferCoord);
 
-StripCoord bufferMapBufferIndexToWorldCoord (Buffer buffer, unsigned short int bufferIndex);
-StripCoord bufferStaticMapBufferIndexToBufferCoord (EgaScrollCoord bufferScroll, bool alternateBuffer, unsigned short int bufferIndex);
+StripCoord bufferMapBufferIndexToWorldCoord (Buffer buffer, uint16_t bufferIndex);
+StripCoord bufferStaticMapBufferIndexToBufferCoord (EgaScrollCoord bufferScroll, bool alternateBuffer, uint16_t bufferIndex);
 StripCoord bufferStaticMapBufferCoordToWorldCoord (EgaScrollCoord bufferScroll, StripCoord bufferCoord);
 
 IndicesByStripTableRow * bufferDirtyBackgroundStripsBegin(Buffer buffer);

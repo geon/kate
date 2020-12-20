@@ -12,14 +12,15 @@
 #include <math.h>
 #include <string.h>
 #include <assert.h>
+#include <stdint.h>
 
 
 typedef struct WorldStruct {
 	Renderer renderer;
-	unsigned short int numSpriteInstances;
+	uint16_t numSpriteInstances;
 	SpriteInstance *spriteInstances;
 
-	unsigned int frame;
+	uint16_t frame;
 	Map map;
 	PixelCoord scroll;
 } WorldStruct;
@@ -38,12 +39,12 @@ World makeWorld (Renderer renderer, char **errorMessage) {
 			"../images/bunny1.bmp",
 			"../images/bunny2.bmp"
 		};
-		unsigned int spritePathArrayLength = sizeof(spritePaths) / sizeof(spritePaths[0]);
+		uint16_t spritePathArrayLength = sizeof(spritePaths) / sizeof(spritePaths[0]);
 		world->numSpriteInstances = spritePathArrayLength;
 		world->spriteInstances = malloc(sizeof(SpriteInstance) * world->numSpriteInstances);
 		assert(world->spriteInstances);
 		{
-			unsigned short int i;
+			uint16_t i;
 			for (i=0; i<spritePathArrayLength; ++i) {
 				Sprite sprite;
 				if (!(sprite = rendererLoadSprite(world->renderer, spritePaths[i], errorMessage))) {
@@ -70,7 +71,7 @@ void freeWorld (World world) {
 
 
 void worldUpdate (World world) {
-	unsigned short int i;
+	uint16_t i;
 
 	world->frame++;
 

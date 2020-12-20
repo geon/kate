@@ -1,10 +1,13 @@
 #ifndef ega_scroll_coord_h
 #define ega_scroll_coord_h
 
+#include <stdint.h>
+
+
 typedef struct EgaScrollCoord {
-	unsigned short int column;
+	uint16_t column;
 	unsigned char restX;
-	unsigned short int y;
+	uint16_t y;
 } EgaScrollCoord;
 
 #endif

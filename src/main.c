@@ -4,6 +4,7 @@
 #include "buffer.h"
 
 #include <stdio.h>
+#include <stdint.h>
 
 
 int main (int argc, char* argv[]) {
@@ -33,7 +34,7 @@ int main (int argc, char* argv[]) {
 	setVirtualScreenWidth(EGA_BUFFER_NUM_COLUMNS);
 
 	{
-		unsigned int frame;
+		uint16_t frame;
 		for (frame=0; frame < 40; ++frame) {
 			worldUpdate(world);
 			worldRender(world);

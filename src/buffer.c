@@ -65,13 +65,13 @@ void markBordersAsDirty (Buffer buffer, PixelCoord scroll, Map map) {
 
 	// Mark the bottom/top edge.
 	{
-		unsigned short int beginY = yChange < 0
+		uint16_t beginY = yChange < 0
 			? 0
 			: max(0, EGA_SCREEN_HEIGHT - 1 - yChange);
-		unsigned short int endY = yChange < 0
+		uint16_t endY = yChange < 0
 			? -yChange
 			: EGA_SCREEN_HEIGHT;
-		unsigned short int dirtyColumn, dirtyY;
+		uint16_t dirtyColumn, dirtyY;
 		for (dirtyY=beginY; dirtyY<endY; ++dirtyY) {
 			for (dirtyColumn=0; dirtyColumn<=EGA_SCREEN_NUM_COLUMNS; ++dirtyColumn) {
 				StripCoord dirtyCoord;
@@ -94,20 +94,20 @@ void markBordersAsDirty (Buffer buffer, PixelCoord scroll, Map map) {
 	// Mark the left/right edge, where it does not overlap the top/bottom.
 	{
 		// The range in Y not covered above.
-		unsigned short int beginY = yChange < 0
+		uint16_t beginY = yChange < 0
 			? -yChange
 			: 0;
-		unsigned short int endY = yChange < 0
+		uint16_t endY = yChange < 0
 			? EGA_SCREEN_HEIGHT
 			: max(0, EGA_SCREEN_HEIGHT - 1 - yChange);
 
-		unsigned short int beginColumn = xChange < 0
+		uint16_t beginColumn = xChange < 0
 			? 0
 			: max(0, EGA_SCREEN_NUM_COLUMNS - 1 - xChange);
-		unsigned short int endColumn = xChange < 0
+		uint16_t endColumn = xChange < 0
 			? -xChange
 			: EGA_SCREEN_NUM_COLUMNS;
-		unsigned short int dirtyColumn, dirtyY;
+		uint16_t dirtyColumn, dirtyY;
 		for (dirtyY=beginY; dirtyY<endY; ++dirtyY) {
 			for (dirtyColumn=beginColumn; dirtyColumn<=endColumn; ++dirtyColumn) {
 				StripCoord dirtyCoord;
@@ -129,12 +129,12 @@ void markBordersAsDirty (Buffer buffer, PixelCoord scroll, Map map) {
 }
 
 
-unsigned short int bufferIndexStart (unsigned short int column, unsigned short int y, bool alternateBuffer) {
+uint16_t bufferIndexStart (uint16_t column, uint16_t y, bool alternateBuffer) {
 	return y*EGA_BUFFER_NUM_COLUMNS + column + (alternateBuffer ? EGA_BUFFER_SIZE : 0);
 }
 
 
-unsigned short int bufferMapWorldCoordToBufferIndex (Buffer buffer, StripCoord worldCoord) {
+uint16_t bufferMapWorldCoordToBufferIndex (Buffer buffer, StripCoord worldCoord) {
 	return  bufferStaticMapBufferCoordToBufferIndex(
 		buffer->scroll,
 		buffer->alternateBuffer,
@@ -154,14 +154,14 @@ StripCoord bufferStaticMapWorldCoordToBufferCoord (EgaScrollCoord bufferScroll, 
 }
 
 
-unsigned short int bufferStaticMapBufferCoordToBufferIndex (EgaScrollCoord bufferScroll, bool alternateBuffer, StripCoord bufferCoord) {
+uint16_t bufferStaticMapBufferCoordToBufferIndex (EgaScrollCoord bufferScroll, bool alternateBuffer, StripCoord bufferCoord) {
 	return
 		bufferIndexStart(bufferScroll.column, bufferScroll.y, alternateBuffer) +
 		bufferCoord.y*EGA_BUFFER_NUM_COLUMNS + bufferCoord.column;
 }
 
 
-StripCoord bufferMapBufferIndexToWorldCoord (Buffer buffer, unsigned short int bufferIndex) {
+StripCoord bufferMapBufferIndexToWorldCoord (Buffer buffer, uint16_t bufferIndex) {
 	return bufferStaticMapBufferCoordToWorldCoord(
 		buffer->scroll,
 		bufferStaticMapBufferIndexToBufferCoord(
@@ -173,8 +173,8 @@ StripCoord bufferMapBufferIndexToWorldCoord (Buffer buffer, unsigned short int b
 }
 
 
-StripCoord bufferStaticMapBufferIndexToBufferCoord (EgaScrollCoord bufferScroll, bool alternateBuffer, unsigned short int bufferIndex) {
-	unsigned short int bufferStripIndexStart = bufferIndexStart(bufferScroll.column, bufferScroll.y, alternateBuffer);
+StripCoord bufferStaticMapBufferIndexToBufferCoord (EgaScrollCoord bufferScroll, bool alternateBuffer, uint16_t bufferIndex) {
+	uint16_t bufferStripIndexStart = bufferIndexStart(bufferScroll.column, bufferScroll.y, alternateBuffer);
 	StripCoord bufferCoord;
 	bufferCoord.column = (bufferIndex - bufferStripIndexStart) % EGA_BUFFER_NUM_COLUMNS;
 	bufferCoord.y = (bufferIndex - bufferStripIndexStart) / EGA_BUFFER_NUM_COLUMNS;

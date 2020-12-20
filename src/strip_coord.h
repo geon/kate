@@ -1,9 +1,12 @@
 #ifndef strip_coord_h
 #define strip_coord_h
 
+#include <stdint.h>
+
+
 typedef struct StripCoord {
-	unsigned short int column;
-	unsigned short int y;
+	uint16_t column;
+	uint16_t y;
 } StripCoord;
 
 #endif

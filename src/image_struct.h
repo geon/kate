@@ -5,8 +5,8 @@
 
 
 typedef struct ImageStruct {
-	unsigned int numColumns;
-	unsigned int height;
+	uint16_t numColumns;
+	uint16_t height;
 	bool upsideDown;
 	unsigned char palette[16];
 	uint32_t *pixels;

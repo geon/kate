@@ -1,9 +1,12 @@
 #ifndef pixel_coord_h
 #define pixel_coord_h
 
+#include <stdint.h>
+
+
 typedef struct PixelCoord {
-	unsigned short int x;
-	unsigned short int y;
+	uint16_t x;
+	uint16_t y;
 } PixelCoord;
 
 #endif

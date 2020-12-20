@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include <stdint.h>
 
 
 Sprite makeSprite (Image image) {
@@ -17,14 +18,14 @@ Sprite makeSprite (Image image) {
 	memcpy(sprite->palette, image->palette, sizeof(sprite->palette));
 
 	{
-		unsigned short int numBitplaneStrips = image->numColumns * image->height;
+		uint16_t numBitplaneStrips = image->numColumns * image->height;
 		initializeBitplaneStripVector(&sprite->bitPlaneStrips, numBitplaneStrips);
 		initializeStripMaskVector(&sprite->mask, numBitplaneStrips);
 
 		{
-			unsigned int i;
+			uint16_t i;
 			for (i=0; i<numBitplaneStrips; ++i) {
-				unsigned short int column, y;
+				uint16_t column, y;
 				column = i % image->numColumns;
 				y = i / image->numColumns;
 				if (image->upsideDown) {

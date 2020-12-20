@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
+#include <stdint.h>
 
 
 declareVector(StripTileVector, StripTile, stripTileVector)
@@ -14,8 +15,8 @@ defineVectorStruct(StripTileVector, StripTile, stripTileVector)
 defineVector(StripTileVector, StripTile, stripTileVector)
 
 typedef struct MapStruct {
-	unsigned int width;
-	unsigned int height;
+	uint16_t width;
+	uint16_t height;
 	unsigned char palette[16];
 	StripTileVectorStruct stripTiles;
 } MapStruct;
@@ -37,19 +38,19 @@ Map makeMap (char **errorMessage) {
 	memcpy(map->palette, image->palette, sizeof(map->palette));
 
 	{
-		unsigned short int numStripTiles = map->width * map->height;
+		uint16_t numStripTiles = map->width * map->height;
 		initializeStripTileVector(&map->stripTiles, numStripTiles);
 
 		{
-			unsigned int i;
+			uint16_t i;
 			int strip;
 			for (i=0; i<numStripTiles; ++i) {
 				StripTile tile;
-				unsigned short int tileX, tileY;
+				uint16_t tileX, tileY;
 				tileX = i % image->numColumns;
 				tileY = i / image->numColumns;
 				for (strip=0; strip<8; ++strip) {
-					unsigned short int imageY = tileY * 8 + strip;
+					uint16_t imageY = tileY * 8 + strip;
 					if (image->upsideDown) {
 						imageY = image->height - 1 - imageY;
 					}
@@ -72,9 +73,9 @@ void freeMap (Map map) {
 
 
 BitplaneStrip getMapStripAtWorldCoord(Map map, StripCoord worldCoord) {
-	unsigned short int sourceTileX;
-	unsigned short int sourceTileY;
-	unsigned short int sourceTileIndex;
+	uint16_t sourceTileX;
+	uint16_t sourceTileY;
+	uint16_t sourceTileIndex;
 
 	sourceTileX = worldCoord.column % map->width;
 	sourceTileY = (worldCoord.y/8) % map->height;

@@ -36,7 +36,7 @@ void setVideoMode () {
 }
 
 
-void drawPoint (unsigned short int x, unsigned short int y, unsigned char color) {
+void drawPoint (uint16_t x, uint16_t y, unsigned char color) {
 	// For some reason, using the int86 function was very glitchy in DOSBox. Inline asm works fine.
 	_asm {
 		mov AH, 0x0C
@@ -54,7 +54,7 @@ void drawPoint (unsigned short int x, unsigned short int y, unsigned char color)
 #define BIT_3 8
 
 
-void drawStrip (unsigned short int index, BitplaneStrip bitplaneStrip, unsigned char mask) {
+void drawStrip (uint16_t index, BitplaneStrip bitplaneStrip, unsigned char mask) {
 
 	/*
 	write modes:
@@ -183,7 +183,7 @@ void drawStrip (unsigned short int index, BitplaneStrip bitplaneStrip, unsigned 
 }
 
 
-void copyStrip (unsigned short int index) {
+void copyStrip (uint16_t index) {
 	unsigned char* stripAddress = bufferBaseAddress + index;
 
 	_asm{
@@ -194,7 +194,7 @@ void copyStrip (unsigned short int index) {
 	}
 }
 
-void pasteStrip (unsigned short int index, unsigned char mask) {
+void pasteStrip (uint16_t index, unsigned char mask) {
 	unsigned char *stripAddress = bufferBaseAddress + index;
 
 	_asm{
@@ -241,7 +241,7 @@ void setPalette (unsigned char palette[16]) {
 }
 
 
-void setVirtualScreenWidth (unsigned short int numColumns) {
+void setVirtualScreenWidth (uint16_t numColumns) {
 
 	// 3d4h index 13h (W):  CRTC: Offset register
 	// bit 0-7  Number of bytes in a scanline / K. Where K is 2 for byte mode, 4 for
@@ -259,7 +259,7 @@ void setVirtualScreenWidth (unsigned short int numColumns) {
 }
 
 
-void setBufferOffset (unsigned short int offset, unsigned char restX) {
+void setBufferOffset (uint16_t offset, unsigned char restX) {
 
 	unsigned char offsetHighBits = offset >> 8;
 	unsigned char offsetLowBits = offset;
