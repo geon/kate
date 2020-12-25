@@ -1,6 +1,10 @@
 #include "bitplane_strip.h"
 
 #include <stdint.h>
+#include <stdlib.h>
+
+
+defineVector(BitplaneStripVector, BitplaneStrip, bitplaneStripVector)
 
 
 #define BIT_0 1

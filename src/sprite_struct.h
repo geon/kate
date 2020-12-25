@@ -8,10 +8,6 @@
 #include "vector.h"
 
 
-declareVector(BitplaneStripVector, BitplaneStrip, bitplaneStripVector)
-defineVectorStruct(BitplaneStripVector, BitplaneStrip, bitplaneStripVector)
-defineVector(BitplaneStripVector, BitplaneStrip, bitplaneStripVector)
-
 typedef unsigned char StripMask;
 declareVector(StripMaskVector, StripMask, stripMaskVector)
 defineVectorStruct(StripMaskVector, StripMask, stripMaskVector)
