@@ -2,17 +2,12 @@
 #include "image_struct.h"
 #include "bmp.h"
 #include "strip_tile.h"
-#include "vector.h"
 
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
 #include <stdint.h>
 
-
-declareVector(StripTileVector, StripTile, stripTileVector)
-defineVectorStruct(StripTileVector, StripTile, stripTileVector)
-defineVector(StripTileVector, StripTile, stripTileVector)
 
 typedef struct MapStruct {
 	uint16_t width;
