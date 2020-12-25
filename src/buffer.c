@@ -36,25 +36,6 @@ void freeBuffer (Buffer buffer) {
 }
 
 
-void switchBuffer (Buffer buffer, PixelCoord scroll, Map map) {
-	// Calculate the current buffer offset and fractional strip panning.
-	StripCoord stripScroll = makeStripCoordFromEgaScrollCoord(buffer->scroll);
-	unsigned short bufferIndex = bufferMapWorldCoordToBufferIndex(
-		buffer,
-		stripScroll
-	);
-
-	// Send the EGA command.
-	setBufferOffset(bufferIndex, buffer->scroll.restX);
-
-	// Update internally.
-	buffer->alternateBuffer = !buffer->alternateBuffer;
-	buffer->scroll = makeEgaScrollCoordFromPixelCoord(scroll);
-
-	markBordersAsDirty(buffer, scroll, map);
-}
-
-
 #define EGA_SCREEN_NUM_COLUMNS 80
 #define EGA_SCREEN_HEIGHT 350
 void markBordersAsDirty (Buffer buffer, PixelCoord scroll, Map map) {
@@ -126,6 +107,25 @@ void markBordersAsDirty (Buffer buffer, PixelCoord scroll, Map map) {
 			}
 		}
 	}
+}
+
+
+void switchBuffer (Buffer buffer, PixelCoord scroll, Map map) {
+	// Calculate the current buffer offset and fractional strip panning.
+	StripCoord stripScroll = makeStripCoordFromEgaScrollCoord(buffer->scroll);
+	unsigned short bufferIndex = bufferMapWorldCoordToBufferIndex(
+		buffer,
+		stripScroll
+	);
+
+	// Send the EGA command.
+	setBufferOffset(bufferIndex, buffer->scroll.restX);
+
+	// Update internally.
+	buffer->alternateBuffer = !buffer->alternateBuffer;
+	buffer->scroll = makeEgaScrollCoordFromPixelCoord(scroll);
+
+	markBordersAsDirty(buffer, scroll, map);
 }
 
 
