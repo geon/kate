@@ -17,8 +17,7 @@
 
 typedef struct WorldStruct {
 	Renderer renderer;
-	uint16_t numSpriteInstances;
-	SpriteInstance *spriteInstances;
+	SpriteInstanceVectorStruct spriteInstances;
 
 	uint16_t frame;
 	Map map;
@@ -40,9 +39,7 @@ World makeWorld (Renderer renderer, char **errorMessage) {
 			"../images/bunny2.bmp"
 		};
 		uint16_t spritePathArrayLength = sizeof(spritePaths) / sizeof(spritePaths[0]);
-		world->numSpriteInstances = spritePathArrayLength;
-		world->spriteInstances = malloc(sizeof(SpriteInstance) * world->numSpriteInstances);
-		assert(world->spriteInstances);
+		initializeSpriteInstanceVector(&world->spriteInstances, spritePathArrayLength);
 		{
 			uint16_t i;
 			for (i=0; i<spritePathArrayLength; ++i) {
@@ -50,7 +47,7 @@ World makeWorld (Renderer renderer, char **errorMessage) {
 				if (!(sprite = rendererLoadSprite(world->renderer, spritePaths[i], errorMessage))) {
 					return NULL;
 				}
-				world->spriteInstances[i] = makeSpriteInstance(sprite, 0, 0);
+				spriteInstanceVectorPush(&world->spriteInstances, makeSpriteInstance(sprite, 0, 0));
 			}
 		}
 	}
@@ -65,12 +62,13 @@ World makeWorld (Renderer renderer, char **errorMessage) {
 
 void freeWorld (World world) {
 	freeMap(world->map);
-	free(world->spriteInstances);
+	destroySpriteInstanceVector(&world->spriteInstances);
 	free(world);
 }
 
 
 void worldUpdate (World world) {
+	SpriteInstance *spriteInstance;
 	uint16_t i;
 
 	world->frame++;
@@ -78,13 +76,13 @@ void worldUpdate (World world) {
 	world->scroll.x = world->frame * 12;
 	world->scroll.y = world->frame * 12;
 
-	for (i=0; i<world->numSpriteInstances; ++i) {
-		world->spriteInstances[i].posX = world->scroll.x + 150 + i*64;
-		world->spriteInstances[i].posY = world->scroll.y + 150;
+	vectorForeachIndex (spriteInstanceVectorBegin(&world->spriteInstances), spriteInstanceVectorEnd(&world->spriteInstances), spriteInstance, i) {
+		spriteInstance->posX = world->scroll.x + 150 + i*64;
+		spriteInstance->posY = world->scroll.y + 150;
 	}
 }
 
 
 void worldRender(World world) {
-	rendererRender(world->renderer, world->numSpriteInstances, world->spriteInstances, world->map, world->scroll);
+	rendererRender(world->renderer, world->spriteInstances.size, world->spriteInstances.values, world->map, world->scroll);
 }

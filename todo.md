@@ -3,7 +3,7 @@
 - [ ] Use the vector in image.
 - [x] Use the vector in sprite.
 - [x] Make the background use a separate datastructure from sprite. It has no mask and must be aligned to strips.
-- [ ] Make spriteInstances use vector.
+- [x] Make spriteInstances use vector.
 - [ ] Access background strips by index. Necessary to compare them efficiently.
 - [ ] Use tiles for the DirtyBackgroundStrips. Fewer objects should be faster.
 - [ ] Use fixed length value arrays in the DirtyBackgroundStrips. More easily reusable like a slab allocator. Should be faster.

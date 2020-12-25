@@ -2,8 +2,10 @@
 #define sprite_instance_h
 
 #include "sprite.h"
+#include "vector.h"
 
 #include <stdint.h>
+#include <stdlib.h>
 
 
 typedef struct SpriteInstance {
@@ -13,5 +15,9 @@ typedef struct SpriteInstance {
 } SpriteInstance;
 
 SpriteInstance makeSpriteInstance (Sprite sprite, int16_t posX, int16_t posY);
+
+
+declareVector(SpriteInstanceVector, SpriteInstance, spriteInstanceVector)
+defineVectorStruct(SpriteInstanceVector, SpriteInstance, spriteInstanceVector)
 
 #endif
