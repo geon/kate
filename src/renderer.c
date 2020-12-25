@@ -129,11 +129,11 @@ void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, Map map) {
 }
 
 
-void renderSprites (Renderer renderer, uint16_t numSpriteInstances, SpriteInstance *spriteInstances, Map map) {
-	uint16_t i;
+void renderSprites (Renderer renderer, SpriteInstanceVector spriteInstances, Map map) {
+	SpriteInstance *spriteInstance;
 
-	for (i=0; i<numSpriteInstances; ++i) {
-		drawSprite(renderer, &spriteInstances[i], map);
+	vectorForeach (spriteInstanceVectorBegin(spriteInstances), spriteInstanceVectorEnd(spriteInstances), spriteInstance) {
+		drawSprite(renderer, spriteInstance, map);
 	}
 }
 
@@ -161,14 +161,14 @@ void renderBackground (Renderer renderer) {
 
 
 
-void rendererRender(Renderer renderer, uint16_t numSpriteInstances, SpriteInstance *spriteInstances, Map map, PixelCoord scroll) {
+void rendererRender(Renderer renderer, SpriteInstanceVector spriteInstances, Map map, PixelCoord scroll) {
 	// Sets the start-address of the buffer.
 	// The value won't be latched by the EGA card until the vertical retrace.
 	// It is not possible to change the actual used address during a frame.
 	switchBuffer(renderer->buffer, scroll, map);
 
 	renderBackground(renderer);
-	renderSprites(renderer, numSpriteInstances, spriteInstances, map);
+	renderSprites(renderer, spriteInstances, map);
 
 	// V-sync.
 	waitForFrame();

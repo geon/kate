@@ -14,6 +14,6 @@ Renderer makeRenderer (char **errorMessage);
 void freeRenderer (Renderer renderer);
 unsigned char * getRendererPalette(Renderer renderer);
 Sprite rendererLoadSprite (Renderer renderer, char *imagePath, char **errorMessage);
-void rendererRender(Renderer renderer, uint16_t numSpriteInstances, SpriteInstance *spriteInstances, Map map, PixelCoord scroll);
+void rendererRender(Renderer renderer, SpriteInstanceVector spriteInstances, Map map, PixelCoord scroll);
 
 #endif

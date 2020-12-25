@@ -84,5 +84,5 @@ void worldUpdate (World world) {
 
 
 void worldRender(World world) {
-	rendererRender(world->renderer, world->spriteInstances.size, world->spriteInstances.values, world->map, world->scroll);
+	rendererRender(world->renderer, &world->spriteInstances, world->map, world->scroll);
 }
