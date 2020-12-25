@@ -8,17 +8,16 @@
 #include "vector.h"
 
 
-typedef uint8_t StripMask;
-declareVector(StripMaskVector, StripMask, stripMaskVector)
-defineVectorStruct(StripMaskVector, StripMask, stripMaskVector)
-defineVector(StripMaskVector, StripMask, stripMaskVector)
+declareVector(Uint8Vector, uint8_t, uint8Vector)
+defineVectorStruct(Uint8Vector, uint8_t, uint8Vector)
+defineVector(Uint8Vector, uint8_t, uint8Vector)
 
 typedef struct SpriteStruct {
 	uint16_t numColumns;
 	uint16_t height;
 	uint8_t palette[16];
 	BitplaneStripVectorStruct bitPlaneStrips;
-	StripMaskVectorStruct mask;
+	Uint8VectorStruct mask;
 } SpriteStruct;
 
 #endif

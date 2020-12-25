@@ -20,7 +20,7 @@ Sprite makeSprite (Image image) {
 	{
 		uint16_t numBitplaneStrips = image->numColumns * image->height;
 		initializeBitplaneStripVector(&sprite->bitPlaneStrips, numBitplaneStrips);
-		initializeStripMaskVector(&sprite->mask, numBitplaneStrips);
+		initializeUint8Vector(&sprite->mask, numBitplaneStrips);
 
 		{
 			uint16_t i;
@@ -32,7 +32,7 @@ Sprite makeSprite (Image image) {
 					y = image->height - 1 - y;
 				}
 				bitplaneStripVectorPush(&sprite->bitPlaneStrips, makeBitplaneStrip(image->pixels[column + y*image->numColumns]));
-				stripMaskVectorPush(&sprite->mask, image->mask[column + y*image->numColumns]);
+				uint8VectorPush(&sprite->mask, image->mask[column + y*image->numColumns]);
 			}
 		}
 	}
@@ -43,7 +43,7 @@ Sprite makeSprite (Image image) {
 
 void freeSprite (Sprite sprite) {
 	destroyBitplaneStripVector(&sprite->bitPlaneStrips);
-	destroyStripMaskVector(&sprite->mask);
+	destroyUint8Vector(&sprite->mask);
 	free(sprite);
 }
 
