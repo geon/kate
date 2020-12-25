@@ -8,6 +8,9 @@
 #include <stdint.h>
 
 
+defineVector(SpriteVector, Sprite, spriteVector)
+
+
 Sprite makeSprite (Image image) {
 	Sprite sprite = malloc(sizeof(SpriteStruct));
 	assert(sprite);

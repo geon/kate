@@ -25,8 +25,7 @@ typedef struct RendererStruct {
 	uint8_t palette[16];
 	Buffer buffer;
 
-	uint16_t numSprites;
-	Sprite *sprites;
+	SpriteVectorStruct sprites;
 } RendererStruct;
 
 
@@ -35,21 +34,19 @@ Renderer makeRenderer (char **errorMessage) {
 	assert(renderer);
 	renderer->buffer = makeBuffer();
 
-	renderer->numSprites = 0;
-	// TODO: Make it dynamic.
-	renderer->sprites = malloc(sizeof(Sprite) * 100);
-	assert(renderer->sprites);
+	initializeSpriteVector(&renderer->sprites, 4);
 
 	return renderer;
 }
 
 
 void freeRenderer (Renderer renderer) {
-	uint16_t i;
+	Sprite *sprite;
 
-	for (i=0; i<renderer->numSprites; ++i) {
-		freeSprite(renderer->sprites[i]);
+	vectorForeach (spriteVectorBegin(&renderer->sprites), spriteVectorEnd(&renderer->sprites), sprite) {
+		freeSprite(*sprite);
 	}
+	destroySpriteVector(&renderer->sprites);
 	freeBuffer(renderer->buffer);
 	free(renderer);
 }
@@ -76,8 +73,9 @@ Sprite rendererLoadSprite (Renderer renderer, char *imagePath, char **errorMessa
 
 	freeImage(image);
 
+	spriteVectorPush(&renderer->sprites, sprite);
+
 	// TODO: Make sure it is the same palette, or remap colors.
-	renderer->sprites[renderer->numSprites++] = sprite;
 	memcpy(renderer->palette, sprite->palette, 16);
 
 	return sprite;
