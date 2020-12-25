@@ -5,12 +5,8 @@
 #include <stdint.h>
 
 #include "platform/dos/bitplane_strip.h"
-#include "vector.h"
+#include "uint8_vector.h"
 
-
-declareVector(Uint8Vector, uint8_t, uint8Vector)
-defineVectorStruct(Uint8Vector, uint8_t, uint8Vector)
-defineVector(Uint8Vector, uint8_t, uint8Vector)
 
 typedef struct SpriteStruct {
 	uint16_t numColumns;
