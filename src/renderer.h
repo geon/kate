@@ -12,7 +12,7 @@ typedef struct RendererStruct *Renderer;
 
 Renderer makeRenderer (char **errorMessage);
 void freeRenderer (Renderer renderer);
-unsigned char * getRendererPalette(Renderer renderer);
+uint8_t * getRendererPalette(Renderer renderer);
 Sprite rendererLoadSprite (Renderer renderer, char *imagePath, char **errorMessage);
 void rendererRender(Renderer renderer, SpriteInstanceVector spriteInstances, Map map, PixelCoord scroll);
 

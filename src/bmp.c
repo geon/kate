@@ -20,7 +20,7 @@ char *errorMessageNumBits = "Only 4-bits-per-pixel images are supported.";
 char *errorMessageCompression = "Compressed images are not supported.";
 char *errorMessagePalette = "Max supported palette length is 16 colors.";
 
-uint32_t parseUnsignedLongInt (unsigned char *data) {
+uint32_t parseUnsignedLongInt (uint8_t *data) {
 	return
 		((uint32_t) data[0]) |
 		((uint32_t) data[1]) << 8 |
@@ -28,7 +28,7 @@ uint32_t parseUnsignedLongInt (unsigned char *data) {
 		((uint32_t) data[3]) << 24;
 }
 
-uint32_t parseLongInt (unsigned char *data) {
+uint32_t parseLongInt (uint8_t *data) {
 	uint32_t bits =
 		((uint32_t) data[0]) |
 		((uint32_t) data[1]) << 8 |
@@ -38,14 +38,14 @@ uint32_t parseLongInt (unsigned char *data) {
 	return *(int32_t*) &bits;
 }
 
-uint16_t parseUnsignedInt (unsigned char *data) {
+uint16_t parseUnsignedInt (uint8_t *data) {
 	return 
 		((uint32_t) data[0]) |
 		((uint32_t) data[1]) << 8;
 }
 
 uint32_t reverseBytes (uint32_t bits) {
-	unsigned char *data = (unsigned char *) &bits;
+	uint8_t *data = (uint8_t *) &bits;
 
 	return 
 		((uint32_t) data[3]) |
@@ -54,10 +54,10 @@ uint32_t reverseBytes (uint32_t bits) {
 		((uint32_t) data[0]) << 24;
 }
 
-unsigned char rgbToEga (unsigned char red, unsigned char green, unsigned char blue) {
-	unsigned char red2Bit = red/85;
-	unsigned char green2Bit = green/85;
-	unsigned char blue2Bit = blue/85;
+uint8_t rgbToEga (uint8_t red, uint8_t green, uint8_t blue) {
+	uint8_t red2Bit = red/85;
+	uint8_t green2Bit = green/85;
+	uint8_t blue2Bit = blue/85;
 
 	return
 		((red2Bit & 1) << 5) |
@@ -68,9 +68,9 @@ unsigned char rgbToEga (unsigned char red, unsigned char green, unsigned char bl
 		(((blue2Bit >> 1) & 1) << 0);
 }
 
-unsigned char makeMask (uint32_t nibbleStrip) {
-	unsigned char i;
-	unsigned char mask;
+uint8_t makeMask (uint32_t nibbleStrip) {
+	uint8_t i;
+	uint8_t mask;
 
 	mask = 0;
 	for (i=0; i<8; ++i) {
@@ -88,15 +88,15 @@ unsigned char makeMask (uint32_t nibbleStrip) {
 #define BYTES_PER_COLOR_ENTRY 4
 Image loadBmp(char* imageFilePath, bool firstColorIsTransparency, char** errorMessage) {
 	Image image = makeImage();
-	unsigned char fileHeader[FILE_HEADER_SIZE];
-	unsigned char infoHeader[INFO_HEADER_SIZE];
+	uint8_t fileHeader[FILE_HEADER_SIZE];
+	uint8_t infoHeader[INFO_HEADER_SIZE];
 	uint32_t width;
 	int32_t height;
 	uint16_t bitsPerPixel;
 	uint32_t compression;
 	uint32_t numColors;
 	uint16_t i;
-	unsigned char paletteData[16 * BYTES_PER_COLOR_ENTRY];
+	uint8_t paletteData[16 * BYTES_PER_COLOR_ENTRY];
 	uint32_t  dataSize;
 	uint32_t  maskSize;
 
@@ -113,7 +113,7 @@ Image loadBmp(char* imageFilePath, bool firstColorIsTransparency, char** errorMe
 
 	fread(infoHeader, 1, INFO_HEADER_SIZE, imageFile);
 
-	// static unsigned char infoHeader[] = {
+	// static uint8_t infoHeader[] = {
 	//     0,0,0,0, /// header size
 	//     0,0,0,0, /// image width
 	//     0,0,0,0, /// image height

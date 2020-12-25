@@ -8,9 +8,9 @@ typedef struct ImageStruct {
 	uint16_t numColumns;
 	uint16_t height;
 	bool upsideDown;
-	unsigned char palette[16];
+	uint8_t palette[16];
 	uint32_t *pixels;
-	unsigned char *mask;
+	uint8_t *mask;
 } ImageStruct;
 
 #endif

@@ -8,6 +8,6 @@ typedef struct SpriteStruct *Sprite;
 
 Sprite makeSprite (Image image);
 void freeSprite (Sprite sprite);
-unsigned char * getSpritePalette(Sprite sprite);
+uint8_t * getSpritePalette(Sprite sprite);
 
 #endif

@@ -28,6 +28,6 @@ void freeImage (Image image) {
 }
 
 
-unsigned char * getImagePalette(Image image) {
+uint8_t * getImagePalette(Image image) {
 	return image->palette;
 }

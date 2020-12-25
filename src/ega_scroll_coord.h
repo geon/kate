@@ -6,7 +6,7 @@
 
 typedef struct EgaScrollCoord {
 	uint16_t column;
-	unsigned char restX;
+	uint8_t restX;
 	uint16_t y;
 } EgaScrollCoord;
 

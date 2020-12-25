@@ -10,7 +10,7 @@
 #define BIOS_INTERRUPT_VIDEO 0X10 // The BIOS video interrupt number.
 #define VIDEO_MODE_EGA_640_350_16 0x10 // EGA 640 x 350, 16 colors.
 
-unsigned char *bufferBaseAddress = (unsigned char*) (0xa000 * 16);
+uint8_t *bufferBaseAddress = (uint8_t*) (0xa000 * 16);
 
 
 void waitForFrame () {
@@ -36,7 +36,7 @@ void setVideoMode () {
 }
 
 
-void drawPoint (uint16_t x, uint16_t y, unsigned char color) {
+void drawPoint (uint16_t x, uint16_t y, uint8_t color) {
 	// For some reason, using the int86 function was very glitchy in DOSBox. Inline asm works fine.
 	_asm {
 		mov AH, 0x0C
@@ -54,7 +54,7 @@ void drawPoint (uint16_t x, uint16_t y, unsigned char color) {
 #define BIT_3 8
 
 
-void drawStrip (uint16_t index, BitplaneStrip bitplaneStrip, unsigned char mask) {
+void drawStrip (uint16_t index, BitplaneStrip bitplaneStrip, uint8_t mask) {
 
 	/*
 	write modes:
@@ -63,14 +63,14 @@ void drawStrip (uint16_t index, BitplaneStrip bitplaneStrip, unsigned char mask)
 		* 2. Write a single color to all 8 pixels.
 	*/
 
-	unsigned char *stripAddress = bufferBaseAddress + index;
+	uint8_t *stripAddress = bufferBaseAddress + index;
 
-	unsigned char bitplane0 = bitplaneStrip.planes[0];
-	unsigned char bitplane1 = bitplaneStrip.planes[1];
-	unsigned char bitplane2 = bitplaneStrip.planes[2];
-	unsigned char bitplane3 = bitplaneStrip.planes[3];
+	uint8_t bitplane0 = bitplaneStrip.planes[0];
+	uint8_t bitplane1 = bitplaneStrip.planes[1];
+	uint8_t bitplane2 = bitplaneStrip.planes[2];
+	uint8_t bitplane3 = bitplaneStrip.planes[3];
 
-	const unsigned char allBits = BIT_0 | BIT_1 | BIT_2 | BIT_3;
+	const uint8_t allBits = BIT_0 | BIT_1 | BIT_2 | BIT_3;
 
 	_asm{
 		; Set write mode
@@ -184,7 +184,7 @@ void drawStrip (uint16_t index, BitplaneStrip bitplaneStrip, unsigned char mask)
 
 
 void copyStrip (uint16_t index) {
-	unsigned char* stripAddress = bufferBaseAddress + index;
+	uint8_t* stripAddress = bufferBaseAddress + index;
 
 	_asm{
 		; Load the strip
@@ -194,8 +194,8 @@ void copyStrip (uint16_t index) {
 	}
 }
 
-void pasteStrip (uint16_t index, unsigned char mask) {
-	unsigned char *stripAddress = bufferBaseAddress + index;
+void pasteStrip (uint16_t index, uint8_t mask) {
+	uint8_t *stripAddress = bufferBaseAddress + index;
 
 	_asm{
 		; Set write mode
@@ -223,7 +223,7 @@ void pasteStrip (uint16_t index, unsigned char mask) {
 }
 
 
-void setPalette (unsigned char palette[16]) {
+void setPalette (uint8_t palette[16]) {
 	union REGS regs;
 	int16_t i;
 
@@ -247,7 +247,7 @@ void setVirtualScreenWidth (uint16_t numColumns) {
 	// bit 0-7  Number of bytes in a scanline / K. Where K is 2 for byte mode, 4 for
 	//          word mode and 8 for Double Word mode.
 
-	unsigned char bufferWidthInWords = numColumns/2;
+	uint8_t bufferWidthInWords = numColumns/2;
 
 	_asm{
 		mov dx, 0x3d4
@@ -259,12 +259,12 @@ void setVirtualScreenWidth (uint16_t numColumns) {
 }
 
 
-void setBufferOffset (uint16_t offset, unsigned char restX) {
+void setBufferOffset (uint16_t offset, uint8_t restX) {
 
-	unsigned char offsetHighBits = offset >> 8;
-	unsigned char offsetLowBits = offset;
+	uint8_t offsetHighBits = offset >> 8;
+	uint8_t offsetLowBits = offset;
 
-	unsigned char pelRegAddress = 0x13 | 0x20;
+	uint8_t pelRegAddress = 0x13 | 0x20;
 
 	// 3d4h index 0Ch (W):  CRTC: Start Address High Register
 	// bit 0-7  Upper 8 bits of the start address of the display buffer

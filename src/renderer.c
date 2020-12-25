@@ -22,7 +22,7 @@
 
 
 typedef struct RendererStruct {
-	unsigned char palette[16];
+	uint8_t palette[16];
 	Buffer buffer;
 
 	uint16_t numSprites;
@@ -55,7 +55,7 @@ void freeRenderer (Renderer renderer) {
 }
 
 
-unsigned char * getRendererPalette(Renderer renderer) {
+uint8_t * getRendererPalette(Renderer renderer) {
 	return renderer->palette;
 }
 
@@ -92,7 +92,7 @@ void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, Map map) {
 			BitplaneStrip strip = spriteInstance->sprite->bitPlaneStrips.values[sourceStripIndex];
 			uint16_t posXColumn = spriteInstance->posX/8;
 			uint16_t posXRest = spriteInstance->posX%8;
-			unsigned char shiftMask;
+			uint8_t shiftMask;
 			BitplaneStrip stripShiftedA, stripShiftedB;
 			uint16_t destinationStripIndex;
 			StripCoord worldCoord;

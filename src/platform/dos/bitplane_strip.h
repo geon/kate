@@ -7,7 +7,7 @@
 
 
 typedef struct BitplaneStrip {
-    unsigned char planes[4];
+    uint8_t planes[4];
 } BitplaneStrip;
 
 BitplaneStrip makeBitplaneStrip (uint32_t nibbleStrip);

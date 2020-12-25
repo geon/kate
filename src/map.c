@@ -12,7 +12,7 @@
 typedef struct MapStruct {
 	uint16_t width;
 	uint16_t height;
-	unsigned char palette[16];
+	uint8_t palette[16];
 	StripTileVectorStruct stripTiles;
 } MapStruct;
 

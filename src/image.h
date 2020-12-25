@@ -2,11 +2,12 @@
 #define image_h
 
 #include <stdbool.h>
+#include <stdint.h>
 
 typedef struct ImageStruct *Image;
 
 Image makeImage ();
 void freeImage (Image image);
-unsigned char * getImagePalette(Image image);
+uint8_t * getImagePalette(Image image);
 
 #endif
