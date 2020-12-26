@@ -113,7 +113,7 @@ void markBordersAsDirty (Buffer buffer, PixelCoord scroll, Map map) {
 void switchBuffer (Buffer buffer, PixelCoord scroll, Map map) {
 	// Calculate the current buffer offset and fractional strip panning.
 	StripCoord stripScroll = makeStripCoordFromEgaScrollCoord(buffer->scroll);
-	unsigned short bufferIndex = bufferMapWorldCoordToBufferIndex(
+	uint16_t bufferIndex = bufferMapWorldCoordToBufferIndex(
 		buffer,
 		stripScroll
 	);

@@ -142,7 +142,7 @@ void renderBackground (Renderer renderer) {
 		// TODO: Replace with single draw call.
 		StripCoord *stripCoord;
 		vectorForeach (stripCoordVectorBegin(row->values), stripCoordVectorEnd(row->values), stripCoord) {
-			unsigned short bufferIndex = bufferMapWorldCoordToBufferIndex(
+			uint16_t bufferIndex = bufferMapWorldCoordToBufferIndex(
 				renderer->buffer,
 				*stripCoord
 			);
