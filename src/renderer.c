@@ -114,15 +114,23 @@ void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, Map map) {
 			shiftMask = spriteInstance->sprite->mask.values[sourceStripIndex] >> posXRest;
 			if (shiftMask) {
 				drawStrip(destinationStripIndex, stripShiftedA, shiftMask);
-				bufferMarkDirtyBackgroundStrips(renderer->buffer, worldCoord, getMapStripAtWorldCoord(map, worldCoord));
 			}
 			shiftMask = spriteInstance->sprite->mask.values[sourceStripIndex] << (8 - posXRest);
 			++worldCoord.column;
 			if (shiftMask) {
 				drawStrip(destinationStripIndex + 1, stripShiftedB, shiftMask);
-				bufferMarkDirtyBackgroundStrips(renderer->buffer, worldCoord,  getMapStripAtWorldCoord(map, worldCoord));
 			}
 		}
+	}
+
+	{
+		StripCoord topLeft, bottomRight;
+		topLeft.column = spriteInstance->posX/8;
+		topLeft.y = spriteInstance->posY;
+		bottomRight.column = topLeft.column + spriteInstance->sprite->numColumns;
+		bottomRight.y = topLeft.y + spriteInstance->sprite->height;
+
+		bufferMarkRectangleAsDirty(renderer->buffer, topLeft, bottomRight, map);
 	}
 }
 

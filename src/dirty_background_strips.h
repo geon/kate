@@ -16,5 +16,6 @@ IndicesByStripTableRow* dirtyBackgroundStripsBegin (DirtyBackgroundStrips dirtyB
 IndicesByStripTableRow* dirtyBackgroundStripsEnd (DirtyBackgroundStrips dirtyBackgroundStrips);
 void dirtyBackgroundStripsClear (DirtyBackgroundStrips dirtyBackgroundStrips);
 void dirtyBackgroundStripsMark (DirtyBackgroundStrips dirtyBackgroundStrips, StripCoord coord, BitplaneStrip cleanStrip);
+void dirtyBackgroundStripsMarkRectangle (DirtyBackgroundStrips dirtyBackgroundStrips, StripCoord topLeftWorldCoord, StripCoord bottomRightWorldCoord, Map map);
 
 #endif

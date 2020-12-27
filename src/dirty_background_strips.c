@@ -66,3 +66,15 @@ void dirtyBackgroundStripsClear (DirtyBackgroundStrips dirtyBackgroundStrips) {
 void dirtyBackgroundStripsMark (DirtyBackgroundStrips dirtyBackgroundStrips, StripCoord coord, BitplaneStrip cleanStrip) {
 	indicesByStripTableAdd(dirtyBackgroundStrips->coordsByStrip, cleanStrip, coord);
 }
+
+void dirtyBackgroundStripsMarkRectangle (DirtyBackgroundStrips dirtyBackgroundStrips, StripCoord topLeftWorldCoord, StripCoord bottomRightWorldCoord, Map map) {
+	uint16_t y, column;
+	for (y=topLeftWorldCoord.y; y<bottomRightWorldCoord.y; ++y) {
+		for (column=topLeftWorldCoord.column; column<bottomRightWorldCoord.column; ++column) {
+			StripCoord worldCoord;
+			worldCoord.column = column;
+			worldCoord.y = y;
+			dirtyBackgroundStripsMark(dirtyBackgroundStrips, worldCoord,  getMapStripAtWorldCoord(map, worldCoord));
+		}
+	}
+}
