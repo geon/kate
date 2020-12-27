@@ -39,26 +39,25 @@ void freeBuffer (Buffer buffer) {
 #define EGA_SCREEN_NUM_COLUMNS 80
 #define EGA_SCREEN_HEIGHT 350
 void markBordersAsDirty (Buffer buffer, PixelCoord scroll, Map map) {
-	int16_t xChange = scroll.x/8 - buffer->scroll.column;
-	int16_t yChange = scroll.y - buffer->scroll.y;
-
 	// Mark the new edge strips as dirty.
 
-	// Mark the bottom/top edge.
 	{
-		uint16_t beginY = yChange < 0
-			? 0
-			: max(0, EGA_SCREEN_HEIGHT - 1 - yChange);
-		uint16_t endY = yChange < 0
-			? -yChange
-			: EGA_SCREEN_HEIGHT;
-
 		StripCoord topLeft, bottomRight;
-		topLeft.column = 0 + scroll.x/8;
-		topLeft.y = beginY + scroll.y;
-		bottomRight.column = EGA_SCREEN_NUM_COLUMNS + scroll.x/8;
-		bottomRight.y = endY + scroll.y;
+		// Mark the top/bottom edge.
+		topLeft.column = scroll.x/8;
+		bottomRight.column = topLeft.column + EGA_SCREEN_NUM_COLUMNS;
+		if (scroll.y > buffer->scroll.y) {
+			// Bottom
+			topLeft.y = buffer->scroll.y + EGA_SCREEN_HEIGHT;
+			bottomRight.y = scroll.y + EGA_SCREEN_HEIGHT;
+		} else {
+			// Top
+			topLeft.y = scroll.y;
+			bottomRight.y = buffer->scroll.y;
+		}
 
+		// Mark in both buffers.
+		// TODO: store the old scroll for both buffers.
 		dirtyBackgroundStripsMarkRectangle(
 			buffer->dirtyBackgroundStrips[0],
 			topLeft,
@@ -73,28 +72,22 @@ void markBordersAsDirty (Buffer buffer, PixelCoord scroll, Map map) {
 		);
 	}
 
-	// Mark the left/right edge, where it does not overlap the top/bottom.
+	// TODO: Remove overlap.
 	{
-		// The range in Y not covered above.
-		uint16_t beginY = yChange < 0
-			? -yChange
-			: 0;
-		uint16_t endY = yChange < 0
-			? EGA_SCREEN_HEIGHT
-			: max(0, EGA_SCREEN_HEIGHT - 1 - yChange);
-
-		uint16_t beginColumn = xChange < 0
-			? 0
-			: max(0, EGA_SCREEN_NUM_COLUMNS - 1 - xChange);
-		uint16_t endColumn = xChange < 0
-			? -xChange
-			: (EGA_SCREEN_NUM_COLUMNS + 1);
-
+		uint16_t scrollColumn = (scroll.x+7)/8;
 		StripCoord topLeft, bottomRight;
-		topLeft.column = beginColumn + scroll.x/8;
-		topLeft.y = beginY + scroll.y;
-		bottomRight.column = endColumn + scroll.x/8;
-		bottomRight.y = endY + scroll.y;
+		// Mark the left/right edge, where it does not overlap the top/bottom.
+		topLeft.y = scroll.y;
+		bottomRight.y = topLeft.y + EGA_SCREEN_HEIGHT;
+		if (scrollColumn > buffer->scroll.column) {
+			// Right
+			topLeft.column = buffer->scroll.column + EGA_SCREEN_NUM_COLUMNS;
+			bottomRight.column = scrollColumn + EGA_SCREEN_NUM_COLUMNS;
+		} else {
+			// Left
+			topLeft.column = buffer->scroll.column;
+			bottomRight.column = scrollColumn;
+		}
 
 		dirtyBackgroundStripsMarkRectangle(
 			buffer->dirtyBackgroundStrips[0],
