@@ -88,7 +88,7 @@ void markBordersAsDirty (Buffer buffer, PixelCoord scroll, Map map) {
 			: max(0, EGA_SCREEN_NUM_COLUMNS - 1 - xChange);
 		uint16_t endColumn = xChange < 0
 			? -xChange
-			: EGA_SCREEN_NUM_COLUMNS;
+			: (EGA_SCREEN_NUM_COLUMNS + 1);
 
 		StripCoord topLeft, bottomRight;
 		topLeft.column = beginColumn + scroll.x/8;
