@@ -52,24 +52,25 @@ void markBordersAsDirty (Buffer buffer, PixelCoord scroll, Map map) {
 		uint16_t endY = yChange < 0
 			? -yChange
 			: EGA_SCREEN_HEIGHT;
-		uint16_t dirtyColumn, dirtyY;
-		for (dirtyY=beginY; dirtyY<endY; ++dirtyY) {
-			for (dirtyColumn=0; dirtyColumn<=EGA_SCREEN_NUM_COLUMNS; ++dirtyColumn) {
-				StripCoord dirtyCoord;
-				dirtyCoord.column = dirtyColumn + scroll.x/8;
-				dirtyCoord.y = dirtyY + scroll.y;
-				dirtyBackgroundStripsMark(
-					buffer->dirtyBackgroundStrips[0],
-					dirtyCoord,
-					getMapStripAtWorldCoord(map, dirtyCoord)
-				);
-				dirtyBackgroundStripsMark(
-					buffer->dirtyBackgroundStrips[1],
-					dirtyCoord,
-					getMapStripAtWorldCoord(map, dirtyCoord)
-				);
-			}
-		}
+
+		StripCoord topLeft, bottomRight;
+		topLeft.column = 0 + scroll.x/8;
+		topLeft.y = beginY + scroll.y;
+		bottomRight.column = EGA_SCREEN_NUM_COLUMNS + scroll.x/8;
+		bottomRight.y = endY + scroll.y;
+
+		dirtyBackgroundStripsMarkRectangle(
+			buffer->dirtyBackgroundStrips[0],
+			topLeft,
+			bottomRight,
+			map
+		);
+		dirtyBackgroundStripsMarkRectangle(
+			buffer->dirtyBackgroundStrips[1],
+			topLeft,
+			bottomRight,
+			map
+		);
 	}
 
 	// Mark the left/right edge, where it does not overlap the top/bottom.
@@ -88,24 +89,25 @@ void markBordersAsDirty (Buffer buffer, PixelCoord scroll, Map map) {
 		uint16_t endColumn = xChange < 0
 			? -xChange
 			: EGA_SCREEN_NUM_COLUMNS;
-		uint16_t dirtyColumn, dirtyY;
-		for (dirtyY=beginY; dirtyY<endY; ++dirtyY) {
-			for (dirtyColumn=beginColumn; dirtyColumn<=endColumn; ++dirtyColumn) {
-				StripCoord dirtyCoord;
-				dirtyCoord.column = dirtyColumn + scroll.x/8;
-				dirtyCoord.y = dirtyY + scroll.y;
-				dirtyBackgroundStripsMark(
-					buffer->dirtyBackgroundStrips[0],
-					dirtyCoord,
-					getMapStripAtWorldCoord(map, dirtyCoord)
-				);
-				dirtyBackgroundStripsMark(
-					buffer->dirtyBackgroundStrips[1],
-					dirtyCoord,
-					getMapStripAtWorldCoord(map, dirtyCoord)
-				);
-			}
-		}
+
+		StripCoord topLeft, bottomRight;
+		topLeft.column = beginColumn + scroll.x/8;
+		topLeft.y = beginY + scroll.y;
+		bottomRight.column = endColumn + scroll.x/8;
+		bottomRight.y = endY + scroll.y;
+
+		dirtyBackgroundStripsMarkRectangle(
+			buffer->dirtyBackgroundStrips[0],
+			topLeft,
+			bottomRight,
+			map
+		);
+		dirtyBackgroundStripsMarkRectangle(
+			buffer->dirtyBackgroundStrips[1],
+			topLeft,
+			bottomRight,
+			map
+		);
 	}
 }
 
