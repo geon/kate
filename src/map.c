@@ -1,7 +1,8 @@
 #include "map.h"
 #include "image_struct.h"
 #include "bmp.h"
-#include "strip_tile.h"
+#include "strip_coord.h"
+#include "uint16_vector.h"
 
 #include <stdlib.h>
 #include <assert.h>
@@ -10,11 +11,17 @@
 
 
 typedef struct MapStruct {
-	uint16_t width;
+	uint16_t numColumns;
 	uint16_t height;
 	uint8_t palette[16];
-	StripTileVectorStruct stripTiles;
+	BitplaneStripVectorStruct bitplaneStrips;
+	Uint16VectorStruct bitplaneStripIndices;
 } MapStruct;
+
+
+bool bitplaneStripEquals(BitplaneStrip* a, BitplaneStrip* b) {
+	return bitplaneStripAsInt(*a) == bitplaneStripAsInt(*b);
+}
 
 
 Map makeMap (char **errorMessage) {
@@ -27,31 +34,38 @@ Map makeMap (char **errorMessage) {
 		return false;
 	}
 
-	map->width = image->numColumns;
-	map->height = image->height / 8;
+	map->numColumns = image->numColumns;
+	map->height = image->height;
 
 	memcpy(map->palette, image->palette, sizeof(map->palette));
 
 	{
-		uint16_t numStripTiles = map->width * map->height;
-		initializeStripTileVector(&map->stripTiles, numStripTiles);
+		uint16_t numBitplaneStripIndices = map->numColumns * map->height;
+		initializeUint16Vector(&map->bitplaneStripIndices, numBitplaneStripIndices);
+		// TODO: Hardcode or calculate a more reasonable capacity.
+		initializeBitplaneStripVector(&map->bitplaneStrips, 64);
 
 		{
 			uint16_t i;
-			int16_t strip;
-			for (i=0; i<numStripTiles; ++i) {
-				StripTile tile;
-				uint16_t tileX, tileY;
-				tileX = i % image->numColumns;
-				tileY = i / image->numColumns;
-				for (strip=0; strip<8; ++strip) {
-					uint16_t imageY = tileY * 8 + strip;
-					if (image->upsideDown) {
-						imageY = image->height - 1 - imageY;
-					}
-					tile.bitPlaneStrips[strip] = makeBitplaneStrip(image->pixels[tileX + imageY*image->numColumns]);
+			for (i=0; i<numBitplaneStripIndices; ++i) {
+				BitplaneStrip strip;
+				int16_t stripIndex;
+				uint16_t stripColumn, stripY;
+				uint16_t imageY = stripY;
+
+				stripColumn = i % image->numColumns;
+				stripY = i / image->numColumns;
+				if (image->upsideDown) {
+					imageY = image->height - 1 - imageY;
 				}
-				stripTileVectorPush(&map->stripTiles, tile);
+				strip = makeBitplaneStrip(image->pixels[stripColumn + imageY*image->numColumns]);
+
+				stripIndex = bitplaneStripVectorIndexOf(&map->bitplaneStrips, strip, bitplaneStripEquals);
+				if (stripIndex == -1) {
+					bitplaneStripVectorPush(&map->bitplaneStrips, strip);
+					stripIndex = bitplaneStripVectorSize(&map->bitplaneStrips) - 1;
+				}
+				uint16VectorPush(&map->bitplaneStripIndices, stripIndex);
 			}
 		}
 	}
@@ -63,19 +77,23 @@ Map makeMap (char **errorMessage) {
 
 
 void freeMap (Map map) {
-    destroyStripTileVector(&map->stripTiles);
+    destroyBitplaneStripVector(&map->bitplaneStrips);
 }
 
 
-BitplaneStrip getMapStripAtWorldCoord(Map map, StripCoord worldCoord) {
-	uint16_t sourceTileX;
-	uint16_t sourceTileY;
-	uint16_t sourceTileIndex;
+uint16_t getMapStripAtWorldCoord(Map map, StripCoord worldCoord) {
+	uint16_t sourceX;
+	uint16_t sourceY;
+	uint16_t sourceIndex;
 
-	sourceTileX = worldCoord.column % map->width;
-	sourceTileY = (worldCoord.y/8) % map->height;
+	sourceX = worldCoord.column % map->numColumns;
+	sourceY = worldCoord.y % map->height;
 
-	sourceTileIndex = sourceTileX + sourceTileY * map->width;
+	sourceIndex = sourceX + sourceY * map->numColumns;
 
-	return map->stripTiles.values[sourceTileIndex].bitPlaneStrips[worldCoord.y%8];
+	return map->bitplaneStripIndices.values[sourceIndex];
+}
+
+BitplaneStrip *mapGetStrips (Map map) {
+	return 	map->bitplaneStrips.values;
 }

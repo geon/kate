@@ -20,25 +20,6 @@ DirtyBackgroundStrips makeDirtyBackgroundStrips (bool alternateBuffer) {
 	assert(dirtyBackgroundStrips);
 	dirtyBackgroundStrips->coordsByStrip = makeIndicesByStripTable(64);
 
-	{
-		// The background has not been rendered yet, so it is by definition completely dirty.
-		uint32_t column;
-		uint32_t y;
-		for (column=0; column<EGA_BUFFER_NUM_COLUMNS_DEFAULT; ++column) {
-			for (y=0; y<EGA_BUFFER_NUM_ROWS_DEFAULT; ++y) {
-				BitplaneStrip strip;
-				StripCoord coord;
-
-				coord.column = column;
-				coord.y = y;
-				// TODO: getMapStripAtWorldCoord(map, worldCoord)
-				strip = makeBitplaneStrip(0x18181818);
-
-				dirtyBackgroundStripsMark(dirtyBackgroundStrips, coord, strip);
-			}
-		}
-	}
-
 	return dirtyBackgroundStrips;
 }
 
@@ -63,8 +44,8 @@ void dirtyBackgroundStripsClear (DirtyBackgroundStrips dirtyBackgroundStrips) {
 }
 
 
-void dirtyBackgroundStripsMark (DirtyBackgroundStrips dirtyBackgroundStrips, StripCoord coord, BitplaneStrip cleanStrip) {
-	indicesByStripTableAdd(dirtyBackgroundStrips->coordsByStrip, cleanStrip, coord);
+void dirtyBackgroundStripsMark (DirtyBackgroundStrips dirtyBackgroundStrips, StripCoord coord, uint16_t cleanStripIndex) {
+	indicesByStripTableAdd(dirtyBackgroundStrips->coordsByStrip, cleanStripIndex, coord);
 }
 
 void dirtyBackgroundStripsMarkRectangle (DirtyBackgroundStrips dirtyBackgroundStrips, StripCoord topLeftWorldCoord, StripCoord bottomRightWorldCoord, Map map) {
@@ -74,7 +55,12 @@ void dirtyBackgroundStripsMarkRectangle (DirtyBackgroundStrips dirtyBackgroundSt
 			StripCoord worldCoord;
 			worldCoord.column = column;
 			worldCoord.y = y;
-			dirtyBackgroundStripsMark(dirtyBackgroundStrips, worldCoord,  getMapStripAtWorldCoord(map, worldCoord));
+
+			dirtyBackgroundStripsMark(
+				dirtyBackgroundStrips,
+				worldCoord,
+				getMapStripAtWorldCoord(map, worldCoord)
+			);
 		}
 	}
 }

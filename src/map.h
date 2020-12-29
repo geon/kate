@@ -9,7 +9,8 @@ typedef struct MapStruct *Map;
 
 Map makeMap (char **errorMessage);
 void freeMap (Map map);
-BitplaneStrip getMapStripAtWorldCoord (Map map, StripCoord worldCoord);
+uint16_t getMapStripAtWorldCoord (Map map, StripCoord worldCoord);
+BitplaneStrip *mapGetStrips (Map map);
 
 #endif
 

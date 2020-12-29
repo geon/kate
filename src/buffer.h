@@ -5,7 +5,8 @@
 #include "strip_coord.h"
 #include "ega_scroll_coord.h"
 #include "pixel_coord.h"
-#include "dirty_background_strips.h"
+#include "map.h"
+#include "indices_grouped_by_strip.h"
 
 #include <stdlib.h>
 #include <stdint.h>
@@ -35,10 +36,10 @@ StripCoord bufferMapBufferIndexToWorldCoord (Buffer buffer, uint16_t bufferIndex
 StripCoord bufferStaticMapBufferIndexToBufferCoord (EgaScrollCoord bufferScroll, bool alternateBuffer, uint16_t bufferIndex);
 StripCoord bufferStaticMapBufferCoordToWorldCoord (EgaScrollCoord bufferScroll, StripCoord bufferCoord);
 
-IndicesByStripTableRow * bufferDirtyBackgroundStripsBegin(Buffer buffer);
-IndicesByStripTableRow * bufferDirtyBackgroundStripsEnd(Buffer buffer);
+IndicesByStripTableRow* bufferDirtyBackgroundStripsBegin(Buffer buffer);
+IndicesByStripTableRow* bufferDirtyBackgroundStripsEnd(Buffer buffer);
 void bufferClearDirtyBackgroundStrips (Buffer buffer);
-void bufferMarkDirtyBackgroundStrips(Buffer buffer, StripCoord coord, BitplaneStrip cleanStrip);
+// void bufferMarkDirtyBackgroundStrips(Buffer buffer, StripCoord coord, BitplaneStrip cleanStrip);
 
 void bufferMarkRectangleAsDirty (Buffer buffer, StripCoord topLeftWorldCoord, StripCoord bottomRightWorldCoord, Map map);
 

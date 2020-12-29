@@ -2,6 +2,7 @@
 #include "platform/dos/ega.h"
 #include "strip_coord.h"
 #include "coord_conversion.h"
+#include "dirty_background_strips.h"
 
 #include <stdlib.h>
 #include <assert.h>
@@ -200,10 +201,9 @@ void bufferClearDirtyBackgroundStrips (Buffer buffer) {
 }
 
 
-void bufferMarkDirtyBackgroundStrips(Buffer buffer, StripCoord coord, BitplaneStrip cleanStrip) {
-	dirtyBackgroundStripsMark(buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0], coord, cleanStrip);
-}
-
+// void bufferMarkDirtyBackgroundStrips(Buffer buffer, StripCoord coord, uint16_t cleanStripIndex) {
+// 	dirtyBackgroundStripsMark(buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0], coord, cleanStripIndex);
+// }
 
 void bufferMarkRectangleAsDirty (Buffer buffer, StripCoord topLeftWorldCoord, StripCoord bottomRightWorldCoord, Map map) {
 	dirtyBackgroundStripsMarkRectangle(buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0], topLeftWorldCoord, bottomRightWorldCoord, map);

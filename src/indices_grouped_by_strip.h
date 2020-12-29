@@ -2,13 +2,13 @@
 #define coords_grouped_by_strip_h
 
 #include "grouped_table.h"
-#include "vector.h"
 #include "platform/dos/bitplane_strip.h"
 #include "strip_coord.h"
 
+#include <stdint.h>
 
-declareVector(StripCoordVector, StripCoord, stripCoordVector)
-declareGroupedTable(IndicesByStripTable, BitplaneStrip, StripCoord, StripCoordVector, indicesByStripTable)
+
+declareGroupedTable(IndicesByStripTable, uint16_t, StripCoord, StripCoordVector, indicesByStripTable)
 declareVector(IndicesByStripTableRowsVector, IndicesByStripTableRow, indicesByStripTableRowsVector)
 
 

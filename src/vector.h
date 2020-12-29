@@ -2,6 +2,8 @@
 #define vector_h
 
 #include <assert.h>
+#include <stdint.h>
+#include <stdbool.h>
 
 #define vectorForeach(begin, end, iterator) for (iterator=begin; iterator!=end; ++iterator)
 #define vectorForeachIndex(begin, end, iterator, index) for (iterator=begin,index=0; iterator!=end; ++iterator,++index)
@@ -18,6 +20,7 @@ void methodPrefix##Clear(VectorTypeName vector); \
 TValue* methodPrefix##Begin(VectorTypeName vector); \
 TValue* methodPrefix##End(VectorTypeName vector); \
 int32_t methodPrefix##Size(VectorTypeName vector); \
+int32_t methodPrefix##IndexOf(VectorTypeName vector, const TValue value, bool (*equals)(TValue *a, TValue *b)); \
 
 
 #define defineVectorStruct(VectorTypeName, TValue, methodPrefix) \
@@ -69,6 +72,15 @@ TValue* methodPrefix##End(VectorTypeName vector) { \
 } \
 int32_t methodPrefix##Size(VectorTypeName vector) { \
 	return vector->size; \
+} \
+int32_t methodPrefix##IndexOf(VectorTypeName vector, TValue value, bool (*equals)(TValue *a, TValue *b)) { \
+	int32_t i; \
+	for (i=0; i<vector->size; ++i) { \
+		if (equals(&vector->values[i], &value)) { \
+			return i; \
+		} \
+	} \
+	return -1; \
 } \
 
 

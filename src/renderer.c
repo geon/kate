@@ -12,6 +12,7 @@
 #include "ega_scroll_coord.h"
 #include "coord_conversion.h"
 #include "vector.h"
+#include "indices_grouped_by_strip.h"
 
 #include <stdlib.h>
 #include <math.h>
@@ -144,7 +145,8 @@ void renderSprites (Renderer renderer, SpriteInstanceVector spriteInstances, Map
 }
 
 
-void renderBackground (Renderer renderer) {
+void renderBackground (Renderer renderer, Map map) {
+	BitplaneStrip* strips = mapGetStrips(map);
 	IndicesByStripTableRow *row;
 	vectorForeach (bufferDirtyBackgroundStripsBegin(renderer->buffer), bufferDirtyBackgroundStripsEnd(renderer->buffer), row) {
 		// TODO: Replace with single draw call.
@@ -156,7 +158,7 @@ void renderBackground (Renderer renderer) {
 			);
 			drawStrip(
 				bufferIndex,
-				row->key,
+				strips[row->key],
 				0xFF
 			);
 		}
@@ -173,7 +175,7 @@ void rendererRender(Renderer renderer, SpriteInstanceVector spriteInstances, Map
 	// It is not possible to change the actual used address during a frame.
 	switchBuffer(renderer->buffer, scroll, map);
 
-	renderBackground(renderer);
+	renderBackground(renderer, map);
 	renderSprites(renderer, spriteInstances, map);
 
 	// V-sync.
