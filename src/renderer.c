@@ -156,15 +156,11 @@ void renderBackground (Renderer renderer, Map map) {
 	BitplaneStrip* strips = mapGetStrips(map);
 	IndicesByStripTableRow *row;
 	vectorForeach (bufferDirtyBackgroundStripsBegin(renderer->buffer), bufferDirtyBackgroundStripsEnd(renderer->buffer), row) {
-		// TODO: Replace with single draw call.
-		uint16_t *bufferIndex;
-		vectorForeach (uint16VectorBegin(row->values), uint16VectorEnd(row->values), bufferIndex) {
-			drawStrip(
-				*bufferIndex,
-				strips[row->key],
-				0xFF
-			);
-		}
+		drawStrips(
+			uint16VectorBegin(row->values),
+			uint16VectorEnd(row->values),
+			strips[row->key]
+		);
 	}
 
 	bufferClearDirtyBackgroundStrips(renderer->buffer);
