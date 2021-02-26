@@ -185,10 +185,11 @@ void drawStrip (uint16_t index, BitplaneStrip bitplaneStrip, uint8_t mask) {
 
 void drawStrips (uint16_t* beginIndex, uint16_t* endIndex, BitplaneStrip bitplaneStrip) {
 	uint16_t* iterator;
-	for (iterator=beginIndex; iterator!=endIndex; ++iterator) {
-		uint16_t index = *iterator;
 
-		drawStrip (index, bitplaneStrip, 0xFF);
+	drawStrip (*beginIndex, bitplaneStrip, 0xFF);
+	copyStrip (*beginIndex);
+	for (iterator=beginIndex; iterator!=endIndex; ++iterator) {
+		pasteStrip (*iterator, 0xFF);
 	}
 }
 
