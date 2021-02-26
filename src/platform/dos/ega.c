@@ -189,7 +189,31 @@ void drawStrips (uint16_t* beginIndex, uint16_t* endIndex, BitplaneStrip bitplan
 	drawStrip (*beginIndex, bitplaneStrip, 0xFF);
 	copyStrip (*beginIndex);
 	for (iterator=beginIndex; iterator!=endIndex; ++iterator) {
-		pasteStrip (*iterator, 0xFF);
+		uint8_t *stripAddress = bufferBaseAddress + *iterator;
+
+		_asm{
+			; Set write mode
+				; 6845 command register
+				mov dx, 03CEh
+				; Specify mode register
+				mov al, 5
+				; Write from latch.
+				mov ah, 1
+				; Send
+				out dx, ax
+
+			; Set 6845 bit mask register
+				; Specify bit mask register
+				mov al, 8
+				mov ah, 0xFF
+				; Send bit mask
+				out dx, ax
+
+			; Draw the strip
+				mov ebx, stripAddress
+				; Write the pixel. The value is irrelevant.
+				mov [ebx], 0
+		}
 	}
 }
 
