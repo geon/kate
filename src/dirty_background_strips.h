@@ -18,7 +18,7 @@ IndicesByStripTableRow* dirtyBackgroundStripsBegin (DirtyBackgroundStrips dirtyB
 IndicesByStripTableRow* dirtyBackgroundStripsEnd (DirtyBackgroundStrips dirtyBackgroundStrips);
 
 void dirtyBackgroundStripsClear (DirtyBackgroundStrips dirtyBackgroundStrips);
-void dirtyBackgroundStripsMark (DirtyBackgroundStrips dirtyBackgroundStrips, StripCoord coord,  uint16_t cleanStripIndex);
-void dirtyBackgroundStripsMarkRectangle (DirtyBackgroundStrips dirtyBackgroundStrips, StripCoord topLeftWorldCoord, StripCoord bottomRightWorldCoord, Map map);
+void dirtyBackgroundStripsMark (DirtyBackgroundStrips dirtyBackgroundStrips, uint16_t bufferIndex,  uint16_t cleanStripIndex);
+void dirtyBackgroundStripsMarkRectangle (DirtyBackgroundStrips dirtyBackgroundStrips, StripCoord topLeftWorldCoord, StripCoord bottomRightWorldCoord, Map map, Buffer buffer, bool alternateBuffer);
 
 #endif

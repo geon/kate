@@ -44,21 +44,35 @@ void dirtyBackgroundStripsClear (DirtyBackgroundStrips dirtyBackgroundStrips) {
 }
 
 
-void dirtyBackgroundStripsMark (DirtyBackgroundStrips dirtyBackgroundStrips, StripCoord coord, uint16_t cleanStripIndex) {
-	indicesByStripTableAdd(dirtyBackgroundStrips->coordsByStrip, cleanStripIndex, coord);
+void dirtyBackgroundStripsMark (DirtyBackgroundStrips dirtyBackgroundStrips, uint16_t bufferIndex, uint16_t cleanStripIndex) {
+	indicesByStripTableAdd(dirtyBackgroundStrips->coordsByStrip, cleanStripIndex, bufferIndex);
 }
 
-void dirtyBackgroundStripsMarkRectangle (DirtyBackgroundStrips dirtyBackgroundStrips, StripCoord topLeftWorldCoord, StripCoord bottomRightWorldCoord, Map map) {
+
+
+// TODO: This can't be here.
+typedef struct BufferStruct {
+	EgaScrollCoord scroll;
+} BufferStruct;
+
+void dirtyBackgroundStripsMarkRectangle (DirtyBackgroundStrips dirtyBackgroundStrips, StripCoord topLeftWorldCoord, StripCoord bottomRightWorldCoord, Map map, Buffer buffer, bool alternateBuffer) {
 	uint16_t y, column;
 	for (y=topLeftWorldCoord.y; y<bottomRightWorldCoord.y; ++y) {
 		for (column=topLeftWorldCoord.column; column<bottomRightWorldCoord.column; ++column) {
+			uint16_t bufferIndex;
 			StripCoord worldCoord;
 			worldCoord.column = column;
 			worldCoord.y = y;
 
+			bufferIndex = bufferMapWorldCoordToBufferIndex(
+				worldCoord,
+				buffer->scroll,
+				alternateBuffer
+			);
+
 			dirtyBackgroundStripsMark(
 				dirtyBackgroundStrips,
-				worldCoord,
+				bufferIndex,
 				getMapStripAtWorldCoord(map, worldCoord)
 			);
 		}

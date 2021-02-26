@@ -63,13 +63,17 @@ void markBordersAsDirty (Buffer buffer, PixelCoord scroll, Map map) {
 			buffer->dirtyBackgroundStrips[0],
 			topLeft,
 			bottomRight,
-			map
+			map,
+			buffer,
+			false
 		);
 		dirtyBackgroundStripsMarkRectangle(
 			buffer->dirtyBackgroundStrips[1],
 			topLeft,
 			bottomRight,
-			map
+			map,
+			buffer,
+			true
 		);
 	}
 
@@ -94,13 +98,17 @@ void markBordersAsDirty (Buffer buffer, PixelCoord scroll, Map map) {
 			buffer->dirtyBackgroundStrips[0],
 			topLeft,
 			bottomRight,
-			map
+			map,
+			buffer,
+			false
 		);
 		dirtyBackgroundStripsMarkRectangle(
 			buffer->dirtyBackgroundStrips[1],
 			topLeft,
 			bottomRight,
-			map
+			map,
+			buffer,
+			true
 		);
 	}
 }
@@ -207,5 +215,5 @@ void bufferClearDirtyBackgroundStrips (Buffer buffer) {
 // }
 
 void bufferMarkRectangleAsDirty (Buffer buffer, StripCoord topLeftWorldCoord, StripCoord bottomRightWorldCoord, Map map) {
-	dirtyBackgroundStripsMarkRectangle(buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0], topLeftWorldCoord, bottomRightWorldCoord, map);
+	dirtyBackgroundStripsMarkRectangle(buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0], topLeftWorldCoord, bottomRightWorldCoord, map, buffer, buffer->alternateBuffer);
 }

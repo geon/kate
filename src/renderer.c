@@ -89,7 +89,6 @@ typedef struct BufferStruct {
 	bool alternateBuffer;
 } BufferStruct;
 
-
 void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, Map map) {
 	uint16_t y, column;
 	for (y = 0; y < spriteInstance->sprite->height; ++y) {
@@ -158,15 +157,10 @@ void renderBackground (Renderer renderer, Map map) {
 	IndicesByStripTableRow *row;
 	vectorForeach (bufferDirtyBackgroundStripsBegin(renderer->buffer), bufferDirtyBackgroundStripsEnd(renderer->buffer), row) {
 		// TODO: Replace with single draw call.
-		StripCoord *stripCoord;
-		vectorForeach (stripCoordVectorBegin(row->values), stripCoordVectorEnd(row->values), stripCoord) {
-			uint16_t bufferIndex = bufferMapWorldCoordToBufferIndex(
-				*stripCoord,
-				renderer->buffer->scroll,
-				renderer->buffer->alternateBuffer
-			);
+		uint16_t *bufferIndex;
+		vectorForeach (uint16VectorBegin(row->values), uint16VectorEnd(row->values), bufferIndex) {
 			drawStrip(
-				bufferIndex,
+				*bufferIndex,
 				strips[row->key],
 				0xFF
 			);
