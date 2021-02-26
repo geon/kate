@@ -83,6 +83,13 @@ Sprite rendererLoadSprite (Renderer renderer, char *imagePath, char **errorMessa
 }
 
 
+// TODO: This can't be here.
+typedef struct BufferStruct {
+	EgaScrollCoord scroll;
+	bool alternateBuffer;
+} BufferStruct;
+
+
 void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, Map map) {
 	uint16_t y, column;
 	for (y = 0; y < spriteInstance->sprite->height; ++y) {
@@ -99,8 +106,9 @@ void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, Map map) {
 			worldCoord.column = posXColumn + column;
 			worldCoord.y = spriteInstance->posY + y;
 			destinationStripIndex = bufferMapWorldCoordToBufferIndex(
-				renderer->buffer,
-				worldCoord
+				worldCoord,
+				renderer->buffer->scroll,
+				renderer->buffer->alternateBuffer
 			);
 
 			stripShiftedA.planes[0] = strip.planes[0] >> posXRest;
@@ -153,8 +161,9 @@ void renderBackground (Renderer renderer, Map map) {
 		StripCoord *stripCoord;
 		vectorForeach (stripCoordVectorBegin(row->values), stripCoordVectorEnd(row->values), stripCoord) {
 			uint16_t bufferIndex = bufferMapWorldCoordToBufferIndex(
-				renderer->buffer,
-				*stripCoord
+				*stripCoord,
+				renderer->buffer->scroll,
+				renderer->buffer->alternateBuffer
 			);
 			drawStrip(
 				bufferIndex,

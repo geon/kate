@@ -110,8 +110,9 @@ void switchBuffer (Buffer buffer, PixelCoord scroll, Map map) {
 	// Calculate the current buffer offset and fractional strip panning.
 	StripCoord stripScroll = makeStripCoordFromEgaScrollCoord(buffer->scroll);
 	uint16_t bufferIndex = bufferMapWorldCoordToBufferIndex(
-		buffer,
-		stripScroll
+		stripScroll,
+		buffer->scroll,
+		buffer->alternateBuffer
 	);
 
 	// Send the EGA command.
@@ -130,12 +131,12 @@ uint16_t bufferIndexStart (uint16_t column, uint16_t y, bool alternateBuffer) {
 }
 
 
-uint16_t bufferMapWorldCoordToBufferIndex (Buffer buffer, StripCoord worldCoord) {
+uint16_t bufferMapWorldCoordToBufferIndex (StripCoord worldCoord, EgaScrollCoord bufferScroll, bool bufferAlternateBuffer) {
 	return  bufferStaticMapBufferCoordToBufferIndex(
-		buffer->scroll,
-		buffer->alternateBuffer,
+		bufferScroll,
+		bufferAlternateBuffer,
 		bufferStaticMapWorldCoordToBufferCoord(
-			buffer->scroll,
+			bufferScroll,
 			worldCoord
 		)
 	);
