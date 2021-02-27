@@ -56,25 +56,31 @@ typedef struct BufferStruct {
 } BufferStruct;
 
 void dirtyBackgroundStripsMarkRectangle (DirtyBackgroundStrips dirtyBackgroundStrips, StripCoord topLeftWorldCoord, StripCoord bottomRightWorldCoord, Map map, Buffer buffer, bool alternateBuffer) {
+	StripCoord worldCoord;
 	uint16_t y, column;
-	for (y=topLeftWorldCoord.y; y<bottomRightWorldCoord.y; ++y) {
-		for (column=topLeftWorldCoord.column; column<bottomRightWorldCoord.column; ++column) {
-			uint16_t bufferIndex;
-			StripCoord worldCoord;
-			worldCoord.column = column;
-			worldCoord.y = y;
+	uint16_t bufferIndex, rowBegin;
 
-			bufferIndex = bufferMapWorldCoordToBufferIndex(
-				worldCoord,
-				buffer->scroll,
-				alternateBuffer
-			);
+	rowBegin = bufferMapWorldCoordToBufferIndex(
+		topLeftWorldCoord,
+		buffer->scroll,
+		alternateBuffer
+	);
+
+	for (y=topLeftWorldCoord.y; y<bottomRightWorldCoord.y; ++y) {
+		bufferIndex = rowBegin;
+		worldCoord.y = y;
+		for (column=topLeftWorldCoord.column; column<bottomRightWorldCoord.column; ++column) {
+			worldCoord.column = column;
 
 			dirtyBackgroundStripsMark(
 				dirtyBackgroundStrips,
 				bufferIndex,
 				getMapStripAtWorldCoord(map, worldCoord)
 			);
+
+			++bufferIndex;
 		}
+
+		rowBegin += EGA_BUFFER_NUM_COLUMNS;
 	}
 }
