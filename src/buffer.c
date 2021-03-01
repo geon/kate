@@ -3,6 +3,7 @@
 #include "strip_coord.h"
 #include "coord_conversion.h"
 #include "dirty_background_strips.h"
+#include "uint16_vector.h"
 
 #include <stdlib.h>
 #include <assert.h>
@@ -195,13 +196,18 @@ StripCoord bufferStaticMapBufferCoordToWorldCoord (EgaScrollCoord bufferScroll, 
 }
 
 
-IndicesByStripTableRow * bufferDirtyBackgroundStripsBegin(Buffer buffer) {
+uint16_t * bufferDirtyBackgroundStripsBegin (Buffer buffer) {
     return  dirtyBackgroundStripsBegin(buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0]);
 }
 
 
-IndicesByStripTableRow * bufferDirtyBackgroundStripsEnd(Buffer buffer) {
+uint16_t * bufferDirtyBackgroundStripsEnd (Buffer buffer) {
     return  dirtyBackgroundStripsEnd(buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0]);
+}
+
+
+Uint16Vector bufferGetDirtyBufferIndicesByStripIndex (Buffer buffer) {
+	return dirtyBackgroundStripsGetDirtyBufferIndicesByStripIndex(buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0]);
 }
 
 

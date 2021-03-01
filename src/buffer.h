@@ -6,7 +6,7 @@
 #include "ega_scroll_coord.h"
 #include "pixel_coord.h"
 #include "map.h"
-#include "indices_grouped_by_strip.h"
+#include "uint16_vector.h"
 
 #include <stdlib.h>
 #include <stdint.h>
@@ -36,8 +36,9 @@ StripCoord bufferMapBufferIndexToWorldCoord (Buffer buffer, uint16_t bufferIndex
 StripCoord bufferStaticMapBufferIndexToBufferCoord (EgaScrollCoord bufferScroll, bool alternateBuffer, uint16_t bufferIndex);
 StripCoord bufferStaticMapBufferCoordToWorldCoord (EgaScrollCoord bufferScroll, StripCoord bufferCoord);
 
-IndicesByStripTableRow* bufferDirtyBackgroundStripsBegin(Buffer buffer);
-IndicesByStripTableRow* bufferDirtyBackgroundStripsEnd(Buffer buffer);
+Uint16Vector bufferGetDirtyBufferIndicesByStripIndex (Buffer buffer);
+uint16_t * bufferDirtyBackgroundStripsBegin (Buffer buffer);
+uint16_t * bufferDirtyBackgroundStripsEnd (Buffer buffer);
 void bufferClearDirtyBackgroundStrips (Buffer buffer);
 // void bufferMarkDirtyBackgroundStrips(Buffer buffer, StripCoord coord, BitplaneStrip cleanStrip);
 

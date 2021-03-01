@@ -1,7 +1,6 @@
 #include "minunit.h"
 
 #include "../src/vector.h"
-#include "../src/grouped_table.h"
 
 
 declareVector(IntVector, int16_t, intVector)
@@ -46,41 +45,6 @@ MU_TEST(test_vector) {
 	}
 
 	freeIntVector(vector);
-}
-
-
-MU_TEST(test_coods_grouped_by_strip) {
-	int16_t capacity = 10;
-	IntByIntTable table = makeIntByIntTable(capacity);
-
-	intByIntTableAdd(table, 1, 1);
-	intByIntTableAdd(table, 1, 2);
-	intByIntTableAdd(table, 1, 3);
-	intByIntTableAdd(table, 2, 1);
-	intByIntTableAdd(table, 2, 2);
-	intByIntTableAdd(table, 2, 3);
-	intByIntTableAdd(table, 2, 4);
-	intByIntTableAdd(table, 2, 5);
-	intByIntTableAdd(table, 3, 1);
-	intByIntTableAdd(table, 4, 1);
-	intByIntTableAdd(table, 5, 1);
-
-	{
-		IntByIntTableRow *row;
-		int16_t i;
-		vectorForeachIndex(intByIntTableBegin(table), intByIntTableEnd(table), row, i) {
-			// printf("%i => %i\n", row->key, intVectorSize(row->values));
-			if (i == 0) {
-				mu_assert_int_eq(5, intVectorSize(row->values));
-			} else if (i == 1) {
-				mu_assert_int_eq(3, intVectorSize(row->values));
-			} else {
-				mu_assert_int_eq(1, intVectorSize(row->values));
-			}
-		}
-	}
-
-	freeIntByIntTable(table);
 }
 
 

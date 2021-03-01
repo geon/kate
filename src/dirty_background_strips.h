@@ -6,7 +6,6 @@
 #include <stdint.h>
 #include "map.h"
 #include "buffer.h"
-#include "indices_grouped_by_strip.h"
 
 
 typedef struct DirtyBackgroundStripsStruct *DirtyBackgroundStrips;
@@ -14,8 +13,10 @@ typedef struct DirtyBackgroundStripsStruct *DirtyBackgroundStrips;
 DirtyBackgroundStrips makeDirtyBackgroundStrips (bool alternateBuffer);
 void freeDirtyBackgroundStrips (DirtyBackgroundStrips dirtyBackgroundStrips);
 
-IndicesByStripTableRow * dirtyBackgroundStripsBegin (DirtyBackgroundStrips dirtyBackgroundStrips);
-IndicesByStripTableRow * dirtyBackgroundStripsEnd (DirtyBackgroundStrips dirtyBackgroundStrips);
+Uint16Vector dirtyBackgroundStripsGetDirtyBufferIndicesByStripIndex (DirtyBackgroundStrips dirtyBackgroundStrips);
+
+uint16_t * dirtyBackgroundStripsBegin (DirtyBackgroundStrips dirtyBackgroundStrips);
+uint16_t * dirtyBackgroundStripsEnd (DirtyBackgroundStrips dirtyBackgroundStrips);
 
 void dirtyBackgroundStripsClear (DirtyBackgroundStrips dirtyBackgroundStrips);
 void dirtyBackgroundStripsMark (DirtyBackgroundStrips dirtyBackgroundStrips, uint16_t bufferIndex,  uint16_t cleanStripIndex);

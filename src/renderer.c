@@ -12,7 +12,7 @@
 #include "ega_scroll_coord.h"
 #include "coord_conversion.h"
 #include "vector.h"
-#include "indices_grouped_by_strip.h"
+#include "uint16_vector.h"
 
 #include <stdlib.h>
 #include <math.h>
@@ -154,12 +154,16 @@ void renderSprites (Renderer renderer, SpriteInstanceVector spriteInstances, Map
 
 void renderBackground (Renderer renderer, Map map) {
 	BitplaneStrip *strips = mapGetStrips(map);
-	IndicesByStripTableRow *row;
-	vectorForeach (bufferDirtyBackgroundStripsBegin(renderer->buffer), bufferDirtyBackgroundStripsEnd(renderer->buffer), row) {
+	Uint16Vector dirtyBufferIndicesByStripIndex = bufferGetDirtyBufferIndicesByStripIndex(renderer->buffer);
+
+	uint16_t *stripIndex;
+	vectorForeach (bufferDirtyBackgroundStripsBegin(renderer->buffer), bufferDirtyBackgroundStripsEnd(renderer->buffer), stripIndex) {
+		Uint16Vector dirtyBufferIndices = &dirtyBufferIndicesByStripIndex[*stripIndex];
+
 		drawStrips(
-			uint16VectorBegin(row->values),
-			uint16VectorEnd(row->values),
-			strips[row->key]
+			uint16VectorBegin(dirtyBufferIndices),
+			uint16VectorEnd(dirtyBufferIndices),
+			strips[*stripIndex]
 		);
 	}
 
