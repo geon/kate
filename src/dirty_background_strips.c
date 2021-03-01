@@ -29,12 +29,12 @@ void freeDirtyBackgroundStrips (DirtyBackgroundStrips dirtyBackgroundStrips) {
 }
 
 
-IndicesByStripTableRow* dirtyBackgroundStripsBegin (DirtyBackgroundStrips dirtyBackgroundStrips) {
+IndicesByStripTableRow * dirtyBackgroundStripsBegin (DirtyBackgroundStrips dirtyBackgroundStrips) {
 	return indicesByStripTableBegin(dirtyBackgroundStrips->coordsByStrip);
 }
 
 
-IndicesByStripTableRow* dirtyBackgroundStripsEnd (DirtyBackgroundStrips dirtyBackgroundStrips) {
+IndicesByStripTableRow * dirtyBackgroundStripsEnd (DirtyBackgroundStrips dirtyBackgroundStrips) {
 	return indicesByStripTableEnd(dirtyBackgroundStrips->coordsByStrip);
 }
 

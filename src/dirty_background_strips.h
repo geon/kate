@@ -14,8 +14,8 @@ typedef struct DirtyBackgroundStripsStruct *DirtyBackgroundStrips;
 DirtyBackgroundStrips makeDirtyBackgroundStrips (bool alternateBuffer);
 void freeDirtyBackgroundStrips (DirtyBackgroundStrips dirtyBackgroundStrips);
 
-IndicesByStripTableRow* dirtyBackgroundStripsBegin (DirtyBackgroundStrips dirtyBackgroundStrips);
-IndicesByStripTableRow* dirtyBackgroundStripsEnd (DirtyBackgroundStrips dirtyBackgroundStrips);
+IndicesByStripTableRow * dirtyBackgroundStripsBegin (DirtyBackgroundStrips dirtyBackgroundStrips);
+IndicesByStripTableRow * dirtyBackgroundStripsEnd (DirtyBackgroundStrips dirtyBackgroundStrips);
 
 void dirtyBackgroundStripsClear (DirtyBackgroundStrips dirtyBackgroundStrips);
 void dirtyBackgroundStripsMark (DirtyBackgroundStrips dirtyBackgroundStrips, uint16_t bufferIndex,  uint16_t cleanStripIndex);

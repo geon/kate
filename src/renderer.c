@@ -153,7 +153,7 @@ void renderSprites (Renderer renderer, SpriteInstanceVector spriteInstances, Map
 
 
 void renderBackground (Renderer renderer, Map map) {
-	BitplaneStrip* strips = mapGetStrips(map);
+	BitplaneStrip *strips = mapGetStrips(map);
 	IndicesByStripTableRow *row;
 	vectorForeach (bufferDirtyBackgroundStripsBegin(renderer->buffer), bufferDirtyBackgroundStripsEnd(renderer->buffer), row) {
 		drawStrips(
