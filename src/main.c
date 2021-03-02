@@ -35,7 +35,7 @@ int16_t main (int16_t argc, char* argv[]) {
 
 	{
 		uint16_t frame;
-		for (frame=0; frame < 40; ++frame) {
+		for (frame=0;; ++frame) {
 			worldUpdate(world);
 			worldRender(world);
 		}
