@@ -123,15 +123,16 @@ void switchBuffer (Buffer buffer, PixelCoord scrollOfNextFrame, Map map) {
 		buffer->scroll,
 		buffer->alternateBuffer
 	);
-
-	// Send the EGA command.
-	setBufferOffset(bufferIndex, buffer->scroll.restX);
+	const uint8_t  restX =  buffer->scroll.restX;
 
 	markBordersAsDirty(buffer, scrollOfNextFrame, map);
 
 	// Update internally.
 	buffer->alternateBuffer = !buffer->alternateBuffer;
 	buffer->scroll = makeEgaScrollCoordFromPixelCoord(scrollOfNextFrame);
+
+	// Send the EGA command.
+	setBufferOffset(bufferIndex, restX);
 }
 
 
