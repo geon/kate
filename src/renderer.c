@@ -168,11 +168,11 @@ void renderBackground (Renderer renderer, Map map) {
 
 
 
-void rendererRender(Renderer renderer, SpriteInstanceVector spriteInstances, Map map, PixelCoord scroll) {
+void rendererRender(Renderer renderer, SpriteInstanceVector spriteInstances, Map map, PixelCoord scrollOfNextFrame) {
 	// Sets the start-address of the buffer.
 	// The value won't be latched by the EGA card until the vertical retrace.
 	// It is not possible to change the actual used address during a frame.
-	switchBuffer(renderer->buffer, scroll, map);
+	switchBuffer(renderer->buffer, scrollOfNextFrame, map);
 
 	renderBackground(renderer, map);
 	renderSprites(renderer, spriteInstances, map);

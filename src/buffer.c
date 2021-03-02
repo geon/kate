@@ -114,7 +114,7 @@ void markBordersAsDirty (Buffer buffer, PixelCoord scroll, Map map) {
 }
 
 
-void switchBuffer (Buffer buffer, PixelCoord scroll, Map map) {
+void switchBuffer (Buffer buffer, PixelCoord scrollOfNextFrame, Map map) {
 	// Calculate the current buffer offset and fractional strip panning.
 	StripCoord stripScroll = makeStripCoordFromEgaScrollCoord(buffer->scroll);
 	uint16_t bufferIndex = bufferMapWorldCoordToBufferIndex(
@@ -126,11 +126,11 @@ void switchBuffer (Buffer buffer, PixelCoord scroll, Map map) {
 	// Send the EGA command.
 	setBufferOffset(bufferIndex, buffer->scroll.restX);
 
-	markBordersAsDirty(buffer, scroll, map);
+	markBordersAsDirty(buffer, scrollOfNextFrame, map);
 
 	// Update internally.
 	buffer->alternateBuffer = !buffer->alternateBuffer;
-	buffer->scroll = makeEgaScrollCoordFromPixelCoord(scroll);
+	buffer->scroll = makeEgaScrollCoordFromPixelCoord(scrollOfNextFrame);
 }
 
 
