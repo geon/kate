@@ -173,11 +173,11 @@ void renderBackground (Renderer renderer, Map map) {
 
 
 void rendererRender(Renderer renderer, SpriteInstanceVector spriteInstances, Map map, PixelCoord scrollOfNextFrame) {
-	renderBackground(renderer, map);
-	renderSprites(renderer, spriteInstances, map);
-
 	// V-sync.
 	waitForFrame();
+
+	renderBackground(renderer, map);
+	renderSprites(renderer, spriteInstances, map);
 
 	// Sets the start-address of the buffer.
 	// The value won't be latched by the EGA card until the vertical retrace.
