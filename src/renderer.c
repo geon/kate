@@ -96,8 +96,8 @@ void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, Map map) {
 		uint16_t lastShiftedMaskBuffer;
 		uint16_t currentShiftedStripBuffer[4] = {0, 0, 0, 0};
 		uint16_t currentShiftedMaskBuffer;
-		uint8_t shiftMask;
-		BitplaneStrip stripShifted;
+		uint8_t shiftedMask;
+		BitplaneStrip shiftedStrip;
 		uint16_t destinationStripIndex;
 
 		for (column=0; column<spriteInstance->sprite->numColumns; ++column) {
@@ -132,10 +132,10 @@ void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, Map map) {
 			{
 				uint8_t plane;
 				for (plane=0; plane<4; ++plane) {
-					stripShifted.planes[plane] = (lastShiftedStripBuffer[plane] & 0xff) | (currentShiftedStripBuffer[plane] >> 8);
+					shiftedStrip.planes[plane] = (lastShiftedStripBuffer[plane] & 0xff) | (currentShiftedStripBuffer[plane] >> 8);
 				}
 			}
-			shiftMask = (lastShiftedMaskBuffer & 0xff) | (currentShiftedMaskBuffer >> 8);
+			shiftedMask = (lastShiftedMaskBuffer & 0xff) | (currentShiftedMaskBuffer >> 8);
 
 			// Save the overflow to the next pass.
 			{
@@ -146,8 +146,8 @@ void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, Map map) {
 			}
 			lastShiftedMaskBuffer = currentShiftedMaskBuffer;
 
-			if (shiftMask) {
-				drawStrip(destinationStripIndex, stripShifted, shiftMask);
+			if (shiftedMask) {
+				drawStrip(destinationStripIndex, shiftedStrip, shiftedMask);
 			}
 		}
 
@@ -155,12 +155,12 @@ void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, Map map) {
 		{
 			uint8_t plane;
 			for (plane=0; plane<4; ++plane) {
-				stripShifted.planes[plane] = lastShiftedStripBuffer[plane] & 0xff;
+				shiftedStrip.planes[plane] = lastShiftedStripBuffer[plane] & 0xff;
 			}
 		}
-		shiftMask = lastShiftedMaskBuffer & 0xff;
-		if (shiftMask) {
-			drawStrip(destinationStripIndex+1, stripShifted, shiftMask);
+		shiftedMask = lastShiftedMaskBuffer & 0xff;
+		if (shiftedMask) {
+			drawStrip(destinationStripIndex+1, shiftedStrip, shiftedMask);
 		}
 	}
 
