@@ -98,8 +98,10 @@ void drawStrip (uint16_t index, BitplaneStrip bitplaneStrip, uint8_t mask) {
 			; Send bit mask
 			out dx, ax
 
-		; Load existing pixels to latch, so masking works.
+		; Write the stripAddress to the register, so dont overwrite it.
 			mov ebx, stripAddress
+
+		; Load existing pixels to latch, so masking works.
 			mov al, [ebx]
 
 		; Enable plane 0
@@ -113,7 +115,6 @@ void drawStrip (uint16_t index, BitplaneStrip bitplaneStrip, uint8_t mask) {
 			out dx, ax
 
 		; Draw the strip
-			mov ebx, stripAddress
 			; Get the pixel value
 			mov al, bitplane0
 			; Write the pixel
@@ -130,7 +131,6 @@ void drawStrip (uint16_t index, BitplaneStrip bitplaneStrip, uint8_t mask) {
 			out dx, ax
 
 		; Draw the strip
-			mov ebx, stripAddress
 			; Get the pixel value
 			mov al, bitplane1
 			; Write the pixel
@@ -147,7 +147,6 @@ void drawStrip (uint16_t index, BitplaneStrip bitplaneStrip, uint8_t mask) {
 			out dx, ax
 
 		; Draw the strip
-			mov ebx, stripAddress
 			; Get the pixel value
 			mov al, bitplane2
 			; Write the pixel
@@ -164,7 +163,6 @@ void drawStrip (uint16_t index, BitplaneStrip bitplaneStrip, uint8_t mask) {
 			out dx, ax
 
 		; Draw the strip
-			mov ebx, stripAddress
 			; Get the pixel value
 			mov al, bitplane3
 			; Write the pixel
