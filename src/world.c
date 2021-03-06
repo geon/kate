@@ -77,8 +77,8 @@ void worldUpdate (World world) {
 	world->scroll.y = world->frame * 3;
 
 	vectorForeachIndex (spriteInstanceVectorBegin(&world->spriteInstances), spriteInstanceVectorEnd(&world->spriteInstances), spriteInstance, i) {
-		spriteInstance->posX = world->scroll.x + 150 + i*64;
-		spriteInstance->posY = world->scroll.y + 150;
+		spriteInstance->posX = world->frame + 150 + i*64;
+		spriteInstance->posY = world->frame + 150;
 	}
 }
 
