@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <stdint.h>
 
+#define NUM_FRAMES 100
+
 
 int16_t main (int16_t argc, char* argv[]) {
 	Renderer renderer;
@@ -35,7 +37,7 @@ int16_t main (int16_t argc, char* argv[]) {
 
 	{
 		uint16_t frame;
-		for (frame=0;; ++frame) {
+		for (frame=0; frame<NUM_FRAMES; ++frame) {
 			worldUpdate(world);
 			worldRender(world);
 		}
