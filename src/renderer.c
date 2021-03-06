@@ -95,6 +95,7 @@ void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, Map map) {
 		for (column=0; column<spriteInstance->sprite->numColumns; ++column) {
 			uint16_t sourceStripIndex = column + y*spriteInstance->sprite->numColumns;
 			BitplaneStrip strip = spriteInstance->sprite->bitPlaneStrips.values[sourceStripIndex];
+			uint8_t mask = spriteInstance->sprite->mask.values[sourceStripIndex];
 			uint16_t posXColumn = spriteInstance->posX/8;
 			uint16_t posXRest = spriteInstance->posX%8;
 			uint8_t shiftMask;
@@ -118,11 +119,11 @@ void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, Map map) {
 				}
 			}
 			// TODO: Combine the adjecent strips, to avoid double writes.
-			shiftMask = spriteInstance->sprite->mask.values[sourceStripIndex] >> posXRest;
+			shiftMask = mask >> posXRest;
 			if (shiftMask) {
 				drawStrip(destinationStripIndex, stripShiftedA, shiftMask);
 			}
-			shiftMask = spriteInstance->sprite->mask.values[sourceStripIndex] << (8 - posXRest);
+			shiftMask = mask << (8 - posXRest);
 			++worldCoord.column;
 			if (shiftMask) {
 				drawStrip(destinationStripIndex + 1, stripShiftedB, shiftMask);
