@@ -92,6 +92,7 @@ typedef struct BufferStruct {
 void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, Map map) {
 	uint16_t y, column;
 	for (y = 0; y < spriteInstance->sprite->height; ++y) {
+		// TODO: Use a uint32_t to shift 3 strips at a time without spilling bits.
 		uint16_t lastShiftedStripBuffer[4] = {0, 0, 0, 0};
 		uint16_t lastShiftedMaskBuffer;
 		uint16_t currentShiftedStripBuffer[4] = {0, 0, 0, 0};
