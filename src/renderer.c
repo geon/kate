@@ -92,15 +92,20 @@ typedef struct BufferStruct {
 void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, Map map) {
 	uint16_t y, column;
 	for (y = 0; y < spriteInstance->sprite->height; ++y) {
+		uint16_t lastShiftedStripBuffer[4] = {0, 0, 0, 0};
+		uint16_t lastShiftedMaskBuffer;
+		uint16_t currentShiftedStripBuffer[4] = {0, 0, 0, 0};
+		uint16_t currentShiftedMaskBuffer;
+		uint8_t shiftMask;
+		BitplaneStrip stripShifted;
+		uint16_t destinationStripIndex;
+
 		for (column=0; column<spriteInstance->sprite->numColumns; ++column) {
 			uint16_t sourceStripIndex = column + y*spriteInstance->sprite->numColumns;
 			BitplaneStrip strip = spriteInstance->sprite->bitPlaneStrips.values[sourceStripIndex];
 			uint8_t mask = spriteInstance->sprite->mask.values[sourceStripIndex];
 			uint16_t posXColumn = spriteInstance->posX/8;
 			uint16_t posXRest = spriteInstance->posX%8;
-			uint8_t shiftMask;
-			BitplaneStrip stripShiftedA, stripShiftedB;
-			uint16_t destinationStripIndex;
 			StripCoord worldCoord;
 
 			worldCoord.column = posXColumn + column;
@@ -111,23 +116,51 @@ void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, Map map) {
 				renderer->buffer->alternateBuffer
 			);
 
+
+
+
+			// Shift the current strip a number of pixels, within a 16 bit variable, so the overflowing bits aren't lost.
 			{
 				uint8_t plane;
 				for (plane=0; plane<4; ++plane) {
-					stripShiftedA.planes[plane] = strip.planes[plane] >> posXRest;
-					stripShiftedB.planes[plane] = strip.planes[plane] << (8 - posXRest);
+					currentShiftedStripBuffer[plane] = strip.planes[plane] << (8 - posXRest);
 				}
 			}
-			// TODO: Combine the adjecent strips, to avoid double writes.
-			shiftMask = mask >> posXRest;
-			if (shiftMask) {
-				drawStrip(destinationStripIndex, stripShiftedA, shiftMask);
+			currentShiftedMaskBuffer = mask << (8 - posXRest);
+
+			// Merge in the overflow from the last strip.
+			{
+				uint8_t plane;
+				for (plane=0; plane<4; ++plane) {
+					stripShifted.planes[plane] = (lastShiftedStripBuffer[plane] & 0xff) | (currentShiftedStripBuffer[plane] >> 8);
+				}
 			}
-			shiftMask = mask << (8 - posXRest);
-			++worldCoord.column;
-			if (shiftMask) {
-				drawStrip(destinationStripIndex + 1, stripShiftedB, shiftMask);
+			shiftMask = (lastShiftedMaskBuffer & 0xff) | (currentShiftedMaskBuffer >> 8);
+
+			// Save the overflow to the next pass.
+			{
+				uint8_t plane;
+				for (plane=0; plane<4; ++plane) {
+					lastShiftedStripBuffer[plane] = currentShiftedStripBuffer[plane];
+				}
 			}
+			lastShiftedMaskBuffer = currentShiftedMaskBuffer;
+
+			if (shiftMask) {
+				drawStrip(destinationStripIndex, stripShifted, shiftMask);
+			}
+		}
+
+		// Draw the last overflown bits.
+		{
+			uint8_t plane;
+			for (plane=0; plane<4; ++plane) {
+				stripShifted.planes[plane] = lastShiftedStripBuffer[plane] & 0xff;
+			}
+		}
+		shiftMask = lastShiftedMaskBuffer & 0xff;
+		if (shiftMask) {
+			drawStrip(destinationStripIndex+1, stripShifted, shiftMask);
 		}
 	}
 
