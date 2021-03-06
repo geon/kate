@@ -110,14 +110,13 @@ void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, Map map) {
 				renderer->buffer->alternateBuffer
 			);
 
-			stripShiftedA.planes[0] = strip.planes[0] >> posXRest;
-			stripShiftedA.planes[1] = strip.planes[1] >> posXRest;
-			stripShiftedA.planes[2] = strip.planes[2] >> posXRest;
-			stripShiftedA.planes[3] = strip.planes[3] >> posXRest;
-			stripShiftedB.planes[0] = strip.planes[0] << (8 - posXRest);
-			stripShiftedB.planes[1] = strip.planes[1] << (8 - posXRest);
-			stripShiftedB.planes[2] = strip.planes[2] << (8 - posXRest);
-			stripShiftedB.planes[3] = strip.planes[3] << (8 - posXRest);
+			{
+				uint8_t plane;
+				for (plane=0; plane<4; ++plane) {
+					stripShiftedA.planes[plane] = strip.planes[plane] >> posXRest;
+					stripShiftedB.planes[plane] = strip.planes[plane] << (8 - posXRest);
+				}
+			}
 			// TODO: Combine the adjecent strips, to avoid double writes.
 			shiftMask = spriteInstance->sprite->mask.values[sourceStripIndex] >> posXRest;
 			if (shiftMask) {
