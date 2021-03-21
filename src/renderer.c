@@ -111,7 +111,7 @@ void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, Map map) {
 
 			worldCoord.column = posXColumn + column;
 			worldCoord.y = spriteInstance->pos.y + y;
-			destinationStripIndex = bufferMapWorldCoordToBufferIndex(
+			destinationStripIndex = bufferMapWorldCoordToBufferIndexInAlternateBuffer(
 				worldCoord,
 				renderer->buffer->scroll,
 				renderer->buffer->alternateBuffer

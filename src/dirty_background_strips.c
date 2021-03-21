@@ -100,7 +100,7 @@ void dirtyBackgroundStripsMarkRectangle (DirtyBackgroundStrips dirtyBackgroundSt
 	uint16_t y, column;
 	uint16_t bufferIndex, rowBegin;
 
-	rowBegin = bufferMapWorldCoordToBufferIndex(
+	rowBegin = bufferMapWorldCoordToBufferIndexInAlternateBuffer(
 		topLeftWorldCoord,
 		buffer->scroll,
 		alternateBuffer
