@@ -220,6 +220,27 @@ void drawStrips (uint16_t* beginIndex, uint16_t* endIndex, BitplaneStrip bitplan
 
 void drawCustomStrips (PositionAndStrip *stripBatchBegin, PositionAndStrip *stripBatchEnd) {
 	register PositionAndStrip *iterator;
+
+	_asm{
+		; Set write mode
+			mov dx, 03CEh ; 6845 command register
+			; Specify mode register
+			mov al, 5
+			; Write. Latched data will be used where the mask bits are 0.
+			mov ah, 0
+			; Send
+			out dx, ax
+
+		; Set write mode
+			mov dx, 03CEh
+			; Data Rotate register
+			mov al, 3
+			; No bit rotation, no AND, OR or XOR.
+			mov ah, 0
+			; Send
+			out dx, ax
+	}
+
 	for (iterator=stripBatchBegin; iterator!=stripBatchEnd; ++iterator) {
 		uint8_t *stripAddress = bufferBaseAddress + iterator->pos;
 		uint8_t mask = iterator->mask;
@@ -230,25 +251,8 @@ void drawCustomStrips (PositionAndStrip *stripBatchBegin, PositionAndStrip *stri
 		uint8_t bitplane3 = iterator->strip.planes[3];
 
 		_asm{
-			; Set write mode
-				mov dx, 03CEh ; 6845 command register
-				; Specify mode register
-				mov al, 5
-				; Write. Latched data will be used where the mask bits are 0.
-				mov ah, 0
-				; Send
-				out dx, ax
-
-			; Set write mode
-				mov dx, 03CEh
-				; Data Rotate register
-				mov al, 3
-				; No bit rotation, no AND, OR or XOR.
-				mov ah, 0
-				; Send
-				out dx, ax
-
 			; Set 6845 bit mask register
+				mov dx, 03CEh
 				; Specify bit mask register
 				mov al, 8
 				mov ah, mask
