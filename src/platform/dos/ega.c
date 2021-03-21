@@ -229,8 +229,6 @@ void drawCustomStrips (PositionAndStrip *stripBatchBegin, PositionAndStrip *stri
 		uint8_t bitplane2 = iterator->strip.planes[2];
 		uint8_t bitplane3 = iterator->strip.planes[3];
 
-		const uint8_t allBits = BIT_0 | BIT_1 | BIT_2 | BIT_3;
-
 		_asm{
 			; Set write mode
 				mov dx, 03CEh ; 6845 command register
@@ -326,7 +324,13 @@ void drawCustomStrips (PositionAndStrip *stripBatchBegin, PositionAndStrip *stri
 				mov al, bitplane3
 				; Write the pixel
 				mov [ebx], al
+		}
+	}
 
+	{
+		const uint8_t allBits = BIT_0 | BIT_1 | BIT_2 | BIT_3;
+
+		_asm{
 			; Re-enable all planes
 				; 6845 command register
 				mov dx, 3C4h
