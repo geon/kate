@@ -5,7 +5,6 @@
 #include "buffer.h"
 #include "sprite.h"
 #include "sprite_instance.h"
-#include "sprite_struct.h"
 #include "map.h"
 #include "strip_coord.h"
 #include "pixel_coord.h"
@@ -77,7 +76,7 @@ Sprite rendererLoadSprite (Renderer renderer, char *imagePath, char **errorMessa
 	spriteVectorPush(&renderer->sprites, sprite);
 
 	// TODO: Make sure it is the same palette, or remap colors.
-	memcpy(renderer->palette, sprite->palette, 16);
+	memcpy(renderer->palette, getSpritePalette(sprite), 16);
 
 	return sprite;
 }
