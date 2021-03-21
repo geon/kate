@@ -2,7 +2,6 @@
 #define map_h
 
 #include "platform/dos/bitplane_strip.h"
-#include "sprite.h"
 #include "strip_coord.h"
 
 typedef struct MapStruct *Map;
