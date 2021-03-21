@@ -83,7 +83,7 @@ Sprite rendererLoadSprite (Renderer renderer, char *imagePath, char **errorMessa
 }
 
 
-void drawSprite(Renderer renderer, Sprite sprite, PixelCoord pos, Map map) {
+void drawSprite(Sprite sprite, PixelCoord pos, Map map, Buffer buffer) {
 	uint16_t y, column;
 	for (y = 0; y < sprite->height; ++y) {
 		// TODO: Use a uint32_t to shift 3 strips at a time without spilling bits.
@@ -106,7 +106,7 @@ void drawSprite(Renderer renderer, Sprite sprite, PixelCoord pos, Map map) {
 			worldCoord.column = posXColumn + column;
 			worldCoord.y = pos.y + y;
 			destinationStripIndex = bufferMapWorldCoordToBufferIndex(
-				renderer->buffer,
+				buffer,
 				worldCoord
 			);
 
@@ -165,7 +165,7 @@ void drawSprite(Renderer renderer, Sprite sprite, PixelCoord pos, Map map) {
 		bottomRight.column = topLeft.column + sprite->numColumns;
 		bottomRight.y = topLeft.y + sprite->height;
 
-		bufferMarkRectangleAsDirty(renderer->buffer, topLeft, bottomRight, map);
+		bufferMarkRectangleAsDirty(buffer, topLeft, bottomRight, map);
 	}
 }
 
@@ -174,7 +174,7 @@ void renderSprites (Renderer renderer, SpriteInstanceVector spriteInstances, Map
 	SpriteInstance *spriteInstance;
 
 	vectorForeach (spriteInstanceVectorBegin(spriteInstances), spriteInstanceVectorEnd(spriteInstances), spriteInstance) {
-		drawSprite(renderer, spriteInstance->sprite, spriteInstance->pos, map);
+		drawSprite(spriteInstance->sprite, spriteInstance->pos, map, renderer->buffer);
 	}
 }
 
