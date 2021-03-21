@@ -218,6 +218,14 @@ void drawStrips (uint16_t* beginIndex, uint16_t* endIndex, BitplaneStrip bitplan
 }
 
 
+void drawCustomStrips (PositionAndStrip *stripBatchBegin, PositionAndStrip *stripBatchEnd) {
+	register PositionAndStrip *iterator;
+	for (iterator=stripBatchBegin; iterator!=stripBatchEnd; ++iterator) {
+		drawStrip(iterator->pos, iterator->strip, iterator->mask);
+	}
+}
+
+
 void copyStrip (uint16_t index) {
 	uint8_t* stripAddress = bufferBaseAddress + index;
 

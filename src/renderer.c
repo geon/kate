@@ -91,9 +91,7 @@ void renderSprites (Renderer renderer, SpriteInstanceVector spriteInstances, Map
 	vectorForeach (spriteInstanceVectorBegin(spriteInstances), spriteInstanceVectorEnd(spriteInstances), spriteInstance) {
 		PositionAndStrip *i;
 		spriteDraw(spriteInstance->sprite, spriteInstance->pos, map, renderer->buffer, &stripBatch);
-		vectorForeach(positionAndStripVectorBegin(&stripBatch), positionAndStripVectorEnd(&stripBatch), i) {
-			drawStrip(i->pos, i->strip, i->mask);
-		}
+		drawCustomStrips(positionAndStripVectorBegin(&stripBatch), positionAndStripVectorEnd(&stripBatch));
 		positionAndStripVectorClear(&stripBatch);
 	}
 	destroyPositionAndStripVector(&stripBatch);
