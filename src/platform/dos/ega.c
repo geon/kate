@@ -219,6 +219,7 @@ void drawStrips (uint16_t* beginIndex, uint16_t* endIndex, BitplaneStrip bitplan
 
 
 void drawCustomStrips (PositionAndStrip *stripBatchBegin, PositionAndStrip *stripBatchEnd) {
+	uint8_t planeIndex;
 	register PositionAndStrip *iterator;
 
 	_asm{
@@ -241,93 +242,47 @@ void drawCustomStrips (PositionAndStrip *stripBatchBegin, PositionAndStrip *stri
 			out dx, ax
 	}
 
-	for (iterator=stripBatchBegin; iterator!=stripBatchEnd; ++iterator) {
-		uint8_t *stripAddress = bufferBaseAddress + iterator->pos;
-		uint8_t mask = iterator->mask;
-
-		uint8_t bitplane0 = iterator->strip.planes[0];
-		uint8_t bitplane1 = iterator->strip.planes[1];
-		uint8_t bitplane2 = iterator->strip.planes[2];
-		uint8_t bitplane3 = iterator->strip.planes[3];
-
+	for (planeIndex=0; planeIndex<4; ++planeIndex) {
+		const uint8_t planeBit = BIT_0<<planeIndex;
 		_asm{
-			; Set 6845 bit mask register
-				mov dx, 03CEh
-				; Specify bit mask register
-				mov al, 8
-				mov ah, mask
-				; Send bit mask
-				out dx, ax
-
-			; Write the stripAddress to the register, so dont overwrite it.
-				mov ebx, stripAddress
-
-			; Load existing pixels to latch, so masking works.
-				mov al, [ebx]
-
-			; Enable plane 0
+			; Enable one plane at a time
 				; 6845 command register
 				mov dx, 3C4h
 				; Specify sequencer register
 				mov al, 2
-				; only plane 0
-				mov ah, BIT_0
+				; only this plane
+				mov ah, planeBit
 				; Send
 				out dx, ax
+		}
 
-			; Draw the strip
-				; Get the pixel value
-				mov al, bitplane0
-				; Write the pixel
-				mov [ebx], al
+		for (iterator=stripBatchBegin; iterator!=stripBatchEnd; ++iterator) {
+			uint8_t *stripAddress = bufferBaseAddress + iterator->pos;
+			uint8_t mask = iterator->mask;
 
-			; Enable plane 1
-				; 6845 command register
-				mov dx, 3C4h
-				; Specify mode register
-				mov al, 2
-				; only plane 1
-				mov ah, BIT_1
-				; Send
-				out dx, ax
+			uint8_t bitplane = iterator->strip.planes[planeIndex];
 
-			; Draw the strip
-				; Get the pixel value
-				mov al, bitplane1
-				; Write the pixel
-				mov [ebx], al
+			_asm{
+				; Set 6845 bit mask register
+					mov dx, 03CEh
+					; Specify bit mask register
+					mov al, 8
+					mov ah, mask
+					; Send bit mask
+					out dx, ax
 
-			; Enable plane 2
-				; 6845 command register
-				mov dx, 3C4h
-				; Specify mode register
-				mov al, 2
-				; only plane 2
-				mov ah, BIT_2
-				; Send
-				out dx, ax
+				; Write the stripAddress to the register, so dont overwrite it.
+					mov ebx, stripAddress
 
-			; Draw the strip
-				; Get the pixel value
-				mov al, bitplane2
-				; Write the pixel
-				mov [ebx], al
+				; Load existing pixels to latch, so masking works.
+					mov al, [ebx]
 
-			; Enable plane 3
-				; 6845 command register
-				mov dx, 3C4h
-				; Specify mode register
-				mov al, 2
-				; only plane 3
-				mov ah, BIT_3
-				; Send
-				out dx, ax
-
-			; Draw the strip
-				; Get the pixel value
-				mov al, bitplane3
-				; Write the pixel
-				mov [ebx], al
+				; Draw the strip
+					; Get the pixel value
+					mov al, bitplane
+					; Write the pixel
+					mov [ebx], al
+			}
 		}
 	}
 
