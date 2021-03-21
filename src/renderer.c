@@ -83,9 +83,9 @@ Sprite rendererLoadSprite (Renderer renderer, char *imagePath, char **errorMessa
 }
 
 
-void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, Map map) {
+void drawSprite(Renderer renderer, Sprite sprite, PixelCoord pos, Map map) {
 	uint16_t y, column;
-	for (y = 0; y < spriteInstance->sprite->height; ++y) {
+	for (y = 0; y < sprite->height; ++y) {
 		// TODO: Use a uint32_t to shift 3 strips at a time without spilling bits.
 		uint16_t lastShiftedStripBuffer[4] = {0, 0, 0, 0};
 		uint16_t lastShiftedMaskBuffer;
@@ -95,16 +95,16 @@ void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, Map map) {
 		BitplaneStrip shiftedStrip;
 		uint16_t destinationStripIndex;
 
-		for (column=0; column<spriteInstance->sprite->numColumns; ++column) {
-			uint16_t sourceStripIndex = column + y*spriteInstance->sprite->numColumns;
-			BitplaneStrip strip = spriteInstance->sprite->bitPlaneStrips.values[sourceStripIndex];
-			uint8_t mask = spriteInstance->sprite->mask.values[sourceStripIndex];
-			uint16_t posXColumn = spriteInstance->pos.x/8;
-			uint16_t posXRest = spriteInstance->pos.x%8;
+		for (column=0; column<sprite->numColumns; ++column) {
+			uint16_t sourceStripIndex = column + y*sprite->numColumns;
+			BitplaneStrip strip = sprite->bitPlaneStrips.values[sourceStripIndex];
+			uint8_t mask = sprite->mask.values[sourceStripIndex];
+			uint16_t posXColumn = pos.x/8;
+			uint16_t posXRest = pos.x%8;
 			StripCoord worldCoord;
 
 			worldCoord.column = posXColumn + column;
-			worldCoord.y = spriteInstance->pos.y + y;
+			worldCoord.y = pos.y + y;
 			destinationStripIndex = bufferMapWorldCoordToBufferIndex(
 				renderer->buffer,
 				worldCoord
@@ -160,10 +160,10 @@ void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, Map map) {
 
 	{
 		StripCoord topLeft, bottomRight;
-		topLeft.column = spriteInstance->pos.x/8;
-		topLeft.y = spriteInstance->pos.y;
-		bottomRight.column = topLeft.column + spriteInstance->sprite->numColumns;
-		bottomRight.y = topLeft.y + spriteInstance->sprite->height;
+		topLeft.column = pos.x/8;
+		topLeft.y = pos.y;
+		bottomRight.column = topLeft.column + sprite->numColumns;
+		bottomRight.y = topLeft.y + sprite->height;
 
 		bufferMarkRectangleAsDirty(renderer->buffer, topLeft, bottomRight, map);
 	}
@@ -174,7 +174,7 @@ void renderSprites (Renderer renderer, SpriteInstanceVector spriteInstances, Map
 	SpriteInstance *spriteInstance;
 
 	vectorForeach (spriteInstanceVectorBegin(spriteInstances), spriteInstanceVectorEnd(spriteInstances), spriteInstance) {
-		drawSprite(renderer, spriteInstance, map);
+		drawSprite(renderer, spriteInstance->sprite, spriteInstance->pos, map);
 	}
 }
 
