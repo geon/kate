@@ -41,13 +41,14 @@ World makeWorld (Renderer renderer, char **errorMessage) {
 		uint16_t spritePathArrayLength = sizeof(spritePaths) / sizeof(spritePaths[0]);
 		initializeSpriteInstanceVector(&world->spriteInstances, spritePathArrayLength);
 		{
+			PixelCoord pos = {.x=0, .y=0};
 			uint16_t i;
 			for (i=0; i<spritePathArrayLength; ++i) {
 				Sprite sprite;
 				if (!(sprite = rendererLoadSprite(world->renderer, spritePaths[i], errorMessage))) {
 					return NULL;
 				}
-				spriteInstanceVectorPush(&world->spriteInstances, makeSpriteInstance(sprite, 0, 0));
+				spriteInstanceVectorPush(&world->spriteInstances, makeSpriteInstance(sprite, pos));
 			}
 		}
 	}
@@ -77,8 +78,8 @@ void worldUpdate (World world) {
 	world->scroll.y = world->frame * 3;
 
 	vectorForeachIndex (spriteInstanceVectorBegin(&world->spriteInstances), spriteInstanceVectorEnd(&world->spriteInstances), spriteInstance, i) {
-		spriteInstance->posX = world->frame + 150 + i*64;
-		spriteInstance->posY = world->frame + 150;
+		spriteInstance->pos.x = world->frame + 150 + i*64;
+		spriteInstance->pos.y = world->frame + 150;
 	}
 }
 

@@ -105,12 +105,12 @@ void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, Map map) {
 			uint16_t sourceStripIndex = column + y*spriteInstance->sprite->numColumns;
 			BitplaneStrip strip = spriteInstance->sprite->bitPlaneStrips.values[sourceStripIndex];
 			uint8_t mask = spriteInstance->sprite->mask.values[sourceStripIndex];
-			uint16_t posXColumn = spriteInstance->posX/8;
-			uint16_t posXRest = spriteInstance->posX%8;
+			uint16_t posXColumn = spriteInstance->pos.x/8;
+			uint16_t posXRest = spriteInstance->pos.x%8;
 			StripCoord worldCoord;
 
 			worldCoord.column = posXColumn + column;
-			worldCoord.y = spriteInstance->posY + y;
+			worldCoord.y = spriteInstance->pos.y + y;
 			destinationStripIndex = bufferMapWorldCoordToBufferIndex(
 				worldCoord,
 				renderer->buffer->scroll,
@@ -167,8 +167,8 @@ void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, Map map) {
 
 	{
 		StripCoord topLeft, bottomRight;
-		topLeft.column = spriteInstance->posX/8;
-		topLeft.y = spriteInstance->posY;
+		topLeft.column = spriteInstance->pos.x/8;
+		topLeft.y = spriteInstance->pos.y;
 		bottomRight.column = topLeft.column + spriteInstance->sprite->numColumns;
 		bottomRight.y = topLeft.y + spriteInstance->sprite->height;
 

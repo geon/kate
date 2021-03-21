@@ -3,12 +3,11 @@
 
 defineVector(SpriteInstanceVector, SpriteInstance, spriteInstanceVector)
 
-SpriteInstance makeSpriteInstance (Sprite sprite, int16_t posX, int16_t posY) {
+SpriteInstance makeSpriteInstance (Sprite sprite, PixelCoord pos) {
 	SpriteInstance spriteInstance;
 
 	spriteInstance.sprite = sprite;
-	spriteInstance.posX = posX;
-	spriteInstance.posY = posY;
+	spriteInstance.pos = pos;
 
 	return spriteInstance;
 }

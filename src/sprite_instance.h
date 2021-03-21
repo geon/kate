@@ -2,6 +2,7 @@
 #define sprite_instance_h
 
 #include "sprite.h"
+#include "pixel_coord.h"
 #include "vector.h"
 
 #include <stdint.h>
@@ -10,11 +11,10 @@
 
 typedef struct SpriteInstance {
     Sprite sprite;
-	int16_t posX;
-	int16_t posY;
+	PixelCoord pos;
 } SpriteInstance;
 
-SpriteInstance makeSpriteInstance (Sprite sprite, int16_t posX, int16_t posY);
+SpriteInstance makeSpriteInstance (Sprite sprite, PixelCoord pos);
 
 
 declareVector(SpriteInstanceVector, SpriteInstance, spriteInstanceVector)
