@@ -89,20 +89,14 @@ void dirtyBackgroundStripsMark (DirtyBackgroundStrips dirtyBackgroundStrips, uin
 }
 
 
-
-// TODO: This can't be here.
-typedef struct BufferStruct {
-	EgaScrollCoord scroll;
-} BufferStruct;
-
 void dirtyBackgroundStripsMarkRectangle (DirtyBackgroundStrips dirtyBackgroundStrips, StripCoord topLeftWorldCoord, StripCoord bottomRightWorldCoord, Map map, Buffer buffer, bool alternateBuffer) {
 	StripCoord worldCoord;
 	uint16_t y, column;
 	uint16_t bufferIndex, rowBegin;
 
 	rowBegin = bufferMapWorldCoordToBufferIndexInAlternateBuffer(
+		buffer,
 		topLeftWorldCoord,
-		buffer->scroll,
 		alternateBuffer
 	);
 

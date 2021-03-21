@@ -152,12 +152,12 @@ uint16_t bufferMapWorldCoordToBufferIndex (Buffer buffer, StripCoord worldCoord)
 }
 
 
-uint16_t bufferMapWorldCoordToBufferIndexInAlternateBuffer (StripCoord worldCoord, EgaScrollCoord bufferScroll, bool bufferAlternateBuffer) {
+uint16_t bufferMapWorldCoordToBufferIndexInAlternateBuffer (Buffer buffer, StripCoord worldCoord, bool bufferAlternateBuffer) {
 	return  bufferStaticMapBufferCoordToBufferIndex(
-		bufferScroll,
+		buffer->scroll,
 		bufferAlternateBuffer,
 		bufferStaticMapWorldCoordToBufferCoord(
-			bufferScroll,
+			buffer->scroll,
 			worldCoord
 		)
 	);
