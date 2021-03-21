@@ -221,7 +221,122 @@ void drawStrips (uint16_t* beginIndex, uint16_t* endIndex, BitplaneStrip bitplan
 void drawCustomStrips (PositionAndStrip *stripBatchBegin, PositionAndStrip *stripBatchEnd) {
 	register PositionAndStrip *iterator;
 	for (iterator=stripBatchBegin; iterator!=stripBatchEnd; ++iterator) {
-		drawStrip(iterator->pos, iterator->strip, iterator->mask);
+		uint8_t *stripAddress = bufferBaseAddress + iterator->pos;
+		uint8_t mask = iterator->mask;
+
+		uint8_t bitplane0 = iterator->strip.planes[0];
+		uint8_t bitplane1 = iterator->strip.planes[1];
+		uint8_t bitplane2 = iterator->strip.planes[2];
+		uint8_t bitplane3 = iterator->strip.planes[3];
+
+		const uint8_t allBits = BIT_0 | BIT_1 | BIT_2 | BIT_3;
+
+		_asm{
+			; Set write mode
+				mov dx, 03CEh ; 6845 command register
+				; Specify mode register
+				mov al, 5
+				; Write. Latched data will be used where the mask bits are 0.
+				mov ah, 0
+				; Send
+				out dx, ax
+
+			; Set write mode
+				mov dx, 03CEh
+				; Data Rotate register
+				mov al, 3
+				; No bit rotation, no AND, OR or XOR.
+				mov ah, 0
+				; Send
+				out dx, ax
+
+			; Set 6845 bit mask register
+				; Specify bit mask register
+				mov al, 8
+				mov ah, mask
+				; Send bit mask
+				out dx, ax
+
+			; Write the stripAddress to the register, so dont overwrite it.
+				mov ebx, stripAddress
+
+			; Load existing pixels to latch, so masking works.
+				mov al, [ebx]
+
+			; Enable plane 0
+				; 6845 command register
+				mov dx, 3C4h
+				; Specify sequencer register
+				mov al, 2
+				; only plane 0
+				mov ah, BIT_0
+				; Send
+				out dx, ax
+
+			; Draw the strip
+				; Get the pixel value
+				mov al, bitplane0
+				; Write the pixel
+				mov [ebx], al
+
+			; Enable plane 1
+				; 6845 command register
+				mov dx, 3C4h
+				; Specify mode register
+				mov al, 2
+				; only plane 1
+				mov ah, BIT_1
+				; Send
+				out dx, ax
+
+			; Draw the strip
+				; Get the pixel value
+				mov al, bitplane1
+				; Write the pixel
+				mov [ebx], al
+
+			; Enable plane 2
+				; 6845 command register
+				mov dx, 3C4h
+				; Specify mode register
+				mov al, 2
+				; only plane 2
+				mov ah, BIT_2
+				; Send
+				out dx, ax
+
+			; Draw the strip
+				; Get the pixel value
+				mov al, bitplane2
+				; Write the pixel
+				mov [ebx], al
+
+			; Enable plane 3
+				; 6845 command register
+				mov dx, 3C4h
+				; Specify mode register
+				mov al, 2
+				; only plane 3
+				mov ah, BIT_3
+				; Send
+				out dx, ax
+
+			; Draw the strip
+				; Get the pixel value
+				mov al, bitplane3
+				; Write the pixel
+				mov [ebx], al
+
+			; Re-enable all planes
+				; 6845 command register
+				mov dx, 3C4h
+				; Specify mode register
+				mov al, 2
+				; bits 0-3.
+				mov ah, allBits
+				; Send
+				out dx, ax
+		}
 	}
 }
 
