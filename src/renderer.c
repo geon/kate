@@ -12,6 +12,7 @@
 #include "coord_conversion.h"
 #include "vector.h"
 #include "uint16_vector.h"
+#include "position_and_strip.h"
 
 #include <stdlib.h>
 #include <math.h>
@@ -84,10 +85,18 @@ Sprite rendererLoadSprite (Renderer renderer, char *imagePath, char **errorMessa
 
 void renderSprites (Renderer renderer, SpriteInstanceVector spriteInstances, Map map) {
 	SpriteInstance *spriteInstance;
+	PositionAndStripVectorStruct stripBatch;
 
+	initializePositionAndStripVector(&stripBatch, 300);
 	vectorForeach (spriteInstanceVectorBegin(spriteInstances), spriteInstanceVectorEnd(spriteInstances), spriteInstance) {
-		spriteDraw(spriteInstance->sprite, spriteInstance->pos, map, renderer->buffer);
+		PositionAndStrip *i;
+		spriteDraw(spriteInstance->sprite, spriteInstance->pos, map, renderer->buffer, &stripBatch);
+		vectorForeach(positionAndStripVectorBegin(&stripBatch), positionAndStripVectorEnd(&stripBatch), i) {
+			drawStrip(i->pos, i->strip, i->mask);
+		}
+		positionAndStripVectorClear(&stripBatch);
 	}
+	destroyPositionAndStripVector(&stripBatch);
 }
 
 

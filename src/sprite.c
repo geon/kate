@@ -2,6 +2,7 @@
 #include "sprite_struct.h"
 #include "image.h"
 #include "image_struct.h"
+
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
@@ -56,7 +57,7 @@ uint8_t * getSpritePalette(Sprite sprite) {
 }
 
 
-void spriteDraw(Sprite sprite, PixelCoord pos, Map map, Buffer buffer) {
+void spriteDraw(Sprite sprite, PixelCoord pos, Map map, Buffer buffer, PositionAndStripVector stripBatch) {
 	uint16_t y, column;
 	for (y = 0; y < sprite->height; ++y) {
 		// TODO: Use a uint32_t to shift 3 strips at a time without spilling bits.
@@ -114,7 +115,11 @@ void spriteDraw(Sprite sprite, PixelCoord pos, Map map, Buffer buffer) {
 			lastShiftedMaskBuffer = currentShiftedMaskBuffer;
 
 			if (shiftedMask) {
-				drawStrip(destinationStripIndex, shiftedStrip, shiftedMask);
+				PositionAndStrip posAndStrip;
+				posAndStrip.pos=destinationStripIndex;
+				posAndStrip.strip=shiftedStrip;
+				posAndStrip.mask=shiftedMask;
+				positionAndStripVectorPush(stripBatch, posAndStrip);
 			}
 		}
 
@@ -127,7 +132,11 @@ void spriteDraw(Sprite sprite, PixelCoord pos, Map map, Buffer buffer) {
 		}
 		shiftedMask = lastShiftedMaskBuffer & 0xff;
 		if (shiftedMask) {
-			drawStrip(destinationStripIndex+1, shiftedStrip, shiftedMask);
+			PositionAndStrip posAndStrip;
+			posAndStrip.pos=destinationStripIndex+1;
+			posAndStrip.strip=shiftedStrip;
+			posAndStrip.mask=shiftedMask;
+			positionAndStripVectorPush(stripBatch, posAndStrip);
 		}
 	}
 
