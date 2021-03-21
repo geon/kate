@@ -118,10 +118,9 @@ void markBordersAsDirty (Buffer buffer, PixelCoord scroll, Map map) {
 void switchBuffer (Buffer buffer, PixelCoord scrollOfNextFrame, Map map) {
 	// Calculate the current buffer offset and fractional strip panning.
 	StripCoord stripScroll = makeStripCoordFromEgaScrollCoord(buffer->scroll);
-	uint16_t bufferIndex = bufferMapWorldCoordToBufferIndexInAlternateBuffer(
-		stripScroll,
-		buffer->scroll,
-		buffer->alternateBuffer
+	uint16_t bufferIndex = bufferMapWorldCoordToBufferIndex(
+		buffer,
+		stripScroll
 	);
 	const uint8_t  restX =  buffer->scroll.restX;
 
@@ -138,6 +137,18 @@ void switchBuffer (Buffer buffer, PixelCoord scrollOfNextFrame, Map map) {
 
 uint16_t bufferIndexStart (uint16_t column, uint16_t y, bool alternateBuffer) {
 	return y*EGA_BUFFER_NUM_COLUMNS + column + (alternateBuffer ? EGA_BUFFER_SIZE : 0);
+}
+
+
+uint16_t bufferMapWorldCoordToBufferIndex (Buffer buffer, StripCoord worldCoord) {
+	return  bufferStaticMapBufferCoordToBufferIndex(
+		buffer->scroll,
+		buffer->alternateBuffer,
+		bufferStaticMapWorldCoordToBufferCoord(
+			buffer->scroll,
+			worldCoord
+		)
+	);
 }
 
 

@@ -83,12 +83,6 @@ Sprite rendererLoadSprite (Renderer renderer, char *imagePath, char **errorMessa
 }
 
 
-// TODO: This can't be here.
-typedef struct BufferStruct {
-	EgaScrollCoord scroll;
-	bool alternateBuffer;
-} BufferStruct;
-
 void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, Map map) {
 	uint16_t y, column;
 	for (y = 0; y < spriteInstance->sprite->height; ++y) {
@@ -111,10 +105,9 @@ void drawSprite(Renderer renderer, SpriteInstance *spriteInstance, Map map) {
 
 			worldCoord.column = posXColumn + column;
 			worldCoord.y = spriteInstance->pos.y + y;
-			destinationStripIndex = bufferMapWorldCoordToBufferIndexInAlternateBuffer(
-				worldCoord,
-				renderer->buffer->scroll,
-				renderer->buffer->alternateBuffer
+			destinationStripIndex = bufferMapWorldCoordToBufferIndex(
+				renderer->buffer,
+				worldCoord
 			);
 
 

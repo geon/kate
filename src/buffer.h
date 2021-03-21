@@ -28,6 +28,7 @@ void freeBuffer (Buffer buffer);
 
 void switchBuffer (Buffer buffer, PixelCoord scroll, Map map);
 
+uint16_t bufferMapWorldCoordToBufferIndex (Buffer buffer, StripCoord worldCoord);
 uint16_t bufferMapWorldCoordToBufferIndexInAlternateBuffer (StripCoord worldCoord, EgaScrollCoord bufferScroll, bool bufferAlternateBuffer);
 StripCoord bufferStaticMapWorldCoordToBufferCoord (EgaScrollCoord bufferScroll, StripCoord worldCoord);
 uint16_t bufferStaticMapBufferCoordToBufferIndex (EgaScrollCoord bufferScroll, bool alternateBuffer, StripCoord bufferCoord);
