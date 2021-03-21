@@ -6,7 +6,7 @@
 - [x] Make spriteInstances use vector.
 - [x] Separate dirty-marking loop from drawing, avoiding double marking.
 - [x] Access background strips by index. Necessary to compare them efficiently.
-- [ ] Move sprite drawing to the sprite class.
+- [x] Move sprite drawing to the sprite class.
 - [ ] Cache the shifted sprites.
 - [ ] Batch strip drawing in sprites.
 - [ ] Batch all sprite drawing to one single draw call.
