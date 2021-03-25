@@ -9,7 +9,6 @@
 typedef struct PositionAndStrip {
     uint16_t pos;
 	BitplaneStrip strip;
-	uint8_t mask;
 } PositionAndStrip;
 
 

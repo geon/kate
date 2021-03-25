@@ -10,7 +10,7 @@
 - [ ] Cache the shifted sprites.
 - [x] Batch strip drawing in sprites.
 - [ ] Batch all sprite drawing to one single draw call.
-- [ ] Blend the sprites with the background in software, so the EGA masks don't need to be set.
+- [x] Blend the sprites with the background in software, so the EGA masks don't need to be set.
 - [x] Draw sprites one plane at a time to avoid unnecessary plane enabling.
 - [ ] Store sprites in 5 separate planes (4 color planes + mask), so they can be shifted with the same method.
 - [ ] Use fixed length value arrays in the DirtyBackgroundStrips. More easily reusable like a slab allocator. Should be faster.

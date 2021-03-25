@@ -240,6 +240,14 @@ void drawCustomStrips (PositionAndStrip *stripBatchBegin, PositionAndStrip *stri
 			mov ah, 0
 			; Send
 			out dx, ax
+
+		; Set 6845 bit mask register
+			mov dx, 03CEh
+			; Specify bit mask register
+			mov al, 8
+			mov ah, 0xff
+			; Send bit mask
+			out dx, ax
 	}
 
 	for (planeIndex=0; planeIndex<4; ++planeIndex) {
@@ -258,24 +266,11 @@ void drawCustomStrips (PositionAndStrip *stripBatchBegin, PositionAndStrip *stri
 
 		for (iterator=stripBatchBegin; iterator!=stripBatchEnd; ++iterator) {
 			uint8_t *stripAddress = bufferBaseAddress + iterator->pos;
-			uint8_t mask = iterator->mask;
-
 			uint8_t bitplane = iterator->strip.planes[planeIndex];
 
 			_asm{
-				; Set 6845 bit mask register
-					mov dx, 03CEh
-					; Specify bit mask register
-					mov al, 8
-					mov ah, mask
-					; Send bit mask
-					out dx, ax
-
 				; Write the stripAddress to the register, so dont overwrite it.
 					mov ebx, stripAddress
-
-				; Load existing pixels to latch, so masking works.
-					mov al, [ebx]
 
 				; Draw the strip
 					; Get the pixel value

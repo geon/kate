@@ -57,7 +57,20 @@ uint8_t * getSpritePalette(Sprite sprite) {
 }
 
 
+BitplaneStrip mixStripsByMask (BitplaneStrip background, BitplaneStrip foreground, uint8_t mask) {
+	BitplaneStrip result;
+
+	uint8_t plane;
+	for (plane=0; plane<4; ++plane) {
+		result.planes[plane] = (background.planes[plane] & ~mask) | (foreground.planes[plane] & mask);
+	}
+
+	return result;
+}
+
+
 void spriteDraw(Sprite sprite, PixelCoord pos, Map map, Buffer buffer, PositionAndStripVector stripBatch) {
+	BitplaneStrip *strips = mapGetStrips(map);
 	uint16_t y, column;
 	for (y = 0; y < sprite->height; ++y) {
 		// TODO: Use a uint32_t to shift 3 strips at a time without spilling bits.
@@ -68,6 +81,7 @@ void spriteDraw(Sprite sprite, PixelCoord pos, Map map, Buffer buffer, PositionA
 		uint8_t shiftedMask;
 		BitplaneStrip shiftedStrip;
 		uint16_t destinationStripIndex;
+		StripCoord worldCoord;
 
 		for (column=0; column<sprite->numColumns; ++column) {
 			uint16_t sourceStripIndex = column + y*sprite->numColumns;
@@ -75,7 +89,7 @@ void spriteDraw(Sprite sprite, PixelCoord pos, Map map, Buffer buffer, PositionA
 			uint8_t mask = sprite->mask.values[sourceStripIndex];
 			uint16_t posXColumn = pos.x/8;
 			uint16_t posXRest = pos.x%8;
-			StripCoord worldCoord;
+			BitplaneStrip backgroundStrip;
 
 			worldCoord.column = posXColumn + column;
 			worldCoord.y = pos.y + y;
@@ -115,10 +129,10 @@ void spriteDraw(Sprite sprite, PixelCoord pos, Map map, Buffer buffer, PositionA
 			lastShiftedMaskBuffer = currentShiftedMaskBuffer;
 
 			if (shiftedMask) {
+				BitplaneStrip backgroundStrip = strips[getMapStripAtWorldCoord(map, worldCoord)];
 				PositionAndStrip posAndStrip;
 				posAndStrip.pos=destinationStripIndex;
-				posAndStrip.strip=shiftedStrip;
-				posAndStrip.mask=shiftedMask;
+				posAndStrip.strip=mixStripsByMask(backgroundStrip, shiftedStrip, shiftedMask);
 				positionAndStripVectorPush(stripBatch, posAndStrip);
 			}
 		}
@@ -130,12 +144,13 @@ void spriteDraw(Sprite sprite, PixelCoord pos, Map map, Buffer buffer, PositionA
 				shiftedStrip.planes[plane] = lastShiftedStripBuffer[plane] & 0xff;
 			}
 		}
+		++worldCoord.column;
 		shiftedMask = lastShiftedMaskBuffer & 0xff;
 		if (shiftedMask) {
+			BitplaneStrip backgroundStrip = strips[getMapStripAtWorldCoord(map, worldCoord)];
 			PositionAndStrip posAndStrip;
 			posAndStrip.pos=destinationStripIndex+1;
-			posAndStrip.strip=shiftedStrip;
-			posAndStrip.mask=shiftedMask;
+			posAndStrip.strip=mixStripsByMask(backgroundStrip, shiftedStrip, shiftedMask);
 			positionAndStripVectorPush(stripBatch, posAndStrip);
 		}
 	}
