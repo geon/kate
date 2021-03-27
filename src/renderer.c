@@ -89,7 +89,7 @@ void renderSprites (Renderer renderer, SpriteInstanceVector spriteInstances, Map
 
 	initializePositionAndStripVector(&stripBatch, 300);
 	vectorForeach (spriteInstanceVectorBegin(spriteInstances), spriteInstanceVectorEnd(spriteInstances), spriteInstance) {
-		spriteDraw(spriteInstance->sprite, spriteInstance->pos, map, renderer->buffer, &stripBatch);
+		spriteInstanceDraw(spriteInstance, map, renderer->buffer, &stripBatch);
 		drawCustomStrips(positionAndStripVectorBegin(&stripBatch), positionAndStripVectorEnd(&stripBatch));
 		positionAndStripVectorClear(&stripBatch);
 	}

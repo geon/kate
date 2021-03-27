@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "strip_coord.h": "c"
+        "strip_coord.h": "c",
+        "sprite_instance.h": "c",
+        "sprite_shift_cache.h": "c"
     }
 }

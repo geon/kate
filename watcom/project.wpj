@@ -4,10 +4,10 @@ projectIdent
 VpeMain
 1
 WRect
-0
-0
+-64
+-85
 10368
-9749
+9770
 2
 MProject
 3
@@ -39,5 +39,5 @@ WFileName
 11
 project.tgt
 0
-7
+0
 7

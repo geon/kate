@@ -1,7 +1,7 @@
 #ifndef sprite_instance_h
 #define sprite_instance_h
 
-#include "sprite.h"
+#include "sprite_shift_cache.h"
 #include "pixel_coord.h"
 #include "vector.h"
 
@@ -10,11 +10,12 @@
 
 
 typedef struct SpriteInstance {
-    Sprite sprite;
+    SpriteShiftCache sprite;
 	PixelCoord pos;
 } SpriteInstance;
 
 SpriteInstance makeSpriteInstance (Sprite sprite, PixelCoord pos);
+void spriteInstanceDraw(SpriteInstance *spriteInstance, Map map, Buffer buffer, PositionAndStripVector stripBatch);
 
 
 declareVector(SpriteInstanceVector, SpriteInstance, spriteInstanceVector)

@@ -7,7 +7,7 @@
 - [x] Separate dirty-marking loop from drawing, avoiding double marking.
 - [x] Access background strips by index. Necessary to compare them efficiently.
 - [x] Move sprite drawing to the sprite class.
-- [ ] Cache the shifted sprites.
+- [x] Cache the shifted sprites.
 - [x] Batch strip drawing in sprites.
 - [ ] Batch all sprite drawing to one single draw call.
 - [x] Blend the sprites with the background in software, so the EGA masks don't need to be set.
