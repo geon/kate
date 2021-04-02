@@ -14,11 +14,12 @@ typedef struct SpriteInstance {
 	PixelCoord pos;
 } SpriteInstance;
 
-SpriteInstance makeSpriteInstance (Sprite sprite, PixelCoord pos);
-void spriteInstanceDraw(SpriteInstance *spriteInstance, Map map, Buffer buffer, PositionAndStripVector stripBatch);
-
 
 declareVector(SpriteInstanceVector, SpriteInstance, spriteInstanceVector)
 defineVectorStruct(SpriteInstanceVector, SpriteInstance, spriteInstanceVector)
+
+
+SpriteInstance makeSpriteInstance (Sprite sprite, PixelCoord pos);
+void spriteInstanceDraw(SpriteInstance *spriteInstance, Map map, Buffer buffer, PositionAndStripVector stripBatch);
 
 #endif
