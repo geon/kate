@@ -83,20 +83,6 @@ Sprite rendererLoadSprite (Renderer renderer, char *imagePath, char **errorMessa
 }
 
 
-void renderSprites (Renderer renderer, SpriteInstanceVector spriteInstances, Map map) {
-	SpriteInstance *spriteInstance;
-	PositionAndStripVectorStruct stripBatch;
-
-	initializePositionAndStripVector(&stripBatch, 300);
-	vectorForeach (spriteInstanceVectorBegin(spriteInstances), spriteInstanceVectorEnd(spriteInstances), spriteInstance) {
-		spriteInstanceDraw(spriteInstance, map, renderer->buffer, &stripBatch);
-		drawCustomStrips(positionAndStripVectorBegin(&stripBatch), positionAndStripVectorEnd(&stripBatch));
-		positionAndStripVectorClear(&stripBatch);
-	}
-	destroyPositionAndStripVector(&stripBatch);
-}
-
-
 void renderBackground (Renderer renderer, Map map) {
 	BitplaneStrip *strips = mapGetStrips(map);
 	Uint16Vector dirtyBufferIndicesByStripIndex = bufferGetDirtyBufferIndicesByStripIndex(renderer->buffer);
@@ -122,7 +108,7 @@ void rendererRender(Renderer renderer, SpriteInstanceVector spriteInstances, Map
 	waitForFrame();
 
 	renderBackground(renderer, map);
-	renderSprites(renderer, spriteInstances, map);
+	spriteInstanceRenderSprites(spriteInstances, map, renderer->buffer);
 
 	// Sets the start-address of the buffer.
 	// The value won't be latched by the EGA card until the vertical retrace.

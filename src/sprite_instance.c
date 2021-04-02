@@ -22,3 +22,17 @@ void spriteInstanceDraw(SpriteInstance *spriteInstance, Map map, Buffer buffer, 
 
 	spriteDraw(&spriteInstance->sprite.preShiftedSprites[rest], pos, map, buffer, stripBatch);
 }
+
+
+void  spriteInstanceRenderSprites (SpriteInstanceVector spriteInstances, Map map, Buffer buffer) {
+	SpriteInstance *spriteInstance;
+	PositionAndStripVectorStruct stripBatch;
+
+	initializePositionAndStripVector(&stripBatch, 300);
+	vectorForeach (spriteInstanceVectorBegin(spriteInstances), spriteInstanceVectorEnd(spriteInstances), spriteInstance) {
+		spriteInstanceDraw(spriteInstance, map, buffer, &stripBatch);
+		drawCustomStrips(positionAndStripVectorBegin(&stripBatch), positionAndStripVectorEnd(&stripBatch));
+		positionAndStripVectorClear(&stripBatch);
+	}
+	destroyPositionAndStripVector(&stripBatch);
+}

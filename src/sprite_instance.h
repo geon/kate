@@ -21,5 +21,6 @@ defineVectorStruct(SpriteInstanceVector, SpriteInstance, spriteInstanceVector)
 
 SpriteInstance makeSpriteInstance (Sprite sprite, PixelCoord pos);
 void spriteInstanceDraw(SpriteInstance *spriteInstance, Map map, Buffer buffer, PositionAndStripVector stripBatch);
+void  spriteInstanceRenderSprites (SpriteInstanceVector spriteInstances, Map map, Buffer buffer);
 
 #endif
