@@ -46,46 +46,44 @@ void spriteInstanceDraw(SpriteInstance *spriteInstance, Map map, Buffer buffer, 
 	pos.column = spriteInstance->pos.x / 8;
 	pos.y = spriteInstance->pos.y;
 
-	spriteDraw(&spriteInstance->sprite.preShiftedSprites[rest], pos, map, buffer, stripBatch);
-}
+	{
+		Sprite sprite = &spriteInstance->sprite.preShiftedSprites[rest];
+		BitplaneStrip *strips = mapGetStrips(map);
+		uint16_t y, column;
+		for (y = 0; y < sprite->height; ++y) {
+			uint16_t destinationStripIndex;
+			StripCoord worldCoord;
 
+			for (column=0; column<sprite->numColumns; ++column) {
+				uint16_t sourceStripIndex = column + y*sprite->numColumns;
+				BitplaneStrip strip = sprite->bitPlaneStrips.values[sourceStripIndex];
+				uint8_t mask = sprite->mask.values[sourceStripIndex];
 
-void spriteDraw(Sprite sprite, StripCoord pos, Map map, Buffer buffer, PositionAndStripVector stripBatch) {
-	BitplaneStrip *strips = mapGetStrips(map);
-	uint16_t y, column;
-	for (y = 0; y < sprite->height; ++y) {
-		uint16_t destinationStripIndex;
-		StripCoord worldCoord;
+				worldCoord.column = pos.column + column;
+				worldCoord.y = pos.y + y;
+				destinationStripIndex = bufferMapWorldCoordToBufferIndex(
+					buffer,
+					worldCoord
+				);
 
-		for (column=0; column<sprite->numColumns; ++column) {
-			uint16_t sourceStripIndex = column + y*sprite->numColumns;
-			BitplaneStrip strip = sprite->bitPlaneStrips.values[sourceStripIndex];
-			uint8_t mask = sprite->mask.values[sourceStripIndex];
-
-			worldCoord.column = pos.column + column;
-			worldCoord.y = pos.y + y;
-			destinationStripIndex = bufferMapWorldCoordToBufferIndex(
-				buffer,
-				worldCoord
-			);
-
-			if (mask) {
-				BitplaneStrip backgroundStrip = strips[getMapStripAtWorldCoord(map, worldCoord)];
-				PositionAndStrip posAndStrip;
-				posAndStrip.pos=destinationStripIndex;
-				posAndStrip.strip=mixStripsByMask(backgroundStrip, strip, mask);
-				positionAndStripVectorPush(stripBatch, posAndStrip);
+				if (mask) {
+					BitplaneStrip backgroundStrip = strips[getMapStripAtWorldCoord(map, worldCoord)];
+					PositionAndStrip posAndStrip;
+					posAndStrip.pos=destinationStripIndex;
+					posAndStrip.strip=mixStripsByMask(backgroundStrip, strip, mask);
+					positionAndStripVectorPush(stripBatch, posAndStrip);
+				}
 			}
 		}
-	}
 
-	{
-		StripCoord topLeft, bottomRight;
-		topLeft.column = pos.column;
-		topLeft.y = pos.y;
-		bottomRight.column = topLeft.column + sprite->numColumns;
-		bottomRight.y = topLeft.y + sprite->height;
+		{
+			StripCoord topLeft, bottomRight;
+			topLeft.column = pos.column;
+			topLeft.y = pos.y;
+			bottomRight.column = topLeft.column + sprite->numColumns;
+			bottomRight.y = topLeft.y + sprite->height;
 
-		bufferMarkRectangleAsDirty(buffer, topLeft, bottomRight, map);
+			bufferMarkRectangleAsDirty(buffer, topLeft, bottomRight, map);
+		}
 	}
 }
