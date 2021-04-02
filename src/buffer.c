@@ -235,3 +235,22 @@ void bufferClearDirtyBackgroundStrips (Buffer buffer) {
 void bufferMarkRectangleAsDirty (Buffer buffer, StripCoord topLeftWorldCoord, StripCoord bottomRightWorldCoord, Map map) {
 	dirtyBackgroundStripsMarkRectangle(buffer->dirtyBackgroundStrips[buffer->alternateBuffer ? 1 : 0], topLeftWorldCoord, bottomRightWorldCoord, map, buffer, buffer->alternateBuffer);
 }
+
+
+void bufferRenderBackground (Buffer buffer, Map map) {
+	BitplaneStrip *strips = mapGetStrips(map);
+	Uint16Vector dirtyBufferIndicesByStripIndex = bufferGetDirtyBufferIndicesByStripIndex(buffer);
+
+	uint16_t *stripIndex;
+	vectorForeach (bufferDirtyBackgroundStripsBegin(buffer), bufferDirtyBackgroundStripsEnd(buffer), stripIndex) {
+		Uint16Vector dirtyBufferIndices = &dirtyBufferIndicesByStripIndex[*stripIndex];
+
+		drawStrips(
+			uint16VectorBegin(dirtyBufferIndices),
+			uint16VectorEnd(dirtyBufferIndices),
+			strips[*stripIndex]
+		);
+	}
+
+	bufferClearDirtyBackgroundStrips(buffer);
+}

@@ -44,5 +44,6 @@ void bufferClearDirtyBackgroundStrips (Buffer buffer);
 // void bufferMarkDirtyBackgroundStrips(Buffer buffer, StripCoord coord, BitplaneStrip cleanStrip);
 
 void bufferMarkRectangleAsDirty (Buffer buffer, StripCoord topLeftWorldCoord, StripCoord bottomRightWorldCoord, Map map);
+void bufferRenderBackground (Buffer buffer, Map map);
 
 #endif

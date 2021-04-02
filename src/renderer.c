@@ -83,31 +83,11 @@ Sprite rendererLoadSprite (Renderer renderer, char *imagePath, char **errorMessa
 }
 
 
-void renderBackground (Renderer renderer, Map map) {
-	BitplaneStrip *strips = mapGetStrips(map);
-	Uint16Vector dirtyBufferIndicesByStripIndex = bufferGetDirtyBufferIndicesByStripIndex(renderer->buffer);
-
-	uint16_t *stripIndex;
-	vectorForeach (bufferDirtyBackgroundStripsBegin(renderer->buffer), bufferDirtyBackgroundStripsEnd(renderer->buffer), stripIndex) {
-		Uint16Vector dirtyBufferIndices = &dirtyBufferIndicesByStripIndex[*stripIndex];
-
-		drawStrips(
-			uint16VectorBegin(dirtyBufferIndices),
-			uint16VectorEnd(dirtyBufferIndices),
-			strips[*stripIndex]
-		);
-	}
-
-	bufferClearDirtyBackgroundStrips(renderer->buffer);
-}
-
-
-
 void rendererRender(Renderer renderer, SpriteInstanceVector spriteInstances, Map map, PixelCoord scrollOfNextFrame) {
 	// V-sync.
 	waitForFrame();
 
-	renderBackground(renderer, map);
+	bufferRenderBackground(renderer->buffer, map);
 	spriteInstanceRenderSprites(spriteInstances, map, renderer->buffer);
 
 	// Sets the start-address of the buffer.
