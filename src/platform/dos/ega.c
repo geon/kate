@@ -339,19 +339,19 @@ void pasteStrip (uint16_t index, uint8_t mask) {
 
 
 void setPalette (uint8_t palette[16]) {
-	union REGS regs;
-	int16_t i;
-
-	// Service 0. Set an individual palette register.
-	regs.w.ax = 0x1000;
-
+	uint8_t i;
 	for (i=0; i<16; ++i) {
-		// BL holds the palette index to be set. (0-15)
-		regs.h.bl = i;
-		// BH holds the new color.
-		regs.h.bh = palette[i];
-		// Tell BIOS to set it.
-		int386(BIOS_INTERRUPT_VIDEO, &regs, &regs);
+		uint8_t  color = palette[i];
+		_asm {
+			// Service 0. Set an individual palette register.
+			mov AX, 0x1000
+			// BL holds the palette index to be set. (0-15)
+			mov BL, i
+			// BH holds the new color.
+			mov BH, color
+			// Tell BIOS to set it.
+			int BIOS_INTERRUPT_VIDEO
+		}
 	}
 }
 
