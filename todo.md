@@ -14,3 +14,4 @@
 - [x] Draw sprites one plane at a time to avoid unnecessary plane enabling.
 - [ ] Store sprites in 5 separate planes (4 color planes + mask), so they can be shifted with the same method.
 - [ ] Use fixed length value arrays in the DirtyBackgroundStrips. More easily reusable like a slab allocator. Should be faster.
+- [ ] Rewrite the generic vector class as separate macros for each method, so overloading works.
