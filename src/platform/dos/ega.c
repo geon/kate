@@ -25,14 +25,13 @@ void waitForFrame () {
 
 // Set video mode to EGA 640x350 16c.
 void setVideoMode () {
-	union REGS regs;
-
-	// service 0 - set current video mode
-	regs.h.ah = 0;
-	// requested mode
-	regs.h.al = VIDEO_MODE_EGA_640_350_16;
-	
-	int386(BIOS_INTERRUPT_VIDEO, &regs, &regs);
+	_asm {
+		// service 0 - set current video mode
+		mov AH, 0x0
+		// requested mode
+		mov AL, VIDEO_MODE_EGA_640_350_16
+		int 0x10
+	}
 }
 
 
