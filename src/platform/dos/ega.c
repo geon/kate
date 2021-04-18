@@ -1,11 +1,7 @@
 #include "ega.h"
 #include "bitplane_strip.h"
 
-#include <dos.h>
 #include <conio.h>
-#include <sys\types.h>
-#include <direct.h>
-#define inportb(port) inp(port)
 
 #define BIOS_INTERRUPT_VIDEO 0X10 // The BIOS video interrupt number.
 #define VIDEO_MODE_EGA_640_350_16 0x10 // EGA 640 x 350, 16 colors.
