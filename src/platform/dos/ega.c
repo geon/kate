@@ -26,7 +26,7 @@ void setVideoMode () {
 		mov AH, 0x0
 		// requested mode
 		mov AL, VIDEO_MODE_EGA_640_350_16
-		int 0x10
+		int BIOS_INTERRUPT_VIDEO
 	}
 }
 
@@ -38,7 +38,7 @@ void drawPoint (uint16_t x, uint16_t y, uint8_t color) {
 		mov AL, color
 		mov CX, x
 		mov DX, y
-		int 0x10
+		int BIOS_INTERRUPT_VIDEO
 	}
 }
 
